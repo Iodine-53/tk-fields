@@ -4,7 +4,7 @@ Tags: custom fields, field groups, gutenberg blocks, elementor, post meta
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.20.6
+Stable tag: 0.20.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,9 @@ Privacy policy: https://wiki.osmfoundation.org/wiki/Privacy_Policy
 oEmbed fields use WordPress core's oEmbed discovery. When an editor pastes a URL from a supported provider (for example YouTube or X), WordPress fetches the embed HTML from that provider's oEmbed endpoint. Data is sent only to the provider of the URL you pasted, and only when you paste it. This is core WordPress behavior; each provider's own terms and privacy policy apply.
 
 == Changelog ==
+
+= 0.20.7 =
+* Compliance: the admin build's `.npmrc` no longer ships in the release zip — the release builder now fails the build if any hidden file lands in the staged tree (the wordpress.org upload scan rejected 0.20.6 for it).
 
 = 0.20.6 =
 * Compliance: added an "External services" readme section documenting the Map field's Photon geocoder address search (opt-in, editor-side only) and the OpenStreetMap tile preview, with terms and privacy links; corrected the main file header, which wrongly claimed there is no external service.

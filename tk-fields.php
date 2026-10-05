@@ -3,7 +3,7 @@
  * Plugin Name:       TK Fields
  * Plugin URI:        https://github.com/iodine-53/tk-fields
  * Description:       Native WordPress custom fields — 35 field types, clean storage, built on core APIs. Free forever, no lock-in.
- * Version:           0.20.6
+ * Version:           0.20.7
  * Requires at least: 6.8
  * Requires PHP:      8.1
  * Author:            Iodine
@@ -42,7 +42,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'TK_FIELDS_VERSION', '0.20.6' );
+define( 'TK_FIELDS_VERSION', '0.20.7' );
 define( 'TK_FIELDS_FILE', __FILE__ );
 define( 'TK_FIELDS_DIR', plugin_dir_path( __FILE__ ) );
 define( 'TK_FIELDS_URL', plugin_dir_url( __FILE__ ) );
