@@ -1,0 +1,18 @@
+/* Editor-only chrome for tk/repeater-row. */
+.tk-repeater-row-editor {
+	border: 1px solid #c3c4c7;
+	border-radius: 4px;
+	padding: 10px;
+	margin-bottom: 8px;
+	background: #fff;
+}
+
+.tk-repeater-row-label {
+	display: inline-block;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: #757575;
+	margin-bottom: 6px;
+}

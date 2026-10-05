@@ -1,0 +1,49 @@
+/**
+ * TK Post Listing block — editor-only styles.
+ *
+ * The ServerSideRender preview emits real frontend markup; these rules
+ * only keep it well-behaved inside the editor canvas (no navigation on
+ * link clicks, breathing room around the preview, field-row layout in
+ * the inspector).
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+/* Don't let preview card links navigate the editor away. */
+.tk-post-listing-editor .tk-post-card a {
+	pointer-events: none;
+}
+
+.tk-post-listing-editor .tk-post-card {
+	cursor: default;
+}
+
+/* Inspector: TK field rows */
+.tkf-pl-field-row {
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	padding: 8px;
+	margin-bottom: 8px;
+}
+
+.tkf-pl-field-row .tkf-pl-add {
+	margin-top: 4px;
+}
+
+.tkf-pl-help {
+	color: #757575;
+	font-size: 12px;
+}
+
+.tkf-pl-color-label {
+	display: block;
+	margin-bottom: 4px;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: #1e1e1e;
+}
+
+.tkf-pl-color {
+	margin-bottom: 16px;
+}

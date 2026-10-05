@@ -1,0 +1,88 @@
+/* Editor-only chrome for tk/field-repeater. */
+.tk-field-repeater-editor {
+	border: 1px solid #8c8f94;
+	border-radius: 4px;
+	padding: 12px;
+	background: #fff;
+}
+
+.tk-field-repeater-editor__head {
+	display: flex;
+	align-items: baseline;
+	gap: 8px;
+	margin-bottom: 8px;
+}
+
+.tk-field-repeater-editor__head-name {
+	color: #646970;
+	font-size: 12px;
+}
+
+.tk-field-repeater-editor__summaries {
+	margin: 0 0 8px;
+	padding: 8px 10px;
+	background: #f6f7f7;
+	border-radius: 3px;
+}
+
+.tk-field-repeater-editor__summaries-label {
+	display: block;
+	font-size: 11px;
+	font-weight: 600;
+	text-transform: uppercase;
+	color: #646970;
+	margin-bottom: 4px;
+}
+
+.tk-field-repeater-editor__summaries-list {
+	margin: 0;
+	padding-left: 0;
+	list-style: none;
+}
+
+.tk-field-repeater-editor__summaries-list li {
+	margin: 2px 0;
+}
+
+.tk-field-repeater-editor__summary {
+	background: none;
+	border: none;
+	padding: 2px 4px;
+	cursor: pointer;
+	color: #1d2327;
+	text-align: left;
+}
+
+.tk-field-repeater-editor__summary:hover {
+	color: var(--wp-admin-theme-color, #007cba);
+	text-decoration: underline;
+}
+
+.tk-field-repeater-editor__summary-index {
+	color: #646970;
+	margin-right: 4px;
+}
+
+.tk-field-repeater-editor__add {
+	margin-top: 10px;
+}
+
+.tk-field-repeater-editor__counts {
+	margin-top: 8px;
+	color: #646970;
+	font-size: 12px;
+}
+
+.tk-field-repeater-editor__field-id {
+	display: flex;
+	flex-direction: column;
+	gap: 2px;
+	margin-bottom: 12px;
+}
+
+/* Grid layout: rows flow into a responsive grid in the editor canvas. */
+.tk-field-repeater-editor--grid .block-editor-block-list__layout {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+	gap: 12px;
+}

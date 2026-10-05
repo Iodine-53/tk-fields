@@ -1,0 +1,64 @@
+/**
+ * Frontend styles for the tk/group block (v0.12.0).
+ *
+ * The server render (render.php) emits a <fieldset> with a <legend> and a
+ * <dl> of sub-field rows. Browser defaults for those elements are ugly, so
+ * this ships a minimal, wp-idiomatic baseline. No markup toggle: styling
+ * only, per scope.
+ */
+.tkf-group {
+	border: 1px solid #dcdcde;
+	border-radius: 4px;
+	padding: 1em 1.25em;
+	margin: 0 0 1.5em;
+	background: #fff;
+}
+
+.tkf-group__legend {
+	font-weight: 600;
+	padding: 0 0.5em;
+}
+
+.tkf-group__list {
+	margin: 0;
+	display: grid;
+	gap: 0.5em;
+}
+
+.tkf-group__row {
+	display: grid;
+	grid-template-columns: minmax(120px, 200px) 1fr;
+	gap: 1em;
+	padding: 0.35em 0;
+	border-bottom: 1px solid #f0f0f1;
+}
+
+.tkf-group__row:last-child {
+	border-bottom: 0;
+}
+
+.tkf-group__term {
+	margin: 0;
+	font-weight: 600;
+}
+
+.tkf-group__value {
+	margin: 0;
+	overflow-wrap: anywhere;
+}
+
+.tkf-group__gallery img {
+	max-width: 72px;
+	height: auto;
+	margin: 0 4px 4px 0;
+	border: 1px solid #dcdcde;
+	border-radius: 2px;
+	vertical-align: top;
+}
+
+@media (max-width: 480px) {
+	.tkf-group__row {
+		grid-template-columns: 1fr;
+		gap: 0.15em;
+	}
+}

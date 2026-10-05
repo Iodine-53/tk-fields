@@ -1,0 +1,116 @@
+/**
+ * TK Taxonomy Terms widget styles (TK Studio v1).
+ *
+ * Pill cloud (default) and divider list variants per DESIGN-0.16.0.md §5.
+ * Consumes the shared tokens from assets/shared/tk-widgets.css and
+ * inherits the theme's fonts — no font-family declarations here.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+/* Pill cloud */
+.tk-term-cloud {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--tk-space-sm);
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.tk-term-pill {
+	display: inline-flex;
+	align-items: center;
+	gap: var(--tk-space-xs);
+	padding: var(--tk-term-pill-padding, 0.5rem 1rem);
+	background: var(--tk-surface-soft);
+	border: 1px solid var(--tk-border);
+	border-radius: var(--tk-term-pill-radius, var(--tk-radius-pill));
+	color: inherit;
+	text-decoration: none;
+	line-height: 1.3;
+	transition:
+		transform var(--tk-dur-fast) var(--tk-ease),
+		background-color var(--tk-dur-fast) var(--tk-ease),
+		border-color var(--tk-dur-fast) var(--tk-ease),
+		box-shadow var(--tk-dur-fast) var(--tk-ease);
+}
+
+a.tk-term-pill:hover {
+	transform: translateY(-1px);
+	background: var(--tk-accent);
+	border-color: transparent;
+	color: #fff;
+	box-shadow: var(--tk-shadow-sm);
+}
+
+.tk-term-pill__count {
+	font-size: 0.75rem;
+	opacity: 0.65;
+	font-weight: 600;
+}
+
+a.tk-term-pill:hover .tk-term-pill__count {
+	opacity: 0.85;
+}
+
+/* Divider list */
+.tk-term-list {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.tk-term-list__item {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: var(--tk-space-md);
+	padding: var(--tk-space-sm) 0;
+	border-bottom: 1px solid var(--tk-border);
+}
+
+.tk-term-list__item:last-child {
+	border-bottom: 0;
+}
+
+.tk-term-list__link {
+	color: inherit;
+	text-decoration: none;
+	font-weight: 500;
+}
+
+.tk-term-list__link:hover {
+	color: var(--tk-accent);
+}
+
+.tk-term-list__count {
+	font-size: 0.8rem;
+	opacity: 0.65;
+	flex-shrink: 0;
+}
+
+/* Empty state — designed, not blank */
+.tk-widget-empty {
+	text-align: center;
+	padding: var(--tk-space-2xl) var(--tk-space-lg);
+	border: 1px dashed var(--tk-border-strong);
+	border-radius: var(--tk-radius-lg);
+	background: var(--tk-surface-soft);
+}
+
+.tk-widget-empty__title {
+	font-weight: 600;
+	margin: 0 0 var(--tk-space-xs);
+}
+
+.tk-widget-empty__text {
+	margin: 0;
+	opacity: 0.7;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	a.tk-term-pill:hover {
+		transform: none;
+	}
+}

@@ -1,0 +1,73 @@
+/**
+ * TK Countdown widget (Elementor) — component styles.
+ *
+ * Consumes the shared TK Studio v1 design tokens (handle `tk-widgets`).
+ * Never hardcode spacing, radii, durations or chrome colors here; use the
+ * --tk-* tokens. No font-family is set — type inherits the theme.
+ *
+ * Digits use tabular numerals so they never jitter while ticking.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+.tk-el-countdown {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--tk-space-sm);
+}
+
+.tk-el-countdown-unit {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--tk-space-xs);
+	min-width: 4.5rem;
+	padding: var(--tk-space-sm) var(--tk-space-md);
+	border-radius: var(--tk-radius-md);
+	background-color: var(--tk-surface-soft);
+	background-color: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.tk-el-countdown--inline .tk-el-countdown-unit {
+	min-width: 0;
+	padding: 0;
+	border: none;
+	background: transparent;
+	border-radius: 0;
+}
+
+.tk-el-countdown-value {
+	font-size: 2rem;
+	font-weight: 600;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0.01em;
+}
+
+.tk-el-countdown-label {
+	font-size: var(--tk-label-size);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: var(--tk-label-spacing);
+	color: currentColor;
+	opacity: 0.65;
+}
+
+.tk-el-countdown-sep {
+	font-size: 1.5rem;
+	font-weight: 600;
+	line-height: 1;
+	opacity: 0.5;
+	align-self: flex-start;
+	margin-top: 0.35em;
+}
+
+.tk-el-countdown--sep-none .tk-el-countdown-sep {
+	display: none;
+}
+
+.tk-el-countdown-expired {
+	margin: 0;
+	font-size: 1rem;
+}

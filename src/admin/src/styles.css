@@ -1,0 +1,1113 @@
+/**
+ * TK Fields admin app styles.
+ *
+ * Everything is scoped under #tk-fields-admin-root and every custom class
+ * uses the tkf- prefix. Nothing here targets wp-admin elements globally.
+ */
+
+#tk-fields-admin-root {
+	color: var(--tkf-text);
+	font-size: var(--tkf-font-size-md);
+	line-height: var(--tkf-line-height);
+}
+
+#tk-fields-admin-root .tkf-app {
+	max-width: 1100px;
+}
+
+#tk-fields-admin-root .tkf-muted {
+	color: var(--tkf-text-subtle);
+}
+
+#tk-fields-admin-root code,
+#tk-fields-admin-root .code {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 12px;
+}
+
+/* Notices ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-notices {
+	margin-bottom: var(--tkf-space-md);
+	display: grid;
+	gap: var(--tkf-space-xs);
+	white-space: pre-line;
+}
+
+/* Loading / errors -------------------------------------------------- */
+#tk-fields-admin-root .tkf-loading {
+	display: flex;
+	align-items: center;
+	gap: var(--tkf-space-xs);
+	padding: var(--tkf-space-lg);
+	color: var(--tkf-text-subtle);
+}
+
+#tk-fields-admin-root .tkf-loading--inline {
+	padding: 0;
+}
+
+#tk-fields-admin-root .tkf-error-box {
+	background: var(--tkf-danger-bg);
+	border: 1px solid var(--tkf-danger);
+	border-radius: var(--tkf-radius-sm);
+	padding: var(--tkf-space-sm) var(--tkf-space-md);
+	margin-bottom: var(--tkf-space-md);
+}
+
+/* TKControl ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-control {
+	margin-bottom: var(--tkf-space-md);
+}
+
+#tk-fields-admin-root .tkf-control__label-row {
+	display: flex;
+	align-items: center;
+	gap: var(--tkf-space-2xs);
+	margin-bottom: var(--tkf-space-2xs);
+}
+
+#tk-fields-admin-root .tkf-control__label {
+	font-weight: 600;
+	font-size: var(--tkf-font-size-md);
+}
+
+#tk-fields-admin-root .tkf-control__required {
+	color: var(--tkf-danger);
+	font-weight: 700;
+}
+
+#tk-fields-admin-root .tkf-control__help-btn {
+	border: 0;
+	background: transparent;
+	padding: 2px;
+	margin: 0;
+	cursor: help;
+	color: var(--tkf-text-faint);
+	display: inline-flex;
+	align-items: center;
+	border-radius: var(--tkf-radius-sm);
+}
+
+#tk-fields-admin-root .tkf-control__help-btn:hover,
+#tk-fields-admin-root .tkf-control__help-btn:focus-visible {
+	color: var(--tkf-brand);
+	outline: 2px solid var(--tkf-brand);
+	outline-offset: 1px;
+}
+
+#tk-fields-admin-root .tkf-control__help-text {
+	color: var(--tkf-text-subtle);
+	font-size: var(--tkf-font-size-sm);
+	margin: var(--tkf-space-2xs) 0 0;
+}
+
+#tk-fields-admin-root .tkf-control__error {
+	color: var(--tkf-danger);
+	font-size: var(--tkf-font-size-sm);
+	margin: var(--tkf-space-2xs) 0 0;
+	font-weight: 600;
+}
+
+#tk-fields-admin-root .tkf-control--error input,
+#tk-fields-admin-root .tkf-control--error select,
+#tk-fields-admin-root .tkf-control--error textarea {
+	border-color: var(--tkf-danger) !important;
+}
+
+/* Multicheck: stacked checkbox list for multi-value settings --------- */
+#tk-fields-admin-root .tkf-multicheck {
+	display: flex;
+	flex-direction: column;
+	gap: var(--tkf-space-2xs);
+	max-height: 220px;
+	overflow-y: auto;
+	padding: var(--tkf-space-2xs) 0;
+}
+
+#tk-fields-admin-root .tkf-multicheck .components-checkbox-control__label {
+	font-weight: normal;
+}
+
+/* Group list ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-list__toolbar {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-end;
+	gap: var(--tkf-space-md);
+	margin-bottom: var(--tkf-space-md);
+}
+
+#tk-fields-admin-root .tkf-list__search {
+	flex: 1;
+	max-width: 360px;
+}
+
+#tk-fields-admin-root .tkf-list__search .tkf-control {
+	margin-bottom: 0;
+}
+
+#tk-fields-admin-root .tkf-list__add {
+	flex-shrink: 0;
+	margin-bottom: 1px;
+}
+
+#tk-fields-admin-root .tkf-table {
+	background: var(--tkf-surface);
+	border: 1px solid var(--tkf-border);
+	border-radius: var(--tkf-radius-md);
+	overflow: hidden;
+}
+
+#tk-fields-admin-root .tkf-table th,
+#tk-fields-admin-root .tkf-table td {
+	padding: var(--tkf-space-sm) var(--tkf-space-md);
+	vertical-align: middle;
+}
+
+#tk-fields-admin-root .tkf-table__title {
+	font-weight: 600;
+}
+
+#tk-fields-admin-root .tkf-link-btn {
+	background: none;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	color: var(--tkf-brand);
+	font-weight: 600;
+	font-size: inherit;
+	text-decoration: none;
+}
+
+#tk-fields-admin-root .tkf-link-btn:hover {
+	text-decoration: underline;
+	color: var(--tkf-brand-darker);
+}
+
+#tk-fields-admin-root .tkf-link-btn--danger {
+	color: var(--tkf-danger);
+}
+
+#tk-fields-admin-root .tkf-table__actions {
+	text-align: right;
+	white-space: nowrap;
+}
+
+#tk-fields-admin-root .tkf-table__location {
+	color: var(--tkf-text-subtle);
+}
+
+#tk-fields-admin-root .tkf-status-pill {
+	display: inline-block;
+	padding: 2px 10px;
+	border-radius: var(--tkf-radius-pill);
+	font-size: var(--tkf-font-size-sm);
+	font-weight: 600;
+}
+
+#tk-fields-admin-root .tkf-status-pill--publish {
+	background: var(--tkf-success-bg);
+	color: var(--tkf-success);
+}
+
+#tk-fields-admin-root .tkf-status-pill--draft {
+	background: var(--tkf-surface-subtle);
+	color: var(--tkf-text-subtle);
+	border: 1px solid var(--tkf-border);
+}
+
+/* Empty state ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-empty {
+	text-align: center;
+	padding: var(--tkf-space-2xl) var(--tkf-space-lg);
+	background: var(--tkf-surface);
+	border: 1px dashed var(--tkf-border-strong);
+	border-radius: var(--tkf-radius-lg);
+}
+
+#tk-fields-admin-root .tkf-empty--inline {
+	padding: var(--tkf-space-lg);
+	margin-bottom: var(--tkf-space-md);
+}
+
+#tk-fields-admin-root .tkf-empty h2,
+#tk-fields-admin-root .tkf-empty h3 {
+	margin-top: 0;
+}
+
+#tk-fields-admin-root .tkf-empty p {
+	color: var(--tkf-text-subtle);
+	max-width: 520px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+#tk-fields-admin-root .tkf-empty__icon {
+	font-size: 48px;
+	width: 48px;
+	height: 48px;
+	color: var(--tkf-border-strong);
+}
+
+/* Editor ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-editor__topbar {
+	margin-bottom: var(--tkf-space-sm);
+}
+
+#tk-fields-admin-root .tkf-editor__header {
+	display: flex;
+	gap: var(--tkf-space-md);
+	align-items: flex-end;
+	background: var(--tkf-surface);
+	border: 1px solid var(--tkf-border);
+	border-radius: var(--tkf-radius-md);
+	padding: var(--tkf-space-md) var(--tkf-space-lg);
+	margin-bottom: var(--tkf-space-md);
+}
+
+#tk-fields-admin-root .tkf-editor__title {
+	flex: 1;
+}
+
+#tk-fields-admin-root .tkf-editor__title .tkf-control {
+	margin-bottom: 0;
+}
+
+#tk-fields-admin-root .tkf-editor__title-input {
+	font-size: var(--tkf-font-size-lg) !important;
+	font-weight: 600;
+}
+
+#tk-fields-admin-root .tkf-editor__status {
+	min-width: 170px;
+}
+
+#tk-fields-admin-root .tkf-editor__status .tkf-control {
+	margin-bottom: 0;
+}
+
+#tk-fields-admin-root .tkf-editor__save {
+	padding-bottom: 1px;
+}
+
+/* Tabs ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-tabs__panel {
+	background: var(--tkf-surface);
+	border: 1px solid var(--tkf-border);
+	border-top: 0;
+	border-radius: 0 0 var(--tkf-radius-md) var(--tkf-radius-md);
+	padding: var(--tkf-space-lg);
+}
+
+#tk-fields-admin-root .tkf-tab-intro {
+	margin-top: 0;
+	color: var(--tkf-text-subtle);
+}
+
+/* Field cards ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-fields-tab__list {
+	display: grid;
+	gap: var(--tkf-space-sm);
+	margin-bottom: var(--tkf-space-md);
+}
+
+#tk-fields-admin-root .tkf-field-card {
+	border: 1px solid var(--tkf-border);
+	border-radius: var(--tkf-radius-md);
+	background: var(--tkf-surface);
+	transition: border-color var(--tkf-transition), box-shadow var(--tkf-transition);
+}
+
+#tk-fields-admin-root .tkf-field-card--open {
+	border-color: var(--tkf-border-strong);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.06);
+}
+
+#tk-fields-admin-root .tkf-field-card--error {
+	border-left: 3px solid var(--tkf-danger);
+}
+
+#tk-fields-admin-root .tkf-field-card--drop-target {
+	border-color: var(--tkf-brand);
+	box-shadow: 0 0 0 2px var(--tkf-brand);
+}
+
+#tk-fields-admin-root .tkf-field-card--dragging {
+	opacity: 0.5;
+}
+
+#tk-fields-admin-root .tkf-field-card__header {
+	display: flex;
+	align-items: center;
+	gap: var(--tkf-space-sm);
+	padding: var(--tkf-space-sm) var(--tkf-space-md);
+}
+
+#tk-fields-admin-root .tkf-field-card__drag {
+	cursor: grab;
+	color: var(--tkf-text-faint);
+	display: inline-flex;
+	padding: var(--tkf-space-2xs);
+}
+
+#tk-fields-admin-root .tkf-field-card__drag:active {
+	cursor: grabbing;
+}
+
+#tk-fields-admin-root .tkf-field-card__summary {
+	flex: 1;
+	display: flex;
+	align-items: center;
+	gap: var(--tkf-space-sm);
+	background: none;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	text-align: left;
+	min-width: 0;
+}
+
+#tk-fields-admin-root .tkf-field-card__label {
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+#tk-fields-admin-root .tkf-field-card__name {
+	color: var(--tkf-text-subtle);
+	background: var(--tkf-surface-subtle);
+	padding: 1px 6px;
+	border-radius: var(--tkf-radius-sm);
+}
+
+#tk-fields-admin-root .tkf-field-card__issues {
+	color: var(--tkf-danger);
+	font-size: var(--tkf-font-size-sm);
+	font-weight: 600;
+	white-space: nowrap;
+}
+
+#tk-fields-admin-root .tkf-field-card__actions {
+	display: flex;
+	align-items: center;
+	gap: 2px;
+	flex-shrink: 0;
+}
+
+#tk-fields-admin-root .tkf-field-card__body {
+	border-top: 1px solid var(--tkf-border);
+	padding: var(--tkf-space-md) var(--tkf-space-lg);
+	background: var(--tkf-surface-subtle);
+	border-radius: 0 0 var(--tkf-radius-md) var(--tkf-radius-md);
+}
+
+#tk-fields-admin-root .tkf-type-badge {
+	display: inline-block;
+	color: #fff;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	padding: 2px 8px;
+	border-radius: var(--tkf-radius-pill);
+	white-space: nowrap;
+}
+
+#tk-fields-admin-root .tkf-fields-tab__add {
+	margin-top: var(--tkf-space-md);
+}
+
+/* Field settings ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-field-settings__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 0 var(--tkf-space-lg);
+}
+
+#tk-fields-admin-root .tkf-field-settings__subhead {
+	margin: var(--tkf-space-md) 0 var(--tkf-space-sm);
+	font-size: var(--tkf-font-size-md);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	color: var(--tkf-text-subtle);
+}
+
+/* Type picker ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-type-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+	gap: var(--tkf-space-sm);
+}
+
+#tk-fields-admin-root .tkf-type-grid__item {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	gap: var(--tkf-space-xs);
+	padding: var(--tkf-space-md);
+	border: 1px solid var(--tkf-border);
+	border-radius: var(--tkf-radius-md);
+	background: var(--tkf-surface);
+	cursor: pointer;
+	text-align: left;
+	transition: border-color var(--tkf-transition), box-shadow var(--tkf-transition);
+}
+
+#tk-fields-admin-root .tkf-type-grid__item:hover,
+#tk-fields-admin-root .tkf-type-grid__item:focus-visible {
+	border-color: var(--tkf-brand);
+	box-shadow: 0 0 0 1px var(--tkf-brand);
+	outline: none;
+}
+
+#tk-fields-admin-root .tkf-type-grid__desc {
+	font-size: var(--tkf-font-size-sm);
+	color: var(--tkf-text-subtle);
+}
+
+/* Choices editor ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-choices__head,
+#tk-fields-admin-root .tkf-choices__row {
+	display: grid;
+	grid-template-columns: 1fr 1fr 32px;
+	gap: var(--tkf-space-xs);
+	align-items: center;
+}
+
+#tk-fields-admin-root .tkf-choices__head {
+	font-size: var(--tkf-font-size-sm);
+	font-weight: 600;
+	color: var(--tkf-text-subtle);
+	margin-bottom: var(--tkf-space-2xs);
+}
+
+#tk-fields-admin-root .tkf-choices__row {
+	margin-bottom: var(--tkf-space-xs);
+}
+
+#tk-fields-admin-root .tkf-choices__input {
+	width: 100%;
+	padding: 6px 8px;
+	border: 1px solid var(--tkf-border-strong);
+	border-radius: var(--tkf-radius-sm);
+	font-size: var(--tkf-font-size-md);
+}
+
+/* Conditional logic ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-logic__rules {
+	margin-top: var(--tkf-space-sm);
+	padding: var(--tkf-space-md);
+	border: 1px dashed var(--tkf-border-strong);
+	border-radius: var(--tkf-radius-md);
+	background: var(--tkf-surface);
+}
+
+#tk-fields-admin-root .tkf-logic__row {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr 32px;
+	gap: var(--tkf-space-xs);
+	align-items: center;
+	margin-bottom: var(--tkf-space-xs);
+}
+
+/* Location tab ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-location-tab__rules {
+	display: grid;
+	gap: var(--tkf-space-sm);
+	margin: var(--tkf-space-md) 0;
+}
+
+#tk-fields-admin-root .tkf-rule-row {
+	display: flex;
+	gap: var(--tkf-space-sm);
+	align-items: center;
+	padding: var(--tkf-space-sm) var(--tkf-space-md);
+	border: 1px solid var(--tkf-border);
+	border-radius: var(--tkf-radius-md);
+	background: var(--tkf-surface-subtle);
+}
+
+#tk-fields-admin-root .tkf-rule-row__controls {
+	flex: 1;
+	display: grid;
+	grid-template-columns: 1fr 1fr 1.5fr;
+	gap: var(--tkf-space-sm);
+	align-items: center;
+}
+
+#tk-fields-admin-root .tkf-callout {
+	margin-top: var(--tkf-space-lg);
+	padding: var(--tkf-space-sm) var(--tkf-space-md);
+	background: var(--tkf-info-bg);
+	border-left: 3px solid var(--tkf-brand);
+	border-radius: 0 var(--tkf-radius-sm) var(--tkf-radius-sm) 0;
+	font-size: var(--tkf-font-size-md);
+}
+
+/* Segmented control ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-segmented {
+	display: inline-flex;
+	border: 1px solid var(--tkf-border-strong);
+	border-radius: var(--tkf-radius-pill);
+	overflow: hidden;
+}
+
+#tk-fields-admin-root .tkf-segmented__btn {
+	border: 0;
+	background: var(--tkf-surface);
+	padding: 6px 16px;
+	cursor: pointer;
+	font-size: var(--tkf-font-size-md);
+	color: var(--tkf-text-subtle);
+}
+
+#tk-fields-admin-root .tkf-segmented__btn--active {
+	background: var(--tkf-brand);
+	color: #fff;
+	font-weight: 600;
+}
+
+/* Presentation tab ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-settings-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+	gap: 0 var(--tkf-space-lg);
+	max-width: 800px;
+}
+
+/* Help tab ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-help__section {
+	margin-bottom: var(--tkf-space-xl);
+}
+
+#tk-fields-admin-root .tkf-help__section h2 {
+	margin-top: 0;
+	padding-bottom: var(--tkf-space-xs);
+	border-bottom: 1px solid var(--tkf-border);
+}
+
+#tk-fields-admin-root .tkf-help__types {
+	display: grid;
+	gap: var(--tkf-space-sm);
+}
+
+#tk-fields-admin-root .tkf-help__type {
+	padding: var(--tkf-space-sm) var(--tkf-space-md);
+	background: var(--tkf-surface-subtle);
+	border-radius: var(--tkf-radius-sm);
+}
+
+#tk-fields-admin-root .tkf-help__type dt {
+	font-weight: 600;
+	display: flex;
+	gap: var(--tkf-space-xs);
+	align-items: baseline;
+}
+
+#tk-fields-admin-root .tkf-help__type-label {
+	color: var(--tkf-text-subtle);
+	font-weight: 400;
+}
+
+#tk-fields-admin-root .tkf-help__type dd {
+	margin: var(--tkf-space-2xs) 0 0;
+	color: var(--tkf-text-subtle);
+}
+
+#tk-fields-admin-root .tkf-help__list {
+	padding-left: var(--tkf-space-lg);
+}
+
+#tk-fields-admin-root .tkf-help__list li {
+	margin-bottom: var(--tkf-space-xs);
+}
+
+#tk-fields-admin-root .tkf-help__map {
+	max-width: 560px;
+}
+
+/* Code blocks ---------------------------------------------------------- */
+#tk-fields-admin-root .tkf-code-block {
+	border: 1px solid var(--tkf-border);
+	border-radius: var(--tkf-radius-md);
+	overflow: hidden;
+	margin: var(--tkf-space-sm) 0 var(--tkf-space-md);
+}
+
+#tk-fields-admin-root .tkf-code-block__bar {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: var(--tkf-space-2xs) var(--tkf-space-sm);
+	background: var(--tkf-surface-subtle);
+	border-bottom: 1px solid var(--tkf-border);
+}
+
+#tk-fields-admin-root .tkf-code-block__lang {
+	font-size: var(--tkf-font-size-sm);
+	font-weight: 700;
+	text-transform: uppercase;
+	color: var(--tkf-text-subtle);
+	letter-spacing: 0.05em;
+}
+
+#tk-fields-admin-root .tkf-code-block__pre {
+	margin: 0;
+	padding: var(--tkf-space-md);
+	background: #1d2327;
+	color: #f0f0f1;
+	overflow-x: auto;
+	font-size: 12.5px;
+}
+
+/* Modal ---------------------------------------------------------- */
+/* (Portalled modal content lives under .tkf-modal in the v0.12.0 section
+   below — Modal renders to document.body, outside #tk-fields-admin-root.) */
+
+/* v0.12.0 rebuild ====================================================== */
+
+/* Portals (Modal, Tooltip) render OUTSIDE #tk-fields-admin-root, so the
+   scoped tokens in tokens.css don't inherit here. Re-declare the subset
+   these rules need — values mirror tokens.css. */
+.tkf-modal {
+	--tkf-space-2xs: 4px;
+	--tkf-space-sm: 12px;
+	--tkf-space-md: 16px;
+	--tkf-space-lg: 24px;
+	--tkf-border: #dcdcde;
+	--tkf-radius-md: 8px;
+	--tkf-surface: #fff;
+	--tkf-surface-subtle: #f6f7f7;
+	--tkf-text: #1d2327;
+	--tkf-text-subtle: #50575e;
+	--tkf-font-size-sm: 12px;
+	--tkf-font-size-xs: 11px;
+	--tkf-brand: var(--wp-admin-theme-color, #3858e9);
+}
+
+/* Modal action rows (all modals portal to document.body). */
+.tkf-modal__actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--tkf-space-sm);
+	margin-top: var(--tkf-space-lg);
+}
+
+/* Tooltip fix (A): the components Tooltip renders in a portal OUTSIDE
+   #tk-fields-admin-root, so this must stay unscoped. Caps the dark popover
+   so it no longer stretches across adjacent fields and obscures labels. */
+.components-tooltip {
+	max-width: 240px;
+	white-space: normal;
+}
+
+/* FieldRow: the one recursive row -------------------------------------- */
+#tk-fields-admin-root .tkf-field-row {
+	border: 1px solid var(--tkf-border);
+	border-radius: var(--tkf-radius-md);
+	background: #fff;
+	margin-bottom: var(--tkf-space-sm);
+	overflow: hidden;
+}
+#tk-fields-admin-root .tkf-field-row--depth-1 {
+	margin-left: 28px;
+	position: relative;
+}
+#tk-fields-admin-root .tkf-field-row--depth-1::before {
+	content: '';
+	position: absolute;
+	left: -18px;
+	top: -8px;
+	bottom: 16px;
+	width: 12px;
+	border-left: 2px solid var(--tkf-border);
+	border-bottom: 2px solid var(--tkf-border);
+	border-bottom-left-radius: 6px;
+	pointer-events: none;
+}
+#tk-fields-admin-root .tkf-field-row--depth-2 {
+	margin-left: 56px;
+	position: relative;
+}
+#tk-fields-admin-root .tkf-field-row--depth-2::before {
+	content: '';
+	position: absolute;
+	left: -18px;
+	top: -8px;
+	bottom: 16px;
+	width: 12px;
+	border-left: 2px solid var(--tkf-border);
+	border-bottom: 2px solid var(--tkf-border);
+	border-bottom-left-radius: 6px;
+	pointer-events: none;
+}
+#tk-fields-admin-root .tkf-field-row__head {
+	display: flex;
+	align-items: center;
+	gap: var(--tkf-space-sm);
+	padding: var(--tkf-space-sm) var(--tkf-space-md);
+	background: var(--tkf-surface-subtle);
+}
+#tk-fields-admin-root .tkf-field-row.is-expanded > .tkf-field-row__head {
+	border-bottom: 1px solid var(--tkf-border);
+}
+#tk-fields-admin-root .tkf-field-row__grip {
+	color: var(--tkf-text-subtle);
+	cursor: grab;
+	display: inline-flex;
+}
+#tk-fields-admin-root .tkf-field-row__thumb {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 32px;
+	height: 32px;
+	border-radius: var(--tkf-radius-sm);
+	background: var(--tkf-surface);
+	border: 1px solid var(--tkf-border);
+	color: var(--tkf-text-subtle);
+	flex: none;
+}
+#tk-fields-admin-root .tkf-field-row__summary {
+	display: flex;
+	align-items: baseline;
+	gap: var(--tkf-space-sm);
+	flex: 1;
+	min-width: 0;
+	background: none;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	text-align: left;
+	font-size: var(--tkf-font-size-md);
+	color: var(--tkf-text);
+}
+#tk-fields-admin-root .tkf-field-row__label {
+	font-weight: 600;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	/* The label wins the space race: it grows to fill the summary row and
+	 * only ellipsizes after the field name has shrunk to nothing. Without
+	 * flex priority the name claimed space first and labels clipped to
+	 * "St…" at nested depth (v0.12.1 fix). */
+	min-width: 0;
+	flex: 1 1 auto;
+}
+#tk-fields-admin-root .tkf-field-row__name {
+	font-family: var(--tkf-font-mono, ui-monospace, SFMono-Regular, Menlo, monospace);
+	font-size: var(--tkf-font-size-sm);
+	color: var(--tkf-text-subtle);
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	min-width: 0;
+	/* v0.12.1: the name absorbs shrinkage ~1000x faster than the label, so the
+	label only starts truncating after the name has fully collapsed. */
+	flex: 0 1000 auto;
+}
+#tk-fields-admin-root .tkf-field-row__badge {
+	font-size: var(--tkf-font-size-xs, 11px);
+	line-height: 1.6;
+	padding: 0 8px;
+	border-radius: 999px;
+	background: var(--tkf-surface);
+	border: 1px solid var(--tkf-border);
+	color: var(--tkf-text-subtle);
+	white-space: nowrap;
+	flex: none;
+}
+#tk-fields-admin-root .tkf-field-row__issues {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 20px;
+	height: 20px;
+	padding: 0 6px;
+	border-radius: 999px;
+	background: #d63638;
+	color: #fff;
+	font-size: 12px;
+	font-weight: 700;
+	flex: none;
+}
+#tk-fields-admin-root .tkf-field-row__actions {
+	display: flex;
+	gap: 2px;
+	flex: none;
+}
+#tk-fields-admin-root .tkf-field-row__body {
+	padding: var(--tkf-space-md);
+}
+#tk-fields-admin-root .tkf-field-row.is-drop-target {
+	outline: 2px dashed var(--tkf-brand);
+	outline-offset: -2px;
+}
+#tk-fields-admin-root .tkf-field-row--fallback {
+	border: 1px dashed var(--tkf-border);
+	border-radius: var(--tkf-radius-md);
+	padding: var(--tkf-space-md);
+	margin-bottom: var(--tkf-space-sm);
+}
+
+/* Type picker modal ------------------------------------------------------ */
+.tkf-type-picker .components-modal__content {
+	min-width: min(720px, 90vw);
+}
+.tkf-type-picker__note {
+	margin: 0 0 var(--tkf-space-md);
+}
+.tkf-type-tiles {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: var(--tkf-space-sm);
+	margin-top: var(--tkf-space-md);
+}
+/* v0.14.0: subtle per-category pastel tints + core Dashicons. Labels keep
+ * native admin text colour for WCAG-safe contrast on every tint. */
+.tkf-type-tile {
+	--tkf-tile-accent: var(--tkf-text-subtle);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: var(--tkf-space-2xs);
+	padding: var(--tkf-space-md) var(--tkf-space-sm);
+	border: 1px solid var(--tkf-border);
+	border-radius: var(--tkf-radius-md);
+	background: #fff;
+	cursor: pointer;
+	text-align: center;
+}
+.tkf-type-tile--basic { --tkf-tile-accent: #3858e9; background: #edf1fe; }
+.tkf-type-tile--content { --tkf-tile-accent: #5b6b00; background: #f2f4e4; }
+.tkf-type-tile--choice { --tkf-tile-accent: #007a9e; background: #e7f3f8; }
+.tkf-type-tile--relational { --tkf-tile-accent: #8c5ce8; background: #f1eafa; }
+.tkf-type-tile--advanced { --tkf-tile-accent: #b85c00; background: #faefe0; }
+.tkf-type-tile--layout { --tkf-tile-accent: #50575e; background: #eef0f3; }
+.tkf-type-tile:hover {
+	border-color: var(--tkf-tile-accent);
+	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+.tkf-type-tile__icon {
+	font-size: 30px;
+	color: var(--tkf-tile-accent);
+}
+.tkf-type-tile__label {
+	font-weight: 600;
+	font-size: var(--tkf-font-size-sm);
+}
+.tkf-type-tile__badge {
+	font-size: var(--tkf-font-size-xs, 11px);
+	padding: 1px 8px;
+	border-radius: 999px;
+	background: var(--tkf-surface);
+	border: 1px solid var(--tkf-border);
+	color: var(--tkf-text-subtle);
+	white-space: nowrap;
+}
+.tkf-type-picker__tabs {
+	margin-top: var(--tkf-space-sm);
+}
+.tkf-type-picker__results {
+	margin-top: var(--tkf-space-sm);
+}
+
+/* Location rule groups --------------------------------------------------- */
+#tk-fields-admin-root .tkf-rule-group {
+	border: 1px solid var(--tkf-border);
+	border-radius: var(--tkf-radius-md);
+	background: var(--tkf-surface-subtle);
+	padding: var(--tkf-space-md);
+	margin-bottom: var(--tkf-space-md);
+}
+#tk-fields-admin-root .tkf-rule-group__head {
+	display: flex;
+	align-items: center;
+	gap: var(--tkf-space-sm);
+	margin-bottom: var(--tkf-space-sm);
+}
+#tk-fields-admin-root .tkf-rule-group__head .components-button {
+	margin-left: auto;
+}
+#tk-fields-admin-root .tkf-rule-group__body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--tkf-space-2xs);
+	margin-bottom: var(--tkf-space-sm);
+}
+#tk-fields-admin-root .tkf-location-tab__actions {
+	display: flex;
+	gap: var(--tkf-space-sm);
+	margin: var(--tkf-space-md) 0;
+}
+
+/* Field settings: adaptive tabs + subheads ------------------------------- */
+#tk-fields-admin-root .tkf-field-settings__subhead {
+	margin: var(--tkf-space-md) 0 var(--tkf-space-sm);
+	font-size: var(--tkf-font-size-sm);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--tkf-text-subtle);
+}
+#tk-fields-admin-root .tkf-field-settings__tab {
+	padding-top: var(--tkf-space-sm);
+}
+
+/* Layout cards (vanilla editors) ------------------------------------------ */
+#tk-fields-admin-root .tkf-layout-card {
+	margin-bottom: var(--tkf-space-md);
+}
+#tk-fields-admin-root .tkf-layout-card__body {
+	display: flex;
+	flex-direction: column;
+	gap: var(--tkf-space-sm);
+}
+#tk-fields-admin-root .tkf-layout-card__row {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+	gap: var(--tkf-space-sm);
+}
+#tk-fields-admin-root .tkf-layout-card__subhead {
+	margin: var(--tkf-space-sm) 0 0;
+	font-size: var(--tkf-font-size-sm);
+	text-transform: uppercase;
+	letter-spacing: 0.04em;
+	color: var(--tkf-text-subtle);
+}
+#tk-fields-admin-root .tkf-layout-card__add-sub {
+	align-self: flex-start;
+}
+#tk-fields-admin-root .tkf-layouts-editor__add {
+	margin-top: var(--tkf-space-sm);
+}
+
+/* Import report ------------------------------------------------------------ */
+.tkf-import-report {
+	margin: 0 0 var(--tkf-space-md);
+	padding-left: var(--tkf-space-lg);
+}
+.tkf-import-report li {
+	margin-bottom: var(--tkf-space-2xs);
+}
+.tkf-import-report--notes {
+	color: var(--tkf-text-subtle);
+	font-size: var(--tkf-font-size-sm);
+}
+
+/* Content Types (v0.15.0) ---------------------------------------------- */
+
+#tk-fields-admin-root .tkf-grid {
+	display: grid;
+	gap: var(--tkf-space-md);
+}
+
+#tk-fields-admin-root .tkf-grid--2 {
+	grid-template-columns: 1fr 1fr;
+}
+
+#tk-fields-admin-root .tkf-grid--3 {
+	grid-template-columns: 1fr 1fr 1fr;
+}
+
+@media (max-width: 782px) {
+	#tk-fields-admin-root .tkf-grid--2,
+	#tk-fields-admin-root .tkf-grid--3 {
+		grid-template-columns: 1fr;
+	}
+}
+
+#tk-fields-admin-root .tkf-section {
+	margin-bottom: var(--tkf-space-xl);
+}
+
+#tk-fields-admin-root .tkf-section__title {
+	font-size: 14px;
+	font-weight: 600;
+	margin: 0 0 var(--tkf-space-md);
+	padding-bottom: var(--tkf-space-xs);
+	border-bottom: 1px solid var(--tkf-border);
+}
+
+#tk-fields-admin-root .tkf-editor__actions {
+	display: flex;
+	gap: var(--tkf-space-sm);
+}
+
+#tk-fields-admin-root .tkf-editor__footer {
+	display: flex;
+	justify-content: flex-end;
+	gap: var(--tkf-space-sm);
+	margin-top: var(--tkf-space-xl);
+	padding-top: var(--tkf-space-md);
+	border-top: 1px solid var(--tkf-border);
+}
+
+#tk-fields-admin-root .tkf-icon-grid {
+	display: flex;
+	flex-wrap: wrap;
+	gap: var(--tkf-space-xs);
+}
+
+#tk-fields-admin-root .tkf-icon-grid__item {
+	width: 44px;
+	height: 44px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid var(--tkf-border);
+	border-radius: var(--tkf-radius-sm);
+	background: var(--tkf-surface);
+	cursor: pointer;
+}
+
+#tk-fields-admin-root .tkf-icon-grid__item:hover {
+	border-color: var(--tkf-brand);
+}
+
+#tk-fields-admin-root .tkf-icon-grid__item.is-selected {
+	border-color: var(--tkf-brand);
+	border-width: 2px;
+	background: color-mix(in srgb, var(--tkf-brand) 12%, white);
+}
+
+#tk-fields-admin-root .tkf-icon-grid__item .dashicons {
+	font-size: 20px;
+	line-height: 1;
+}
+
+#tk-fields-admin-root .tkf-import-preview ul {
+	margin: var(--tkf-space-sm) 0;
+	padding-left: 0;
+	list-style: none;
+}
+
+#tk-fields-admin-root .tkf-import-preview li {
+	padding: var(--tkf-space-2xs) 0;
+	border-bottom: 1px dotted var(--tkf-border);
+}
+
+.tkf-modal.tkf-modal--wide {
+	max-width: 640px;
+}
+
+/* v0.17.0: AI Import modal. */
+.tkf-textarea--mono,
+textarea.tkf-textarea--mono {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	font-size: 12px;
+	width: 100%;
+}
+.tkf-notice-box {
+	border-left: 4px solid #dba617;
+	background: #fcf9e8;
+	padding: 8px 12px;
+	margin: 12px 0;
+}
+.tkf-notice-box p {
+	margin: 4px 0;
+}
+.tkf-notice-box--success {
+	border-left-color: #00a32a;
+	background: #edfaef;
+}

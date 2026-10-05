@@ -1,0 +1,15 @@
+/**
+ * TK Fields — tk/group editor styles.
+ */
+
+.tkf-group__placeholder {
+	padding: 12px;
+	border: 1px dashed #c3c4c7;
+	color: #646970;
+}
+
+.tkf-group__tip-label {
+	display: block;
+	margin-bottom: 4px;
+	font-weight: 600;
+}

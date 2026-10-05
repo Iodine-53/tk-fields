@@ -1,0 +1,100 @@
+/**
+ * TK Parallax widget (Elementor) — component styles.
+ *
+ * Consumes the shared TK Studio v1 design tokens (handle `tk-widgets`).
+ * Never hardcode spacing, radii, durations or chrome colors here; use the
+ * --tk-* tokens. No font-family is set — type inherits the theme.
+ *
+ * The background layer is oversized (inset: -20% 0) so the JS translation
+ * never exposes an edge. When the effect is disabled (reduced motion,
+ * mobile setting, no JS) the .tk-el-parallax--static class pins a plain
+ * cover background instead.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+.tk-el-parallax {
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	min-height: 420px;
+}
+
+.tk-el-parallax-bg {
+	position: absolute;
+	inset: -20% 0;
+	background-size: cover;
+	background-position: center;
+	background-repeat: no-repeat;
+	will-change: transform;
+}
+
+/* Static fallback: plain cover, no drift. */
+.tk-el-parallax--static .tk-el-parallax-bg {
+	inset: 0;
+	transform: none;
+	will-change: auto;
+}
+
+.tk-el-parallax-overlay {
+	position: absolute;
+	inset: 0;
+	pointer-events: none;
+}
+
+.tk-el-parallax--overlay-none .tk-el-parallax-overlay {
+	display: none;
+}
+
+.tk-el-parallax--overlay-bottom .tk-el-parallax-overlay {
+	/* Opacity applies to the overlay color via color-mix; plain fallback first. */
+	background: linear-gradient(to top, rgb(0 0 0 / 0.55), transparent);
+	background: linear-gradient(
+		to top,
+		color-mix(in srgb, var(--tk-el-parallax-overlay-color, #000) var(--tk-el-parallax-overlay-opacity, 55%), transparent),
+		transparent
+	);
+}
+
+.tk-el-parallax--overlay-full .tk-el-parallax-overlay {
+	background: var(--tk-el-parallax-overlay-color, #000);
+	opacity: var(--tk-el-parallax-overlay-opacity, 55%);
+}
+
+.tk-el-parallax-content {
+	position: relative;
+	z-index: 1;
+	width: 100%;
+	max-width: 42rem;
+	padding: var(--tk-space-xl) var(--tk-space-lg);
+	color: #fff;
+	text-align: center;
+}
+
+.tk-el-parallax-content > :first-child {
+	margin-top: 0;
+}
+
+.tk-el-parallax-content > :last-child {
+	margin-bottom: 0;
+}
+
+/* Headings over imagery read better with a touch of balance. */
+.tk-el-parallax-content h1,
+.tk-el-parallax-content h2,
+.tk-el-parallax-content h3 {
+	text-wrap: balance;
+}
+
+/* Links inherit the light-on-dark treatment of the overlay. */
+.tk-el-parallax-content a {
+	color: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tk-el-parallax-bg {
+		transform: none !important;
+	}
+}

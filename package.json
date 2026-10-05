@@ -1,0 +1,1 @@
+{"description":"Build manifest for TK Fields. The admin UI is compiled from src/admin/src into assets/admin/build/.","devDependencies":{},"name":"tk-fields","private":true,"scripts":{"build":"npm run build --prefix src/admin","start":"npm run start --prefix src/admin"},"version":"0.20.5"}

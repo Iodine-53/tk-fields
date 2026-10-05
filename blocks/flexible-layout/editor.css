@@ -1,0 +1,4 @@
+.tk-flexible-layout-editor{border:1px dashed #a7aaad;border-radius:4px;padding:8px 12px;background:#fcfcfc}
+.tk-flexible-layout-editor__head{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.tk-flexible-layout-editor__actions{display:flex;gap:4px}
+.tk-flexible-layout-editor__summary{color:#50575e;font-size:13px;padding:4px 0}

@@ -1,0 +1,15 @@
+/* Frontend styles for tk/repeater. */
+.tk-repeater {
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+.tk-repeater--grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 18rem), 1fr));
+}
+
+.tk-repeater-row {
+	min-width: 0;
+}

@@ -1,0 +1,67 @@
+/**
+ * TK Studio v1 — shared design tokens for TK Fields widgets.
+ *
+ * One token file consumed by the Gutenberg blocks (accordion, slider,
+ * parallax, countdown, scroll-reveal) AND the Elementor widgets, so the two
+ * builders produce visibly sibling output. Components must use these tokens;
+ * never hardcode spacing, radii, durations, or chrome colors.
+ *
+ * Dark-mode-safe by construction: tints and borders derive from
+ * currentColor via color-mix(), so they adapt to light and dark themes.
+ * Each color-mix() declaration is preceded by a plain fallback for older
+ * browsers (the fallback is intentionally neutral).
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+:root {
+	/* Spacing scale — 4px base */
+	--tk-space-xs: 0.5rem;   /* 8px  */
+	--tk-space-sm: 0.75rem;  /* 12px */
+	--tk-space-md: 1rem;     /* 16px */
+	--tk-space-lg: 1.5rem;   /* 24px */
+	--tk-space-xl: 2rem;     /* 32px */
+	--tk-space-2xl: 3rem;    /* 48px */
+
+	/* Radius scale */
+	--tk-radius-sm: 6px;
+	--tk-radius-md: 10px;
+	--tk-radius-lg: 16px;
+	--tk-radius-pill: 999px;
+
+	/* Motion vocabulary — easeOutExpo-ish, quick in / soft out */
+	--tk-ease: cubic-bezier(0.22, 1, 0.36, 1);
+	--tk-dur-fast: 180ms;
+	--tk-dur: 280ms;
+ 	--tk-dur-slow: 420ms;
+
+	/* Color — neutral-first; accent used sparingly */
+	--tk-accent: #3858e9;
+
+	/* Surfaces & chrome — theme-adaptive */
+	--tk-surface: #ffffff;
+	--tk-surface-soft: rgb(0 0 0 / 0.03);
+	--tk-surface-soft: color-mix(in srgb, currentColor 4%, transparent);
+	--tk-border: rgb(0 0 0 / 0.09);
+	--tk-border: color-mix(in srgb, currentColor 10%, transparent);
+	--tk-border-strong: rgb(0 0 0 / 0.16);
+	--tk-border-strong: color-mix(in srgb, currentColor 18%, transparent);
+
+	/* Elevation */
+	--tk-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.05);
+	--tk-shadow-md: 0 8px 24px rgb(0 0 0 / 0.07);
+	--tk-shadow-lg: 0 16px 48px rgb(0 0 0 / 0.10);
+
+	/* Type */
+	--tk-label-size: 0.72rem;
+	--tk-label-spacing: 0.08em;
+}
+
+/* Motion off means motion off — every TK widget must respect this. */
+@media (prefers-reduced-motion: reduce) {
+	:root {
+		--tk-dur-fast: 1ms;
+		--tk-dur: 1ms;
+		--tk-dur-slow: 1ms;
+	}
+}

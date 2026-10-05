@@ -1,0 +1,55 @@
+/**
+ * TK Parallax — TK Studio v1.
+ *
+ * Background layer translates on scroll (rAF, IntersectionObserver-gated).
+ * Always paired with an overlay preset (none / bottom gradient / full) so
+ * foreground text stays legible. Content is vertically centered in a
+ * max-width text column.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+.tk-parallax {
+	position: relative;
+	overflow: hidden;
+}
+
+.tk-parallax-bg {
+	position: absolute;
+	inset: -20% 0;
+	background-size: cover;
+	background-position: center;
+	will-change: transform;
+}
+
+/* Scrim presets. Opacity comes from the inline style on the element. */
+.tk-parallax-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 0;
+	pointer-events: none;
+	background: #000;
+}
+
+.tk-parallax--overlay-bottom .tk-parallax-overlay {
+	background: linear-gradient(
+		to top,
+		rgb(0 0 0 / 0.75),
+		rgb(0 0 0 / 0.15) 55%,
+		transparent
+	);
+}
+
+/* Foreground content: vertically centered, comfortable text column. */
+.tk-parallax-content {
+	position: relative;
+	z-index: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	min-height: inherit;
+	max-width: 60rem;
+	margin-left: auto;
+	margin-right: auto;
+	padding: var(--tk-space-xl) var(--tk-space-lg);
+}

@@ -1,0 +1,79 @@
+/**
+ * TK Fields — design tokens.
+ *
+ * All custom properties are scoped under #tk-fields-admin-root so they can
+ * never leak into (or fight) wp-admin CSS. Every custom class in the app
+ * uses the `tkf-` prefix.
+ */
+
+#tk-fields-admin-root {
+	/* Spacing scale */
+	--tkf-space-2xs: 4px;
+	--tkf-space-xs: 8px;
+	--tkf-space-sm: 12px;
+	--tkf-space-md: 16px;
+	--tkf-space-lg: 24px;
+	--tkf-space-xl: 32px;
+	--tkf-space-2xl: 48px;
+
+	/* Radius */
+	--tkf-radius-sm: 4px;
+	--tkf-radius-md: 8px;
+	--tkf-radius-lg: 12px;
+	--tkf-radius-pill: 999px;
+
+	/* Brand — follows the active admin color scheme where sensible */
+	--tkf-brand: var(--wp-admin-theme-color, #3858e9);
+	--tkf-brand-darker: var(--wp-admin-theme-color-darker-10, #2145e6);
+
+	/* Surfaces */
+	--tkf-surface: #fff;
+	--tkf-surface-subtle: #f6f7f7;
+	--tkf-border: #dcdcde;
+	--tkf-border-strong: #c3c4c7;
+
+	/* Text */
+	--tkf-text: #1d2327;
+	--tkf-text-subtle: #50575e;
+	--tkf-text-faint: #8c8f94;
+
+	/* Status */
+	--tkf-danger: #d63638;
+	--tkf-danger-bg: #fcf0f1;
+	--tkf-warning: #dba617;
+	--tkf-success: #00a32a;
+	--tkf-success-bg: #edfaef;
+	--tkf-info-bg: #f0f6fc;
+
+	/*
+	 * v0.12.0: field-type category colors. These mirror the Gutenberg
+	 * palette values the wp-admin shell already uses, mapped from
+	 * @wordpress/base-styles SCSS variables (plain CSS cannot consume SCSS,
+	 * so the hexes are pinned here with their source variable noted):
+	 *   basic:      $blue-50      (#3858e9) — WP's primary action blue
+	 *   content:    —             (#5b6b00) — olive, no base-styles match
+	 *   choice:    —             (#007a9e) — deep teal, no base-styles match
+	 *   relational: $purple-40   (#8c5ce8)
+	 *   advanced:  —             (#b85c00) — burnt orange
+	 *   layout:    $gray-600     (#50575e) — neutral
+	 * Where a brand/action color is needed, prefer var(--wp-admin-theme-color)
+	 * (which base-styles derives from the admin color scheme) over a pinned hex.
+	 */
+	--tkf-cat-basic: #3858e9;
+	--tkf-cat-content: #5b6b00;
+	--tkf-cat-choice: #007a9e;
+	--tkf-cat-relational: #8c5ce8;
+	--tkf-cat-advanced: #b85c00;
+	--tkf-cat-layout: #50575e;
+
+	/* Type */
+	--tkf-font-size-sm: 12px;
+	--tkf-font-size-md: 13px;
+	--tkf-font-size-lg: 15px;
+	--tkf-font-size-xs: 11px;
+	--tkf-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+	--tkf-line-height: 1.5;
+
+	/* Motion */
+	--tkf-transition: 120ms ease-in-out;
+}

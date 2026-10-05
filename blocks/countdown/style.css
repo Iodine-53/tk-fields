@@ -1,0 +1,98 @@
+/**
+ * TK Countdown — TK Studio v1.
+ *
+ * Unit cards: soft surface, 10px radius, tabular numerals (no jitter),
+ * semibold 2xl figures, micro uppercase labels with letter-spacing.
+ * The `inline` layout falls back to a plain row; labels stay in the
+ * accessibility tree but are visually hidden.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+.tk-countdown {
+	display: flex;
+	align-items: center;
+}
+
+.tk-cd-units {
+	display: flex;
+	align-items: center;
+	gap: var(--tk-space-sm);
+}
+
+.tk-cd-days,
+.tk-cd-hours,
+.tk-cd-minutes,
+.tk-cd-seconds {
+	font-variant-numeric: tabular-nums;
+}
+
+/* Card layout (default). */
+.tk-countdown[data-layout="cards"] .tk-cd-unit {
+	background: var(--tk-surface-soft);
+	border: 1px solid var(--tk-border);
+	border-radius: var(--tk-radius-md); /* 10px */
+	box-shadow: var(--tk-shadow-sm);
+	padding: var(--tk-space-md) var(--tk-space-sm);
+	min-width: 4.5rem;
+	text-align: center;
+}
+
+.tk-countdown[data-layout="cards"] .tk-cd-unit > span:first-child {
+	display: block;
+	font-size: 2rem;
+	font-weight: 600;
+	line-height: 1;
+}
+
+.tk-cd-label {
+	display: block;
+	margin-top: var(--tk-space-xs);
+	font-size: var(--tk-label-size);
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: var(--tk-label-spacing);
+	opacity: 0.6;
+}
+
+/* Inline layout: plain row, labels hidden visually but kept for SR. */
+.tk-countdown[data-layout="inline"] .tk-cd-units {
+	gap: 0.35em;
+}
+
+.tk-countdown[data-layout="inline"] .tk-cd-unit > span:first-child {
+	font-weight: 600;
+}
+
+.tk-countdown[data-layout="inline"] .tk-cd-label {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0 0 0 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.tk-cd-sep {
+	align-self: center;
+	opacity: 0.5;
+}
+
+.tk-countdown[data-layout="cards"] .tk-cd-sep {
+	font-size: 1.5rem;
+	font-weight: 600;
+}
+
+.tk-cd-expired {
+	font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tk-countdown,
+	.tk-countdown * {
+		transition: none;
+	}
+}

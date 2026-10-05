@@ -1,0 +1,60 @@
+/**
+ * TK Post Listing block styles (TK Studio v1).
+ *
+ * The card design is the shared tk-post-listing.css (same file the
+ * Elementor widgets use) — imported so both builders stay one design
+ * language. This file only adds: responsive column breakpoints driven by
+ * the block's per-device column attributes, and the style-override
+ * custom properties the block's Style panel emits on the wrapper.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+@import url('../../assets/elementor/css/tk-post-listing.css');
+
+/* Responsive columns: the wrapper carries all three vars; breakpoints
+ * swap which one the grid consumes. */
+@media (max-width: 1024px) {
+	.tk-post-listing--grid.tk-post-listing {
+		grid-template-columns: repeat(var(--tk-post-listing-columns-tablet, 2), minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 640px) {
+	.tk-post-listing--grid.tk-post-listing {
+		grid-template-columns: repeat(var(--tk-post-listing-columns-mobile, 1), minmax(0, 1fr));
+	}
+}
+
+/* Style-panel overrides. Each var is only set when the user picks a
+ * value; the fallback is the designed default from tk-post-listing.css. */
+.tk-post-card {
+	background: var(--tk-post-card-bg, var(--tk-surface));
+	border-radius: var(--tk-post-card-radius, var(--tk-radius-lg));
+}
+
+.tk-post-card__body {
+	padding: var(--tk-post-card-padding, 1.25rem);
+}
+
+.tk-post-card__title,
+.tk-post-card__title a {
+	color: var(--tk-post-card-title-color, inherit);
+}
+
+.tk-post-card__meta {
+	color: var(--tk-post-card-meta-color, inherit);
+	opacity: var(--tk-post-card-meta-opacity, 0.65);
+}
+
+.tk-post-card__excerpt {
+	color: var(--tk-post-card-excerpt-color, inherit);
+}
+
+.tk-post-card__more {
+	color: var(--tk-post-card-more-color, var(--tk-accent));
+}
+
+.tk-post-card__more:hover {
+	color: var(--tk-post-card-more-hover, var(--tk-post-card-more-color, var(--tk-accent)));
+}

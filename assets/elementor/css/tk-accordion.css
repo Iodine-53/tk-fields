@@ -1,0 +1,151 @@
+/**
+ * TK Accordion widget (Elementor) — component styles.
+ *
+ * Consumes the shared TK Studio v1 design tokens (handle `tk-widgets`).
+ * Never hardcode spacing, radii, durations or chrome colors here; use the
+ * --tk-* tokens. No font-family is set — type inherits the theme.
+ *
+ * The panel open/close animation uses the grid-template-rows 0fr → 1fr
+ * trick, so no JS height measuring is needed and there is no layout jump.
+ * Under prefers-reduced-motion the shared tokens zero all durations.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+.tk-el-accordion {
+	display: flex;
+	flex-direction: column;
+	gap: var(--tk-el-accordion-gap, var(--tk-space-sm));
+}
+
+.tk-el-accordion-item {
+	background-color: var(--tk-surface);
+	border: 1px solid var(--tk-border-strong);
+	border: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+	border-radius: var(--tk-radius-md);
+	overflow: hidden;
+	transition:
+		background-color var(--tk-dur-fast) var(--tk-ease),
+		box-shadow var(--tk-dur) var(--tk-ease),
+		border-color var(--tk-dur-fast) var(--tk-ease);
+}
+
+.tk-el-accordion-item.is-open {
+	box-shadow: var(--tk-shadow-sm);
+}
+
+/* --- Minimal variant: dividers only, no cards --- */
+.tk-el-accordion--minimal {
+	gap: 0;
+}
+
+.tk-el-accordion--minimal .tk-el-accordion-item {
+	background: transparent;
+	border: none;
+	border-bottom: 1px solid var(--tk-border-strong);
+	border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+	border-radius: 0;
+	box-shadow: none;
+}
+
+.tk-el-accordion--minimal .tk-el-accordion-item.is-open {
+	box-shadow: none;
+}
+
+/* --- Filled variant: soft tinted panels --- */
+.tk-el-accordion--filled .tk-el-accordion-item {
+	background-color: var(--tk-surface-soft);
+	background-color: color-mix(in srgb, currentColor 4%, transparent);
+	border-color: transparent;
+}
+
+.tk-el-accordion-heading {
+	margin: 0;
+}
+
+.tk-el-accordion-trigger {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--tk-space-md);
+	width: 100%;
+	padding: var(--tk-space-md) var(--tk-space-lg);
+	border: none;
+	background: transparent;
+	color: inherit;
+	font-size: 1rem;
+	font-weight: 600;
+	text-align: left;
+	cursor: pointer;
+	transition:
+		color var(--tk-dur-fast) var(--tk-ease),
+		background-color var(--tk-dur-fast) var(--tk-ease);
+}
+
+.tk-el-accordion-trigger:hover {
+	background-color: var(--tk-surface-soft);
+	background-color: color-mix(in srgb, currentColor 4%, transparent);
+}
+
+.tk-el-accordion-trigger:focus-visible {
+	outline: 2px solid var(--tk-accent);
+	outline-offset: -2px;
+}
+
+.tk-el-accordion-title {
+	flex: 1 1 auto;
+	min-width: 0;
+}
+
+.tk-el-accordion-icon {
+	display: inline-flex;
+	flex-shrink: 0;
+	align-items: center;
+	justify-content: center;
+	font-size: 1.125rem;
+	line-height: 1;
+	transition: transform var(--tk-el-accordion-dur, var(--tk-dur)) var(--tk-el-accordion-ease, var(--tk-ease));
+}
+
+.tk-el-accordion-item.is-open .tk-el-accordion-icon {
+	transform: rotate(180deg);
+}
+
+/* Icon on the left: title stays first in the DOM (a11y), icon is reordered. */
+.tk-el-accordion--icon-left .tk-el-accordion-icon {
+	order: -1;
+}
+
+.tk-el-accordion-panel {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows var(--tk-el-accordion-dur, var(--tk-dur)) var(--tk-el-accordion-ease, var(--tk-ease));
+}
+
+.tk-el-accordion-panel > .tk-el-accordion-panel-inner {
+	overflow: hidden;
+	min-height: 0;
+	visibility: hidden;
+	transition: visibility 0s var(--tk-el-accordion-dur, var(--tk-dur));
+}
+
+.tk-el-accordion-item.is-open > .tk-el-accordion-panel {
+	grid-template-rows: 1fr;
+}
+
+.tk-el-accordion-item.is-open > .tk-el-accordion-panel > .tk-el-accordion-panel-inner {
+	visibility: visible;
+	transition-delay: 0s;
+}
+
+.tk-el-accordion-panel-inner {
+	padding: var(--tk-space-md) var(--tk-space-lg);
+}
+
+.tk-el-accordion-panel-inner > :first-child {
+	margin-top: 0;
+}
+
+.tk-el-accordion-panel-inner > :last-child {
+	margin-bottom: 0;
+}

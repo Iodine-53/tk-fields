@@ -1,0 +1,1 @@
+{"$schema":"https://schemas.wp.org/trunk/block.json","apiVersion":3,"category":"design","description":"A single slide inside a TK Slider. Add any blocks as the slide content.","name":"tk/slide","parent":["tk/slider"],"render":"file:./render.php","supports":{"html":false,"interactivity":true},"textdomain":"tk-fields","title":"Slide"}

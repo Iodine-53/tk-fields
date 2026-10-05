@@ -1,0 +1,22 @@
+/**
+ * TK Parallax — editor-only styles.
+ *
+ * The overlay preview reuses the frontend .tk-parallax--overlay-* rules from
+ * style.css (which also loads on the canvas); here we only give the canvas
+ * positioning context and keep the content above the scrim.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+.tk-parallax-editor {
+	position: relative;
+	background-size: cover;
+	background-position: center;
+	border: 1px dashed #949494;
+	padding: 16px;
+}
+
+.tk-parallax-editor-content {
+	position: relative;
+	z-index: 1;
+}

@@ -1,0 +1,280 @@
+/**
+ * TK Slider widget (Elementor) — component styles.
+ *
+ * Consumes the shared TK Studio v1 design tokens (handle `tk-widgets`).
+ * Never hardcode spacing, radii, durations or chrome colors here; use the
+ * --tk-* tokens. No font-family is set — type inherits the theme.
+ *
+ * Transitions:
+ *   --slide      : track translates horizontally
+ *   --fade       : slides cross-fade in place
+ *   --slide-fade : cross-fade with a slight horizontal drift
+ *
+ * Arrows are circular frosted buttons: revealed on hover for pointer
+ * devices, always visible on touch. The active dot stretches into a pill.
+ * Under prefers-reduced-motion the shared tokens zero all durations.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+.tk-el-slider {
+	position: relative;
+	overflow: hidden;
+	aspect-ratio: 16 / 9;
+	border-radius: var(--tk-radius-lg);
+	background-color: var(--tk-surface-soft);
+	background-color: color-mix(in srgb, currentColor 4%, transparent);
+	isolation: isolate;
+}
+
+.tk-el-slides {
+	position: relative;
+	width: 100%;
+	height: 100%;
+}
+
+.tk-el-slide {
+	position: relative;
+	overflow: hidden;
+}
+
+.tk-el-slide-image {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+}
+
+/* --- Slide transition --- */
+.tk-el-slider--slide .tk-el-slides {
+	display: flex;
+	transition: transform var(--tk-el-slider-dur, var(--tk-dur-slow)) var(--tk-el-slider-ease, var(--tk-ease));
+}
+
+.tk-el-slider--slide .tk-el-slide {
+	flex: 0 0 100%;
+	width: 100%;
+	height: 100%;
+}
+
+/* --- Fade transition --- */
+.tk-el-slider--fade .tk-el-slide,
+.tk-el-slider--slide-fade .tk-el-slide {
+	position: absolute;
+	inset: 0;
+	opacity: 0;
+	visibility: hidden;
+	transition:
+		opacity var(--tk-el-slider-dur, var(--tk-dur-slow)) var(--tk-el-slider-ease, var(--tk-ease)),
+		visibility 0s var(--tk-el-slider-dur, var(--tk-dur-slow)),
+		transform var(--tk-el-slider-dur, var(--tk-dur-slow)) var(--tk-el-slider-ease, var(--tk-ease));
+}
+
+.tk-el-slider--slide-fade .tk-el-slide {
+	transform: translateX(24px);
+}
+
+.tk-el-slider--fade .tk-el-slide.is-active,
+.tk-el-slider--slide-fade .tk-el-slide.is-active {
+	opacity: 1;
+	visibility: visible;
+	transform: none;
+	transition-delay: 0s;
+	z-index: 1;
+}
+
+/* --- Overlay + caption scrim --- */
+.tk-el-slider-overlay {
+	position: absolute;
+	inset: 0;
+	z-index: 1;
+	background: rgb(0 0 0 / var(--tk-el-slider-overlay, 30%));
+	pointer-events: none;
+}
+
+.tk-el-slide-caption {
+	position: absolute;
+	inset-inline: 0;
+	bottom: 0;
+	z-index: 2;
+	padding: var(--tk-space-lg) var(--tk-space-xl);
+	padding-bottom: calc(var(--tk-space-lg) + var(--tk-space-md));
+	background: linear-gradient(to top, rgb(0 0 0 / 0.65), rgb(0 0 0 / 0));
+	color: #fff;
+	text-align: left;
+}
+
+.tk-el-slide-title {
+	margin: 0 0 var(--tk-space-xs);
+	font-size: 1.5rem;
+	font-weight: 700;
+	line-height: 1.2;
+	text-wrap: balance;
+}
+
+.tk-el-slide-text {
+	margin: 0 0 var(--tk-space-md);
+	max-width: 42rem;
+	font-size: 1rem;
+	line-height: 1.5;
+	color: rgb(255 255 255 / 0.85);
+}
+
+.tk-el-slide-text:last-child {
+	margin-bottom: 0;
+}
+
+.tk-el-slide-button {
+	display: inline-block;
+	padding: var(--tk-space-xs) var(--tk-space-lg);
+	border-radius: var(--tk-radius-pill);
+	background-color: var(--tk-accent);
+	color: #fff;
+	font-size: 0.95rem;
+	font-weight: 600;
+	text-decoration: none;
+	transition:
+		background-color var(--tk-dur-fast) var(--tk-ease),
+		transform var(--tk-dur-fast) var(--tk-ease);
+}
+
+.tk-el-slide-button:hover {
+	background-color: var(--tk-accent);
+	filter: brightness(0.92);
+	color: #fff;
+}
+
+/* --- Arrows --- */
+.tk-el-slider-arrow {
+	position: absolute;
+	top: 50%;
+	z-index: 3;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 44px;
+	height: 44px;
+	padding: 0;
+	border: none;
+	border-radius: 50%;
+	background-color: rgb(255 255 255 / 0.9);
+	color: #1c1c1c;
+	font-size: 1.25rem;
+	cursor: pointer;
+	transform: translateY(-50%);
+	opacity: 0;
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	box-shadow: var(--tk-shadow-md);
+	transition:
+		opacity var(--tk-dur) var(--tk-ease),
+		background-color var(--tk-dur-fast) var(--tk-ease),
+		transform var(--tk-dur) var(--tk-ease);
+}
+
+.tk-el-slider-arrow:hover {
+	background-color: #fff;
+	transform: translateY(-50%) scale(1.06);
+}
+
+.tk-el-slider-arrow:focus-visible {
+	outline: 2px solid var(--tk-accent);
+	outline-offset: 2px;
+	opacity: 1;
+}
+
+.tk-el-slider-prev {
+	left: var(--tk-space-md);
+}
+
+.tk-el-slider-next {
+	right: var(--tk-space-md);
+}
+
+/* Arrows appear on hover for pointer devices... */
+@media (hover: hover) {
+	.tk-el-slider:hover .tk-el-slider-arrow {
+		opacity: 1;
+	}
+}
+
+/* ...and stay visible on touch, where there is no hover. */
+@media (hover: none) {
+	.tk-el-slider-arrow {
+		opacity: 1;
+	}
+}
+
+/* --- Dots --- */
+.tk-el-slider-dots {
+	position: absolute;
+	inset-inline: 0;
+	bottom: var(--tk-space-md);
+	z-index: 3;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: var(--tk-space-xs);
+	padding: 0;
+}
+
+.tk-el-slider-dot {
+	width: 8px;
+	height: 8px;
+	padding: 0;
+	border: none;
+	border-radius: var(--tk-radius-pill);
+	background-color: rgb(255 255 255 / 0.55);
+	cursor: pointer;
+	transition:
+		width var(--tk-dur) var(--tk-ease),
+		background-color var(--tk-dur-fast) var(--tk-ease);
+}
+
+.tk-el-slider-dot:hover {
+	background-color: rgb(255 255 255 / 0.85);
+}
+
+.tk-el-slider-dot.is-active {
+	width: 24px;
+	background-color: #fff;
+}
+
+/* --- Autoplay progress bar --- */
+.tk-el-slider-progress {
+	position: absolute;
+	top: 0;
+	inset-inline: 0;
+	z-index: 3;
+	height: 3px;
+	background: rgb(255 255 255 / 0.2);
+}
+
+.tk-el-slider-progress span {
+	display: block;
+	width: 100%;
+	height: 100%;
+	background-color: var(--tk-accent);
+	transform: scaleX(0);
+	transform-origin: left;
+}
+
+[dir="rtl"] .tk-el-slider-progress span {
+	transform-origin: right;
+}
+
+.tk-el-slider-progress span.is-running {
+	animation-name: tk-el-slider-progress;
+	animation-timing-function: linear;
+	animation-fill-mode: forwards;
+}
+
+@keyframes tk-el-slider-progress {
+	from {
+		transform: scaleX(0);
+	}
+	to {
+		transform: scaleX(1);
+	}
+}

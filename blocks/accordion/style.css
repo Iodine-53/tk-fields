@@ -1,0 +1,170 @@
+/**
+ * TK Accordion — TK Studio v1.
+ *
+ * Card style by default: white surface, 10px radius, 1px translucent border,
+ * 12px gaps between items. Panels open/close with the grid-template-rows
+ * 0fr -> 1fr trick (no JS measuring). Chevron rotates 180 degrees on open.
+ * Variants: .tk-accordion--style-minimal (dividers only),
+ * .tk-accordion--style-filled (soft tinted panels).
+ * Icon position: .tk-accordion--icon-left moves the chevron before the title.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+.tk-accordion {
+	display: grid;
+	gap: var(--tk-space-sm); /* 12px between cards */
+}
+
+.tk-accordion-item {
+	background: var(--tk-surface);
+	border: 1px solid var(--tk-border);
+	border-radius: var(--tk-radius-md); /* 10px */
+	overflow: hidden;
+	transition: box-shadow var(--tk-dur-fast) var(--tk-ease),
+		border-color var(--tk-dur-fast) var(--tk-ease);
+}
+
+.tk-accordion-item.is-open {
+	box-shadow: var(--tk-shadow-sm);
+}
+
+.tk-accordion-trigger {
+	display: flex;
+	width: 100%;
+	align-items: center;
+	justify-content: space-between;
+	gap: var(--tk-space-md);
+	padding: var(--tk-space-md) var(--tk-space-lg);
+	border: none;
+	background: transparent;
+	cursor: pointer;
+	font-size: 1rem;
+	font-weight: 600;
+	text-align: left;
+	color: inherit;
+	transition: background-color var(--tk-dur-fast) var(--tk-ease);
+}
+
+.tk-accordion-trigger:hover {
+	background: var(--tk-surface-soft);
+}
+
+.tk-accordion-trigger:focus-visible {
+	outline: 2px solid var(--tk-accent);
+	outline-offset: -2px;
+}
+
+.tk-accordion-item-title {
+	font-weight: 600;
+}
+
+.tk-accordion-icon {
+	flex-shrink: 0;
+	display: inline-flex;
+	line-height: 0;
+	opacity: 0.65;
+	transition: transform var(--tk-dur) var(--tk-ease);
+}
+
+.tk-accordion-item.is-open .tk-accordion-icon {
+	transform: rotate(180deg);
+}
+
+/* Icon before the title. */
+.tk-accordion--icon-left .tk-accordion-icon {
+	order: -1;
+}
+
+/* Smooth open/close: 0fr -> 1fr grid trick. The inner wrapper clips; the
+ * body carries the visual padding (padding on the grid item itself would
+ * keep the collapsed row at padding-height instead of 0). */
+.tk-accordion-panel {
+	display: grid;
+	grid-template-rows: 0fr;
+	transition: grid-template-rows var(--tk-dur) var(--tk-ease);
+}
+
+.tk-accordion-panel-inner {
+	overflow: hidden;
+	min-height: 0;
+}
+
+.tk-accordion-panel-body {
+	padding: 0 var(--tk-space-lg) var(--tk-space-lg);
+}
+
+.tk-accordion-item.is-open .tk-accordion-panel {
+	grid-template-rows: 1fr;
+}
+
+.tk-accordion-panel-body > :first-child {
+	margin-top: 0;
+}
+
+.tk-accordion-panel-body > :last-child {
+	margin-bottom: 0;
+}
+
+/* --- Variant: minimal (dividers only, no cards) --- */
+.tk-accordion--style-minimal {
+	gap: 0;
+}
+
+.tk-accordion--style-minimal .tk-accordion-item {
+	background: transparent;
+	border: none;
+	border-radius: 0;
+}
+
+.tk-accordion--style-minimal .tk-accordion-item + .tk-accordion-item {
+	border-top: 1px solid var(--tk-border);
+}
+
+.tk-accordion--style-minimal .tk-accordion-item.is-open {
+	box-shadow: none;
+}
+
+.tk-accordion--style-minimal .tk-accordion-trigger {
+	padding-left: 0;
+	padding-right: 0;
+}
+
+.tk-accordion--style-minimal .tk-accordion-trigger:hover {
+	background: transparent;
+}
+
+.tk-accordion--style-minimal .tk-accordion-panel-body {
+	padding: 0 0 var(--tk-space-md);
+}
+
+/* --- Variant: filled (soft tinted panels) --- */
+.tk-accordion--style-filled .tk-accordion-item {
+	background: var(--tk-surface-soft);
+	border-color: transparent;
+}
+
+.tk-accordion--style-filled .tk-accordion-trigger:hover {
+	background: rgb(0 0 0 / 0.03);
+	background: color-mix(in srgb, currentColor 6%, transparent);
+}
+
+/* --- Editor canvas preview (shares this stylesheet) --- */
+.tk-accordion-block {
+	display: grid;
+	gap: var(--tk-space-sm);
+}
+
+.tk-accordion-block.tk-accordion--style-minimal {
+	gap: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tk-accordion-panel {
+		transition: none;
+	}
+
+	.tk-accordion-icon {
+		transition: none;
+	}
+}

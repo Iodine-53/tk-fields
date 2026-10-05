@@ -1,0 +1,50 @@
+/**
+ * TK Scroll Reveal — TK Studio v1 refinement.
+ *
+ * Fade + 12px rise at 420ms with the shared ease. Stagger via the
+ * --tk-reveal-delay custom property (set it inline per element, e.g.
+ * style="--tk-reveal-delay:120ms"); the `delay` attribute maps to it.
+ *
+ * This file is part of TK Fields (GPL-2.0-or-later). See LICENSE.
+ */
+
+.tk-scroll-reveal {
+	opacity: 0;
+	transition-property: opacity, transform;
+	transition-duration: var(--tk-dur-slow); /* 420ms */
+	transition-delay: var(--tk-reveal-delay, 0ms);
+	transition-timing-function: var(--tk-ease);
+}
+
+.tk-scroll-reveal[data-animation="fade"] {
+	transform: none;
+}
+
+.tk-scroll-reveal[data-animation="slide-up"] {
+	transform: translateY(12px);
+}
+
+.tk-scroll-reveal[data-animation="slide-left"] {
+	transform: translateX(40px);
+}
+
+.tk-scroll-reveal[data-animation="slide-right"] {
+	transform: translateX(-40px);
+}
+
+.tk-scroll-reveal[data-animation="zoom"] {
+	transform: scale(0.9);
+}
+
+.tk-scroll-reveal.is-visible {
+	opacity: 1;
+	transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.tk-scroll-reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}

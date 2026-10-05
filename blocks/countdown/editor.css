@@ -1,0 +1,10 @@
+.tk-countdown-editor .tk-cd-preview {
+	padding: 12px 14px;
+	border: 1px dashed #949494;
+	border-radius: 2px;
+	background: #f6f7f7;
+}
+
+.tk-countdown-editor .tk-cd-preview--empty {
+	color: #757575;
+}
