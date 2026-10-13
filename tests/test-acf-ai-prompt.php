@@ -18,10 +18,10 @@
  * Exits 0 when every assertion passes, 1 otherwise.
  *
  * Covers the no-ACF import path contract:
- * - The tk/v1/import-acf/ai-prompt route is registered (and the existing
+ * - The tkfi/v1/import-acf/ai-prompt route is registered (and the existing
  *   /import-acf POST route still is — no regression).
  * - Capability gating: manage_options (the admin-route bar used across the
- *   tk/v1 namespace) — denied without the cap.
+ *   tkfi/v1 namespace) — denied without the cap.
  * - The prompt is generated server-side from the live AI_Import template:
  *   every FIELD_SHAPE key (via the template's public fields[] projection)
  *   appears in the prompt — it cannot drift from the validator.
@@ -34,7 +34,7 @@
  * in eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -77,8 +77,8 @@ $find_route = function ( string $needle ) use ( $routes ) {
 };
 
 $ai_prompt_route = $find_route( 'import-acf/ai-prompt' );
-$check( null !== $ai_prompt_route, 'tk/v1/import-acf/ai-prompt route is registered' );
-$check( null !== $find_route( 'import-acf' ), 'existing tk/v1/import-acf POST route still registered (no regression)' );
+$check( null !== $ai_prompt_route, 'tkfi/v1/import-acf/ai-prompt route is registered' );
+$check( null !== $find_route( 'import-acf' ), 'existing tkfi/v1/import-acf POST route still registered (no regression)' );
 
 // ------------------------------------------------------ capability gate ---
 $perm = $ai_prompt_route[0]['permission_callback'] ?? null;

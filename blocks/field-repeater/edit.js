@@ -4,11 +4,11 @@
  */
 
 /**
- * Editor UI for tk/field-repeater.
+ * Editor UI for tkfi/field-repeater.
  *
  * Dedicated wrapper for a TK Fields *repeater* field (synthesis Q1, locked
- * unanimous). Composes the existing tk/repeater-row machinery — rows are
- * tk/repeater-row blocks with stable rowId attributes, never array indexes.
+ * unanimous). Composes the existing tkfi/repeater-row machinery — rows are
+ * tkfi/repeater-row blocks with stable rowId attributes, never array indexes.
  *
  * Identity & ownership (the load-bearing invariant):
  * - fieldKey is the stable field identity. It is set ONLY by the
@@ -25,13 +25,13 @@
  *   itself (wrapper > row[rowId] > wrapper > row[rowId]) is the path
  *   stack the Fields-service read/save path resolves against.
  * - Containment (Round 3(a), one layer up): rows cannot be dragged out
- *   into free post content — tk/repeater-row's block.json `parent`
- *   restricts it to tk/repeater / tk/field-repeater (core enforces this),
- *   the InnerBlocks here allows only tk/repeater-row, and there is no
+ *   into free post content — tkfi/repeater-row's block.json `parent`
+ *   restricts it to tkfi/repeater / tkfi/field-repeater (core enforces this),
+ *   the InnerBlocks here allows only tkfi/repeater-row, and there is no
  *   appender: rows are added only through the Add Row button.
  *   templateLock="all" is deliberately NOT used on the parent: it would
  *   freeze row reordering (value order is presentation) and lock the
- *   programmatic Add Row inserts (same adjudication as tk/flexible-content).
+ *   programmatic Add Row inserts (same adjudication as tkfi/flexible-content).
  * - Cross-post paste: rowIds are scoped to (post_id, field_name), never
  *   globally unique. On mount the wrapper compares its originPostId
  *   attribute against the current post; a mismatch regenerates every
@@ -45,11 +45,11 @@
  *
  * Read-path contract (for the Fields-service workstream): the wrapper is
  * located by its fieldName attribute (first top-level match wins, mirroring
- * Flexible_Content::rows_raw). Rows are its direct tk/repeater-row
+ * Flexible_Content::rows_raw). Rows are its direct tkfi/repeater-row
  * children in document order (presentation order). Each row's identity is
- * its rowId attribute. Scalar sub-field values are tk/field-value children
+ * its rowId attribute. Scalar sub-field values are tkfi/field-value children
  * keyed by SHORT sub-field name; a nested repeater sub-field is a
- * tk/field-repeater child of the row, resolved recursively. Nothing about
+ * tkfi/field-repeater child of the row, resolved recursively. Nothing about
  * the path stack is flattened into a single context key.
  *
  * Classic script using wp.* globals only — no build step. Every control
@@ -72,16 +72,16 @@
 	var useSelect = data.useSelect;
 	var useDispatch = data.useDispatch;
 
-	var BLOCK_NAME = 'tk/field-repeater';
-	var ROW_NAME = 'tk/repeater-row';
-	var FIELD_VALUE_NAME = 'tk/field-value';
+	var BLOCK_NAME = 'tkfi/field-repeater';
+	var ROW_NAME = 'tkfi/repeater-row';
+	var FIELD_VALUE_NAME = 'tkfi/field-value';
 
 	function cleanId(s) {
 		return String(s || '').replace(/[^a-zA-Z0-9-]/g, '');
 	}
 
 	// Field keys keep underscores (field names use them); rowIds mirror
-	// tk/repeater-row's clientId-derived formula exactly.
+	// tkfi/repeater-row's clientId-derived formula exactly.
 	function cleanKey(s) {
 		return String(s || '').replace(/[^a-zA-Z0-9_-]/g, '');
 	}
@@ -114,8 +114,8 @@
 	}
 
 	/**
-	 * One tk/field-value block per scalar sub-field — the canonical
-	 * sub-field input, mirroring tk/flexible-content's fieldValueBlock().
+	 * One tkfi/field-value block per scalar sub-field — the canonical
+	 * sub-field input, mirroring tkfi/flexible-content's fieldValueBlock().
 	 */
 	function fieldValueBlock(sub) {
 		var attrs = {
@@ -135,7 +135,7 @@
 	}
 
 	/**
-	 * Build the nested tk/field-repeater block for a repeater sub-field.
+	 * Build the nested tkfi/field-repeater block for a repeater sub-field.
 	 * The inner wrapper pushes its own context layer: its fieldKey and
 	 * scopeStack extend the parent's (path stack, never a flat key).
 	 */
@@ -160,8 +160,8 @@
 	}
 
 	/**
-	 * Depth-first search for the tk/field-value block carrying a sub-field
-	 * name inside one row. Never descends into nested tk/field-repeater
+	 * Depth-first search for the tkfi/field-value block carrying a sub-field
+	 * name inside one row. Never descends into nested tkfi/field-repeater
 	 * blocks — those are a different scope (path stack, not flat).
 	 */
 	function findFieldValue(blockList, name) {
@@ -282,13 +282,13 @@
 
 		// ---- Nested-wrapper adoption: keep this instance owned by its
 		// actual parent. When the wrapper is nested (an ancestor
-		// tk/field-repeater provides context), its fieldKey and scopeStack
+		// tkfi/field-repeater provides context), its fieldKey and scopeStack
 		// extend the parent's — a path stack, never a flat key. Pasted or
 		// moved wrappers are re-owned so a row subtree can never resolve
 		// into the wrong parent scope (the CQ3 write-path trap).
-		var parentKey = context['tk/field-repeater-field-key'];
-		var parentName = context['tk/field-repeater-field-name'];
-		var parentScope = context['tk/field-repeater-scope'];
+		var parentKey = context['tkfi/field-repeater-field-key'];
+		var parentName = context['tkfi/field-repeater-field-name'];
+		var parentScope = context['tkfi/field-repeater-scope'];
 		useEffect(
 			function () {
 				if (parentKey && parentName && fieldName) {
@@ -632,7 +632,7 @@
 	/**
 	 * Field-group renderer entry point.
 	 *
-	 * Builds a tk/field-repeater block instance from a repeater field
+	 * Builds a tkfi/field-repeater block instance from a repeater field
 	 * definition (shape: {name, label, sub_fields, min, max, button_label,
 	 * layout, collapsed}). The renderer — not the author — owns the
 	 * fieldKey, so attribute drift can never orphan stored rows.

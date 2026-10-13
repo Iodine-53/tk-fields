@@ -4,7 +4,7 @@
  */
 
 /**
- * tk/countdown frontend — Interactivity API store.
+ * tkfi/countdown frontend — Interactivity API store.
  *
  * Per-instance unit values live in context as padded strings; the markup
  * binds via data-wp-text="context.days" etc. Server render.php pre-fills them
@@ -16,7 +16,7 @@ import { store, getContext } from "@wordpress/interactivity";
 
 const pad = ( n ) => String( n ).padStart( 2, "0" );
 
-store( "tk/countdown", {
+store( "tkfi/countdown", {
 	callbacks: {
 		start() {
 			// Capture the context ONCE while the directive scope is active.

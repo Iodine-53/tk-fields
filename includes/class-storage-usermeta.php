@@ -16,12 +16,12 @@
  * field on an options-like "profile extras" group), mirroring
  * Storage_Postmeta's zero-pointer contract.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

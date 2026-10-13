@@ -15,15 +15,15 @@
  * Serves number and range fields. Numeric values are output as-is
  * (escaped), usable in both number and text category controls.
  *
- * @package TK\Fields\Integrations\Elementor\Tags
+ * @package TKFields\Integrations\Elementor\Tags
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Tags;
+namespace TKFields\Integrations\Elementor\Tags;
 
 use Elementor\Modules\DynamicTags\Module as Dynamic_Tags_Module;
-use TK\Fields\Unset_Value;
+use TKFields\Unset_Value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

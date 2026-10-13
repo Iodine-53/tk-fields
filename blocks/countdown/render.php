@@ -10,7 +10,7 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/countdown.
+ * Server render for tkfi/countdown.
  *
  * Computes the initial remaining time server-side (strtotime($target) - time(),
  * clamped at 0) so the first paint never flashes wrong values; the Interactivity
@@ -22,7 +22,7 @@
  * between units (colon/dot/none). `hideOnExpire` hides the whole block once
  * the countdown reaches zero instead of showing the expired message.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -101,9 +101,9 @@ $context = array(
 	'seconds'      => $pad( $s ),
 );
 
-$wrapper = get_block_wrapper_attributes( array( 'class' => 'tk-countdown' ) );
+$wrapper = get_block_wrapper_attributes( array( 'class' => 'tkfi-countdown' ) );
 ?>
-<div <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-wp-interactive="tk/countdown" data-wp-context='<?php echo esc_attr( wp_json_encode( $context ) ); ?>' data-wp-init="callbacks.start" data-layout="<?php echo esc_attr( $layout ); ?>" data-wp-bind--hidden="context.hideOnExpire && context.expired"<?php echo ( $expired && $hide_on_expire ) ? ' hidden' : ''; ?>>
+<div <?php echo $wrapper; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?> data-wp-interactive="tkfi/countdown" data-wp-context='<?php echo esc_attr( wp_json_encode( $context ) ); ?>' data-wp-init="callbacks.start" data-layout="<?php echo esc_attr( $layout ); ?>" data-wp-bind--hidden="context.hideOnExpire && context.expired"<?php echo ( $expired && $hide_on_expire ) ? ' hidden' : ''; ?>>
 	<div class="tk-cd-units" data-wp-bind--hidden="context.expired"<?php echo $expired ? ' hidden' : ''; ?>>
 		<?php
 		$first = true;

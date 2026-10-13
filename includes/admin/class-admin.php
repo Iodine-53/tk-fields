@@ -21,12 +21,12 @@
  * is produced by the React worker — this file treats those paths as an
  * output contract and degrades gracefully when they don't exist yet.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -55,7 +55,7 @@ final class Admin {
 	public function init(): void {
 		add_action( 'admin_menu', array( $this, 'register_menu' ) );
 		add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_assets' ) );
-		add_action( 'admin_post_tk_fields_export_context', array( $this, 'handle_export_context' ) );
+		add_action( 'admin_post_tkfi_export_context', array( $this, 'handle_export_context' ) );
 	}
 
 	/**
@@ -113,7 +113,7 @@ final class Admin {
 	 * unchanged.
 	 */
 	public function render_content_types(): void {
-		$built = file_exists( TK_FIELDS_DIR . 'assets/admin/build/index.js' );
+		$built = file_exists( TKFI_DIR . 'assets/admin/build/index.js' );
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Content Types', 'tk-fields' ); ?></h1>
@@ -150,7 +150,7 @@ final class Admin {
 			return;
 		}
 
-		$asset_file = TK_FIELDS_DIR . 'assets/admin/build/index.asset.php';
+		$asset_file = TKFI_DIR . 'assets/admin/build/index.asset.php';
 		if ( ! file_exists( $asset_file ) ) {
 			// React worker hasn't produced the bundle yet — the screen will
 			// show a fallback notice (see render_app()).
@@ -163,11 +163,11 @@ final class Admin {
 		}
 
 		$deps    = $asset['dependencies'] ?? array();
-		$version = $asset['version'] ?? TK_FIELDS_VERSION;
+		$version = $asset['version'] ?? TKFI_VERSION;
 
 		wp_enqueue_style(
 			'tk-fields-admin',
-			TK_FIELDS_URL . 'assets/admin/build/index.css',
+			TKFI_URL . 'assets/admin/build/index.css',
 			array( 'wp-components' ),
 			$version
 		);
@@ -181,7 +181,7 @@ final class Admin {
 		// dependency so it always loads first.
 		wp_register_script(
 			'tk-fields-layouts-editor',
-			TK_FIELDS_URL . 'assets/admin/layouts-editor.js',
+			TKFI_URL . 'assets/admin/layouts-editor.js',
 			array( 'wp-element', 'wp-components', 'wp-i18n' ),
 			$version,
 			true
@@ -194,7 +194,7 @@ final class Admin {
 		// dependency so it always loads first.
 		wp_register_script(
 			'tk-fields-subfields-editor',
-			TK_FIELDS_URL . 'assets/admin/subfields-editor.js',
+			TKFI_URL . 'assets/admin/subfields-editor.js',
 			array( 'wp-element', 'wp-components', 'wp-i18n' ),
 			$version,
 			true
@@ -203,7 +203,7 @@ final class Admin {
 
 		wp_enqueue_script(
 			'tk-fields-admin',
-			TK_FIELDS_URL . 'assets/admin/build/index.js',
+			TKFI_URL . 'assets/admin/build/index.js',
 			array_merge( $deps, array( 'tk-fields-layouts-editor', 'tk-fields-subfields-editor' ) ),
 			$version,
 			true
@@ -214,9 +214,9 @@ final class Admin {
 		// Inline config BEFORE the bundle: REST root, nonce, admin URL.
 		wp_add_inline_script(
 			'tk-fields-admin',
-			'window.TK_FIELDS_ADMIN = ' . wp_json_encode(
+			'window.TKFI_ADMIN = ' . wp_json_encode(
 				array(
-					'root'     => esc_url_raw( rest_url( 'tk/v1' ) ),
+					'root'     => esc_url_raw( rest_url( 'tkfi/v1' ) ),
 					'wpRoot'   => esc_url_raw( rest_url( 'wp/v2' ) ),
 					'nonce'    => wp_create_nonce( 'wp_rest' ),
 					'adminUrl' => esc_url_raw( admin_url() ),
@@ -230,16 +230,16 @@ final class Admin {
 	 * Render the Field Groups screen (React mount point).
 	 */
 	public function render_app(): void {
-		$built = file_exists( TK_FIELDS_DIR . 'assets/admin/build/index.js' );
+		$built = file_exists( TKFI_DIR . 'assets/admin/build/index.js' );
 		?>
 		<div class="wrap">
 			<h1><?php esc_html_e( 'Field Groups', 'tk-fields' ); ?></h1>
 			<?php if ( Context_Export::user_can_export() ) : ?>
 				<p>
-					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=tk_fields_export_context' ), 'tk_fields_export_context' ) ); ?>" class="button">
+					<a href="<?php echo esc_url( wp_nonce_url( admin_url( 'admin-post.php?action=tkfi_export_context' ), 'tkfi_export_context' ) ); ?>" class="button">
 						<?php esc_html_e( 'Export AI context (JSON)', 'tk-fields' ); ?>
 					</a>
-					<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'format', 'markdown', admin_url( 'admin-post.php?action=tk_fields_export_context' ) ), 'tk_fields_export_context' ) ); ?>" class="button">
+					<a href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'format', 'markdown', admin_url( 'admin-post.php?action=tkfi_export_context' ) ), 'tkfi_export_context' ) ); ?>" class="button">
 						<?php esc_html_e( 'Export AI context (Markdown)', 'tk-fields' ); ?>
 					</a>
 				</p>
@@ -277,9 +277,9 @@ final class Admin {
 			</p>
 			<h2><?php esc_html_e( 'Quick reference', 'tk-fields' ); ?></h2>
 			<ul>
-				<li><?php esc_html_e( 'Read a field: tk_get_field( $name, $post_id ).', 'tk-fields' ); ?></li>
-				<li><?php esc_html_e( 'Write a field: tk_update_field( $name, $value, $post_id ).', 'tk-fields' ); ?></li>
-				<li><?php esc_html_e( 'REST namespace: tk/v1 (requires manage_options).', 'tk-fields' ); ?></li>
+				<li><?php esc_html_e( 'Read a field: tkfi_get_field( $name, $post_id ).', 'tk-fields' ); ?></li>
+				<li><?php esc_html_e( 'Write a field: tkfi_update_field( $name, $value, $post_id ).', 'tk-fields' ); ?></li>
+				<li><?php esc_html_e( 'REST namespace: tkfi/v1 (requires manage_options).', 'tk-fields' ); ?></li>
 			</ul>
 		</div>
 		<?php
@@ -290,7 +290,7 @@ final class Admin {
 	 *
 	 * Regenerates the schema on demand — nothing is written to the
 	 * filesystem, and no field values are ever read. Capability-gated via
-	 * the `tk_fields_context_export_capability` filter (default
+	 * the `tkfi_context_export_capability` filter (default
 	 * edit_theme_options).
 	 */
 	public function handle_export_context(): void {
@@ -302,7 +302,7 @@ final class Admin {
 			);
 		}
 
-		check_admin_referer( 'tk_fields_export_context' );
+		check_admin_referer( 'tkfi_export_context' );
 
 		$format = ( isset( $_GET['format'] ) && 'markdown' === $_GET['format'] ) ? 'markdown' : 'json';
 

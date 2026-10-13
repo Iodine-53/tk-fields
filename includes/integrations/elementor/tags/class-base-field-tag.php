@@ -16,18 +16,18 @@
  * and the group registration so every concrete tag only declares what
  * field types it serves and how to render them.
  *
- * @package TK\Fields\Integrations\Elementor\Tags
+ * @package TKFields\Integrations\Elementor\Tags
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Tags;
+namespace TKFields\Integrations\Elementor\Tags;
 
-use TK\Fields\Field_Registry;
-use TK\Fields\Fields;
-use TK\Fields\Integrations\Elementor\Context;
-use TK\Fields\Integrations\Elementor\Module;
-use TK\Fields\Unset_Value;
+use TKFields\Field_Registry;
+use TKFields\Fields;
+use TKFields\Integrations\Elementor\Context;
+use TKFields\Integrations\Elementor\Module;
+use TKFields\Unset_Value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

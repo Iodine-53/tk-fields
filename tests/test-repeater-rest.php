@@ -30,7 +30,7 @@
  * in eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -52,7 +52,7 @@ $check = function ( bool $cond, string $label ) use ( &$failures ): void {
 };
 
 // ------------------------------------------------------- picker meta -----
-$ref = new \ReflectionMethod( 'TK\\Fields\\Rest', 'type_picker_meta' );
+$ref = new \ReflectionMethod( 'TKFields\\Rest', 'type_picker_meta' );
 $ref->setAccessible( true );
 $meta = $ref->invoke( null );
 $entry = $meta['repeater'] ?? null;

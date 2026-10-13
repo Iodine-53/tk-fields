@@ -27,12 +27,12 @@
  * the repeater template loop; flexible rows have their own helpers on
  * the Flexible_Content class.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -68,7 +68,7 @@ final class Fields {
 			 * @param array<string, Storage_Adapter> $adapters
 			 */
 			self::$adapters = apply_filters(
-				'tk_fields_storage_adapters',
+				'tkfi_storage_adapters',
 				array(
 					'post'   => new Storage_Postmeta(),
 					'term'   => new Storage_Termmeta(),
@@ -149,7 +149,7 @@ final class Fields {
 			return self::get_flexible( $field, $selector, $type, $id, $format );
 		}
 
-		// Repeater: block-backed rows on posts (tk/field-repeater wrapper);
+		// Repeater: block-backed rows on posts (tkfi/field-repeater wrapper);
 		// serialized block markup in a single meta/option row on other
 		// object types. Nested to 2 levels, row-id identity, path-stack
 		// context.
@@ -199,7 +199,7 @@ final class Fields {
 	/**
 	 * Read a flexible_content field.
 	 *
-	 * Posts: parse the tk/flexible-content block in post_content (the block
+	 * Posts: parse the tkfi/flexible-content block in post_content (the block
 	 * editor owns those writes). Other object types: read the serialized
 	 * block markup from the single meta/option row. Parsed rows are
 	 * re-sanitized so reads always return typed values. No rows stored
@@ -412,7 +412,7 @@ final class Fields {
 			 * @param int    $id    Post ID being saved.
 			 * @param string $value Sanitized oEmbed URL.
 			 */
-			if ( apply_filters( 'tk_fields_warm_oembed_cache', true, $id, $value ) ) {
+			if ( apply_filters( 'tkfi_warm_oembed_cache', true, $id, $value ) ) {
 				Field_Registry::oembed_html( (string) $value, $id );
 			}
 		}
@@ -545,7 +545,7 @@ final class Fields {
 	/**
 	 * Write a flexible_content field.
 	 *
-	 * Posts: refused — flexible rows live as tk/flexible-content blocks in
+	 * Posts: refused — flexible rows live as tkfi/flexible-content blocks in
 	 * post_content and the block editor owns those writes (repeater
 	 * parity); rewriting post_content programmatically is out of scope for
 	 * v1. Terms, users, options: sanitize + validate (per-layout min/max
@@ -601,7 +601,7 @@ final class Fields {
 	/**
 	 * Write a repeater field.
 	 *
-	 * Posts: refused — repeater rows live as tk/field-repeater blocks in
+	 * Posts: refused — repeater rows live as tkfi/field-repeater blocks in
 	 * post_content and the block editor owns those writes; rewriting
 	 * post_content programmatically is out of scope for v1. Terms, users,
 	 * options: sanitize + validate (repeater min/max ROW counts enforced
@@ -657,7 +657,7 @@ final class Fields {
 	/**
 	 * Read a repeater field.
 	 *
-	 * Posts: parse the tk/field-repeater wrapper in post_content (the block
+	 * Posts: parse the tkfi/field-repeater wrapper in post_content (the block
 	 * editor owns those writes). Other object types: read the serialized
 	 * block markup from the single meta/option row. Parsed rows are
 	 * re-sanitized so reads always return typed values. No rows stored
@@ -772,10 +772,10 @@ final class Fields {
 	/**
 	 * Repeater rows for a field, as Repeater_Row objects.
 	 *
-	 * Parses $post->post_content for the field's tk/field-repeater wrapper
+	 * Parses $post->post_content for the field's tkfi/field-repeater wrapper
 	 * (fieldKey identity, fieldName fallback) and maps its direct
-	 * tk/repeater-row inner blocks to Repeater_Row objects. Legacy
-	 * tk/repeater blocks still match for BC.
+	 * tkfi/repeater-row inner blocks to Repeater_Row objects. Legacy
+	 * tkfi/repeater blocks still match for BC.
 	 *
 	 * Nested repeaters are NOT traversed here — a nested repeater's rows
 	 * resolve through the active row (Repeater_Loop, or
@@ -794,7 +794,7 @@ final class Fields {
 		$field = Field_Registry::instance()->get( $selector );
 		if ( ! is_array( $field ) || 'repeater' !== ( $field['type'] ?? '' ) ) {
 			// Not a registered repeater: V1 callers matched legacy
-			// tk/repeater blocks by fieldName alone.
+			// tkfi/repeater blocks by fieldName alone.
 			return Repeater::legacy_rows( $selector, $id );
 		}
 

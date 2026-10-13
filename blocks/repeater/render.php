@@ -10,13 +10,13 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/repeater.
+ * Server render for tkfi/repeater.
  *
  * Dynamic block: rows arrive already rendered in $content (each row through
  * its own render.php). We only add the wrapper, layout class, and the
  * field-name data attribute that the PHP row API matches on.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);

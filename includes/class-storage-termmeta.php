@@ -17,12 +17,12 @@
  * zero-pointer contract: "unset" is returned when the key does not exist,
  * never a guessed default.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

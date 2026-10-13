@@ -10,13 +10,13 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/scroll-reveal.
+ * Server render for tkfi/scroll-reveal.
  *
  * Duration/delay are emitted as inline styles; animation + threshold as data
  * attributes read by the vanilla view.js IntersectionObserver. One-shot: the
  * .is-visible class is added once and the element is unobserved.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

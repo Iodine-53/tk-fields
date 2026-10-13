@@ -18,7 +18,7 @@
  * Exits 0 when every assertion passes, 1 otherwise.
  *
  * Covers the renderer build contract:
- * - The tk/v1/post-repeaters/<id> route is registered.
+ * - The tkfi/v1/post-repeaters/<id> route is registered.
  * - Capability gating: edit_posts (the editor-consumed gate, same as the
  *   sibling /field-def/<name> route) — denied without the cap.
  * - Response shape: only TOP-LEVEL repeater fields of the post's assigned
@@ -31,7 +31,7 @@
  * in eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -69,7 +69,7 @@ foreach ( array_keys( $routes ) as $pattern ) {
 		break;
 	}
 }
-$check( $found, 'tk/v1/post-repeaters route is registered' );
+$check( $found, 'tkfi/v1/post-repeaters route is registered' );
 
 // ------------------------------------------------------ capability gate ---
 $check( true === Field_Group_Renderer::permissions_check(), 'permissions_check passes for an admin (has edit_posts)' );
@@ -155,7 +155,7 @@ $post_id = wp_insert_post(
 	)
 );
 
-$req = new \WP_REST_Request( 'GET', '/tk/v1/post-repeaters/' . $post_id );
+$req = new \WP_REST_Request( 'GET', '/tkfi/v1/post-repeaters/' . $post_id );
 $req->set_param( 'id', $post_id );
 $res = Field_Group_Renderer::post_repeaters( $req );
 
@@ -190,7 +190,7 @@ $check( ! in_array( 'grouped_rep', $names, true ), 'group-nested repeater exclud
 $check( ! in_array( 'subtitle', $names, true ), 'non-repeater field excluded' );
 
 // ------------------------------------------------------------------ 404 ---
-$bad_req = new \WP_REST_Request( 'GET', '/tk/v1/post-repeaters/999999999' );
+$bad_req = new \WP_REST_Request( 'GET', '/tkfi/v1/post-repeaters/999999999' );
 $bad_req->set_param( 'id', 999999999 );
 $bad_res = Field_Group_Renderer::post_repeaters( $bad_req );
 $check(
@@ -206,7 +206,7 @@ $page_id = wp_insert_post(
 		'post_status' => 'draft',
 	)
 );
-$page_req = new \WP_REST_Request( 'GET', '/tk/v1/post-repeaters/' . $page_id );
+$page_req = new \WP_REST_Request( 'GET', '/tkfi/v1/post-repeaters/' . $page_id );
 $page_req->set_param( 'id', $page_id );
 $page_res = Field_Group_Renderer::post_repeaters( $page_req );
 $page_fields = $page_res instanceof \WP_REST_Response ? ( $page_res->get_data()['fields'] ?? null ) : null;

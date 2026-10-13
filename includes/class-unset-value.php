@@ -16,12 +16,12 @@
  * null value. Shared by the Fields service, the PHP API, Block Bindings and
  * every future integration so empty-vs-unset semantics are solved once.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

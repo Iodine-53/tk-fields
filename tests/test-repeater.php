@@ -36,7 +36,7 @@
  *   group-in-repeater and repeater-in-group allowed with depth counting.
  * - Fields service: post updates refused, term round-trip as serialized
  *   block markup, formatted vs canonical reads, invalid rows rejected.
- * - Block store read: 2x2 nested editor markup, nested tk_have_rows loops
+ * - Block store read: 2x2 nested editor markup, nested tkfi_have_rows loops
  *   scoped by the path stack, current_path() segments, CQ3 regression
  *   (row 1/1 byte-identical after editing row 2/2), revision-safe reads.
  * - Context export (CQ2): {type, name, min, max, button_label, layout,
@@ -46,7 +46,7 @@
  * eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -307,16 +307,16 @@ $check( 'full_name' === ( $stored['collapsed'] ?? '' ), 'collapsed persisted' );
 $check( 'Add Row X' === ( $stored['button_label'] ?? '' ), 'button_label persisted' );
 $check( 2 === (int) ( $stored['min'] ?? 0 ) && 6 === (int) ( $stored['max'] ?? 0 ), 'min/max persisted' );
 
-$expect_key = 'f_' . substr( md5( 'tk_repeater:rep_store:full_name' ), 0, 20 );
+$expect_key = 'f_' . substr( md5( 'tkfi_repeater:rep_store:full_name' ), 0, 20 );
 $found_key  = '';
 foreach ( (array) ( $stored['sub_fields'] ?? array() ) as $s ) {
 	if ( 'full_name' === ( $s['name'] ?? '' ) ) {
 		$found_key = (string) ( $s['key'] ?? '' );
 	}
 }
-$check( $expect_key === $found_key, 'deterministic sub-field keys (md5 tk_repeater:...)' );
+$check( $expect_key === $found_key, 'deterministic sub-field keys (md5 tkfi_repeater:...)' );
 
-$nested_key_expect = 'f_' . substr( md5( 'tk_repeater:sessions:topic' ), 0, 20 );
+$nested_key_expect = 'f_' . substr( md5( 'tkfi_repeater:sessions:topic' ), 0, 20 );
 $nested_key_found  = '';
 foreach ( (array) ( $stored['sub_fields'] ?? array() ) as $s ) {
 	if ( 'sessions' === ( $s['name'] ?? '' ) ) {
@@ -504,8 +504,8 @@ if ( $term instanceof \WP_Term ) {
 	);
 	$check( true === Fields::update( 'rep_team', $term_rows, $term ), 'repeater update on term accepted' );
 	$meta = get_term_meta( $term_id, 'rep_team', true );
-	$check( is_string( $meta ) && false !== strpos( $meta, '<!-- wp:tk/field-repeater' ), 'term meta holds serialized repeater block markup' );
-	$check( false !== strpos( $meta, '<!-- wp:tk/repeater-row' ), 'term meta holds row blocks' );
+	$check( is_string( $meta ) && false !== strpos( $meta, '<!-- wp:tkfi/field-repeater' ), 'term meta holds serialized repeater block markup' );
+	$check( false !== strpos( $meta, '<!-- wp:tkfi/repeater-row' ), 'term meta holds row blocks' );
 
 	$got = Fields::get( 'rep_team', $term );
 	$check( is_array( $got ) && 'Cara' === ( $got[0]['name'] ?? null ) && true === $got[0]['admin'], 'term read returns formatted rows' );
@@ -579,7 +579,7 @@ $modules_rows = $registry->sanitize(
 	)
 );
 $editor_markup = Repeater::serialize_rows( $modules_field, $modules_rows );
-$check( false !== strpos( $editor_markup, 'tk/field-repeater' ), 'serialize_rows emits the wrapper block' );
+$check( false !== strpos( $editor_markup, 'tkfi/field-repeater' ), 'serialize_rows emits the wrapper block' );
 
 $mod_post_id = wp_insert_post(
 	array(
@@ -604,18 +604,18 @@ $paths        = array();
 $last_heading = null;
 $outer_titles = array();
 $outer_ids    = array();
-while ( tk_have_rows( 'rep_modules', (int) $mod_post_id ) ) {
-	tk_the_row();
-	$outer_titles[] = tk_get_sub_field( 'title' );
-	$outer_ids[]    = tk_get_row_id();
-	while ( tk_have_rows( 'lessons', (int) $mod_post_id ) ) {
-		tk_the_row();
+while ( tkfi_have_rows( 'rep_modules', (int) $mod_post_id ) ) {
+	tkfi_the_row();
+	$outer_titles[] = tkfi_get_sub_field( 'title' );
+	$outer_ids[]    = tkfi_get_row_id();
+	while ( tkfi_have_rows( 'lessons', (int) $mod_post_id ) ) {
+		tkfi_the_row();
 		$paths[]      = Repeater_Loop::current_path();
-		$last_heading = tk_get_sub_field( 'heading' );
+		$last_heading = tkfi_get_sub_field( 'heading' );
 	}
 }
 $check( array( 'M1', 'M2' ) === $outer_titles, 'outer loop visits both rows in order' );
-$check( array( 'm1', 'm2' ) === $outer_ids, 'tk_get_row_id returns the persisted row id' );
+$check( array( 'm1', 'm2' ) === $outer_ids, 'tkfi_get_row_id returns the persisted row id' );
 $check(
 	array(
 		array( 'rep_modules', 'm1', 'lessons', 'l1' ),
@@ -626,7 +626,7 @@ $check(
 	'nested loops resolve through the full path stack'
 );
 $check( 'L4' === $last_heading, 'sub-field reads the addressed row (row 2 of row 2)' );
-$check( false === tk_have_rows( 'lessons', (int) $mod_post_id ), 'nested selector with no active row returns false' );
+$check( false === tkfi_have_rows( 'lessons', (int) $mod_post_id ), 'nested selector with no active row returns false' );
 
 // CQ3 regression: edit row 2 of the inner repeater of outer row 2;
 // row 1 (outer row 1) must be byte-identical afterwards.

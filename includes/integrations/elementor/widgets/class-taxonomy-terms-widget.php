@@ -17,16 +17,16 @@
  * no TK field storage involved; styling consumes the shared tk-widgets
  * tokens.
  *
- * @package TK\Fields\Integrations\Elementor\Widgets
+ * @package TKFields\Integrations\Elementor\Widgets
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Widgets;
+namespace TKFields\Integrations\Elementor\Widgets;
 
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Typography;
-use TK\Fields\Widget_Assets;
+use TKFields\Widget_Assets;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -48,10 +48,10 @@ final class Taxonomy_Terms_Widget extends \Elementor\Widget_Base {
 		parent::__construct( $data, $args );
 
 		wp_register_style(
-			'tk-taxonomy-terms',
-			plugins_url( 'assets/elementor/css/tk-taxonomy-terms.css', TK_FIELDS_FILE ),
+			'tkfi-taxonomy-terms',
+			plugins_url( 'assets/elementor/css/tk-taxonomy-terms.css', TKFI_FILE ),
 			array( Widget_Assets::HANDLE ),
-			TK_FIELDS_VERSION
+			TKFI_VERSION
 		);
 	}
 
@@ -59,7 +59,7 @@ final class Taxonomy_Terms_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_name(): string {
-		return 'tk-taxonomy-terms';
+		return 'tkfi-taxonomy-terms';
 	}
 
 	/**
@@ -94,7 +94,7 @@ final class Taxonomy_Terms_Widget extends \Elementor\Widget_Base {
 	 * @return array<int, string>
 	 */
 	public function get_style_depends(): array {
-		return array( Widget_Assets::HANDLE, 'tk-taxonomy-terms' );
+		return array( Widget_Assets::HANDLE, 'tkfi-taxonomy-terms' );
 	}
 
 	/**
@@ -102,7 +102,7 @@ final class Taxonomy_Terms_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function register_controls(): void {
 		$this->start_controls_section(
-			'tk_terms_content',
+			'tkfi_terms_content',
 			array(
 				'label' => __( 'Content', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,
@@ -229,7 +229,7 @@ final class Taxonomy_Terms_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_terms_style',
+			'tkfi_terms_style',
 			array(
 				'label' => __( 'Terms', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_STYLE,

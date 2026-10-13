@@ -10,20 +10,20 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/slide.
+ * Server render for tkfi/slide.
  *
- * The slider (tk/slider) post-processes this output with WP_HTML_Tag_Processor
+ * The slider (tkfi/slider) post-processes this output with WP_HTML_Tag_Processor
  * to stamp each slide's data-wp-context index. The data-wp-class--is-active
  * directive resolves against the nearest data-wp-interactive ancestor
- * (the tk/slider root) using the merged context; CSS cross-fades/slides
+ * (the tkfi/slider root) using the merged context; CSS cross-fades/slides
  * between .is-active slides (420ms).
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

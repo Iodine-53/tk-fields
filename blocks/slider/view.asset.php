@@ -9,7 +9,7 @@
  *
  * See LICENSE in the plugin root for the full license text.
  */
-// View asset manifest for tk/slider's Interactivity view module.
+// View asset manifest for tkfi/slider's Interactivity view module.
 // Guarded so a direct request cannot dump the dependency manifest.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -17,5 +17,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 return array(
 	'dependencies' => array( '@wordpress/interactivity' ),
-	'version'      => TK_FIELDS_VERSION,
+	'version'      => TKFI_VERSION,
 );

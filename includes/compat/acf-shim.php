@@ -13,7 +13,7 @@
  * OPT-IN ACF compatibility shim — "Migration Mode".
  *
  * Loaded ONLY when the site owner explicitly enables it, via the
- * tk_fields_acf_compat_enabled option or the TK_FIELDS_ACF_COMPAT constant,
+ * tkfi_acf_compat_enabled option or the TKFI_ACF_COMPAT constant,
  * AND only from the late plugins_loaded hook (priority 20) in tk-fields.php.
  *
  * Rules:
@@ -23,15 +23,15 @@
  *   emulate ACF internals (acf_get_field_group(), acf_get_fields(), ...):
  *   third-party plugins sniffing for ACF are out of scope.
  * - have_rows() / the_row() / get_sub_field() / the_sub_field() map onto the
- *   block-traversal repeater loop (tk_have_rows() etc.).
+ *   block-traversal repeater loop (tkfi_have_rows() etc.).
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-use TK\Fields\Fields;
-use TK\Fields\Unset_Value;
+use TKFields\Fields;
+use TKFields\Unset_Value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -57,12 +57,12 @@ if ( function_exists( 'acf' ) || class_exists( 'ACF' ) || function_exists( 'get_
 
 if ( ! function_exists( 'get_field' ) ) {
 	/**
-	 * ACF-compatible alias of tk_get_field().
+	 * ACF-compatible alias of tkfi_get_field().
 	 *
 	 * Unset fields return false (ACF convention), not the TK sentinel.
 	 */
 	function get_field( $selector, $post_id = false, $format_value = true ) {
-		$value = tk_get_field( (string) $selector, $post_id ?: null, (bool) $format_value );
+		$value = tkfi_get_field( (string) $selector, $post_id ?: null, (bool) $format_value );
 
 		return Unset_Value::is_unset( $value ) ? false : $value;
 	}
@@ -70,32 +70,32 @@ if ( ! function_exists( 'get_field' ) ) {
 
 if ( ! function_exists( 'the_field' ) ) {
 	function the_field( $selector, $post_id = false ) {
-		tk_the_field( (string) $selector, $post_id ?: null );
+		tkfi_the_field( (string) $selector, $post_id ?: null );
 	}
 }
 
 if ( ! function_exists( 'have_rows' ) ) {
 	/**
-	 * ACF-compatible alias of tk_have_rows().
+	 * ACF-compatible alias of tkfi_have_rows().
 	 */
 	function have_rows( $selector, $post_id = false ) {
-		return tk_have_rows( (string) $selector, $post_id ?: null );
+		return tkfi_have_rows( (string) $selector, $post_id ?: null );
 	}
 }
 
 if ( ! function_exists( 'the_row' ) ) {
 	function the_row() {
-		tk_the_row();
+		tkfi_the_row();
 	}
 }
 
 if ( ! function_exists( 'get_sub_field' ) ) {
 	/**
-	 * ACF-compatible alias of tk_get_sub_field(). Returns false (ACF
+	 * ACF-compatible alias of tkfi_get_sub_field(). Returns false (ACF
 	 * convention) when no row is active or the sub-field is absent.
 	 */
 	function get_sub_field( $selector ) {
-		$value = tk_get_sub_field( (string) $selector );
+		$value = tkfi_get_sub_field( (string) $selector );
 
 		return null === $value ? false : $value;
 	}
@@ -103,30 +103,30 @@ if ( ! function_exists( 'get_sub_field' ) ) {
 
 if ( ! function_exists( 'the_sub_field' ) ) {
 	function the_sub_field( $selector ) {
-		tk_the_sub_field( (string) $selector );
+		tkfi_the_sub_field( (string) $selector );
 	}
 }
 
 if ( ! function_exists( 'update_field' ) ) {
 	function update_field( $selector, $value, $post_id = false ) {
-		return tk_update_field( (string) $selector, $value, $post_id ?: null );
+		return tkfi_update_field( (string) $selector, $value, $post_id ?: null );
 	}
 }
 
 if ( ! function_exists( 'delete_field' ) ) {
 	function delete_field( $selector, $post_id = false ) {
-		return tk_delete_field( (string) $selector, $post_id ?: null );
+		return tkfi_delete_field( (string) $selector, $post_id ?: null );
 	}
 }
 
 if ( ! function_exists( 'get_fields' ) ) {
 	function get_fields( $post_id = false ) {
-		return tk_get_fields( $post_id ?: null );
+		return tkfi_get_fields( $post_id ?: null );
 	}
 }
 
 if ( ! function_exists( 'get_field_object' ) ) {
 	function get_field_object( $selector, $post_id = false ) {
-		return tk_get_field_object( (string) $selector );
+		return tkfi_get_field_object( (string) $selector );
 	}
 }

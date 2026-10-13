@@ -16,15 +16,15 @@
  * `elementor/loaded` hook in tk-fields.php). Registers the `tk-fields`
  * dynamic-tags group + typed tag classes, and the TK Repeater widget.
  *
- * Every tag and widget resolves values through \TK\Fields\Fields — no
+ * Every tag and widget resolves values through \TKFields\Fields — no
  * integration may read postmeta directly.
  *
- * @package TK\Fields\Integrations\Elementor
+ * @package TKFields\Integrations\Elementor
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor;
+namespace TKFields\Integrations\Elementor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -126,7 +126,7 @@ final class Module {
 	 * Whether the field registry currently holds any field of a given type.
 	 */
 	private static function registry_has_type( string $type ): bool {
-		foreach ( \TK\Fields\Field_Registry::instance()->all() as $field ) {
+		foreach ( \TKFields\Field_Registry::instance()->all() as $field ) {
 			if ( ( $field['type'] ?? '' ) === $type ) {
 				return true;
 			}

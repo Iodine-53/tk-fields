@@ -14,7 +14,7 @@
  *
  * Two responsibilities:
  *
- * 1. REST: `GET tk/v1/post-repeaters/<post_id>` returns the repeater-type
+ * 1. REST: `GET tkfi/v1/post-repeaters/<post_id>` returns the repeater-type
  *    fields (full defs) of every field group whose location rules match the
  *    post. Top-level repeater fields only — nested repeaters are created
  *    through the row UI, never the renderer. Schema only, no values.
@@ -22,22 +22,22 @@
  *    route `/field-def/<name>` (the block editor calls this while authors —
  *    not just admins — edit posts).
  * 2. Editor script: enqueues `assets/js/field-group-renderer.js` on
- *    `enqueue_block_editor_assets`, which inserts one `tk/field-repeater`
+ *    `enqueue_block_editor_assets`, which inserts one `tkfi/field-repeater`
  *    wrapper per repeater field on editor init.
  *
  * Wiring (final integration step — add to tk-fields.php, after the
  * Block_Bindings require/init):
  *
- *   require_once TK_FIELDS_DIR . 'includes/class-field-group-renderer.php';
+ *   require_once TKFI_DIR . 'includes/class-field-group-renderer.php';
  *
  *   Field_Group_Renderer::init();
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -88,11 +88,11 @@ final class Field_Group_Renderer {
 	}
 
 	/**
-	 * Register the tk/v1/post-repeaters route.
+	 * Register the tkfi/v1/post-repeaters route.
 	 */
 	public static function register_routes(): void {
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/post-repeaters/(?P<id>\d+)',
 			array(
 				array(
@@ -122,7 +122,7 @@ final class Field_Group_Renderer {
 		$post    = get_post( $post_id );
 		if ( ! $post instanceof \WP_Post ) {
 			return new \WP_Error(
-				'tk_fields_unknown_post',
+				'tkfi_unknown_post',
 				__( 'Unknown post.', 'tk-fields' ),
 				array( 'status' => 404 )
 			);
@@ -183,9 +183,9 @@ final class Field_Group_Renderer {
 	public static function enqueue_editor_assets(): void {
 		wp_register_script(
 			self::EDITOR_SCRIPT_HANDLE,
-			TK_FIELDS_URL . 'assets/js/field-group-renderer.js',
+			TKFI_URL . 'assets/js/field-group-renderer.js',
 			array( 'wp-blocks', 'wp-data', 'wp-api-fetch', 'wp-i18n' ),
-			TK_FIELDS_VERSION,
+			TKFI_VERSION,
 			array( 'in_footer' => true )
 		);
 		wp_set_script_translations( self::EDITOR_SCRIPT_HANDLE, 'tk-fields' );

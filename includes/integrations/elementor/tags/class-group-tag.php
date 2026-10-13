@@ -17,15 +17,15 @@
  * escaped definition list of sub-field labels and values. Module only
  * registers this tag once the registry actually holds a group-type field.
  *
- * @package TK\Fields\Integrations\Elementor\Tags
+ * @package TKFields\Integrations\Elementor\Tags
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Tags;
+namespace TKFields\Integrations\Elementor\Tags;
 
 use Elementor\Modules\DynamicTags\Module as Dynamic_Tags_Module;
-use TK\Fields\Unset_Value;
+use TKFields\Unset_Value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -57,7 +57,7 @@ class Group_Tag extends Base_Field_Tag {
 		}
 
 		$def      = $this->get_field_def();
-		$children = is_array( $def ) ? \TK\Fields\Field_Registry::instance()->resolve_group_children( $def ) : array();
+		$children = is_array( $def ) ? \TKFields\Field_Registry::instance()->resolve_group_children( $def ) : array();
 
 		$rows = '';
 		foreach ( $value as $short => $child_value ) {

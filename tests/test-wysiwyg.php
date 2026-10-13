@@ -26,7 +26,7 @@
  * eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -166,22 +166,22 @@ $post_id = wp_insert_post(
 );
 $check( $post_id > 0, 'test post created' );
 
-$check( tk_update_field( 'tkwy_body', $evil, $post_id ), 'admin save accepted' );
+$check( tkfi_update_field( 'tkwy_body', $evil, $post_id ), 'admin save accepted' );
 Fields::flush();
-$stored = tk_get_field( 'tkwy_body', $post_id, false );
+$stored = tkfi_get_field( 'tkwy_body', $post_id, false );
 $check( is_string( $stored ), 'stored value reads back as string' );
 $check( false === stripos( (string) $stored, '<script' ), 'stored value has no <script>' );
 $check( false === stripos( (string) $stored, 'onclick' ), 'stored value has no event handlers' );
 $check( false !== strpos( (string) $stored, '<p>Hello <strong>world</strong></p>' ), 'stored value keeps allowed markup' );
 
 // Formatted read returns the HTML string (consistent with format()).
-$formatted = tk_get_field( 'tkwy_body', $post_id, true );
+$formatted = tkfi_get_field( 'tkwy_body', $post_id, true );
 $check( $stored === $formatted, 'formatted read returns the same HTML string' );
 
 // Opt-out field stores raw HTML.
-$check( tk_update_field( 'tkwy_raw', $evil, $post_id ), 'opt-out save accepted' );
+$check( tkfi_update_field( 'tkwy_raw', $evil, $post_id ), 'opt-out save accepted' );
 Fields::flush();
-$check( $evil === tk_get_field( 'tkwy_raw', $post_id, false ), 'opt-out field stores raw HTML verbatim' );
+$check( $evil === tkfi_get_field( 'tkwy_raw', $post_id, false ), 'opt-out field stores raw HTML verbatim' );
 
 // ------------------------------------------------- save as a low-privilege role
 $sub_name = 'tkwy_sub_' . substr( md5( (string) time() ), 0, 8 );
@@ -190,9 +190,9 @@ $check( $sub_id > 0 && ! is_wp_error( $sub_id ), 'subscriber test user created' 
 
 $admin_id = get_current_user_id();
 wp_set_current_user( $sub_id );
-$check( tk_update_field( 'tkwy_body', $evil, $post_id ), 'subscriber save accepted (kses still applies)' );
+$check( tkfi_update_field( 'tkwy_body', $evil, $post_id ), 'subscriber save accepted (kses still applies)' );
 Fields::flush();
-$sub_stored = tk_get_field( 'tkwy_body', $post_id, false );
+$sub_stored = tkfi_get_field( 'tkwy_body', $post_id, false );
 $check( false === stripos( (string) $sub_stored, '<script' ), 'subscriber-saved value has no <script>' );
 $check( false === stripos( (string) $sub_stored, 'onclick' ), 'subscriber-saved value has no event handlers' );
 wp_set_current_user( $admin_id );
@@ -232,8 +232,8 @@ $check( false === ( $schema['allow_unfiltered'] ?? null ), 'AI schema enumerates
 $check( 'string (HTML)' === ( $ret ?? '' ), 'AI return_format describes HTML' );
 
 // ------------------------------------------------- Elementor text tag
-$check( class_exists( 'TK\\Fields\\Integrations\\Elementor\\Tags\\Text_Tag' ), 'Elementor Text_Tag class loaded' );
-$ref = new \ReflectionMethod( 'TK\\Fields\\Integrations\\Elementor\\Tags\\Text_Tag', 'supported_types' );
+$check( class_exists( 'TKFields\\Integrations\\Elementor\\Tags\\Text_Tag' ), 'Elementor Text_Tag class loaded' );
+$ref = new \ReflectionMethod( 'TKFields\\Integrations\\Elementor\\Tags\\Text_Tag', 'supported_types' );
 $ref->setAccessible( true );
 $tag_types = $ref->invoke( null );
 $check( is_array( $tag_types ) && in_array( 'wysiwyg', $tag_types, true ), 'Elementor text tag serves wysiwyg' );
@@ -250,24 +250,24 @@ $attributes = array(
 );
 $block      = null;
 ob_start();
-include TK_FIELDS_DIR . 'blocks/field-value/render.php';
+include TKFI_DIR . 'blocks/field-value/render.php';
 $html = (string) ob_get_clean();
 $check( false !== strpos( $html, '<p>Rendered <strong>body</strong></p>' ), 'render.php outputs the HTML unescaped' );
 $check( false !== strpos( $html, 'tk-field-value--wysiwyg' ), 'render.php wraps with the wysiwyg class' );
 
 // ------------------------------------------------- classic renderer
-$check( class_exists( 'TK\\Fields\\Classic_Renderer' ), 'Classic_Renderer class exists' );
+$check( class_exists( 'TKFields\\Classic_Renderer' ), 'Classic_Renderer class exists' );
 $check( has_action( 'add_meta_boxes', array( Classic_Renderer::instance(), 'add_meta_boxes' ) ) !== false, 'classic renderer hooks add_meta_boxes' );
 $check( has_action( 'save_post', array( Classic_Renderer::instance(), 'save_post' ) ) !== false, 'classic renderer hooks save_post' );
 $check( method_exists( Classic_Renderer::instance(), 'render_field_wysiwyg' ), 'classic renderer implements render_field_wysiwyg' );
 
 // ------------------------------------------------- field-value block enum
-$block_json = json_decode( file_get_contents( TK_FIELDS_DIR . 'blocks/field-value/block.json' ), true );
+$block_json = json_decode( file_get_contents( TKFI_DIR . 'blocks/field-value/block.json' ), true );
 $check( in_array( 'wysiwyg', $block_json['attributes']['fieldType']['enum'], true ), 'block.json fieldType enum includes wysiwyg' );
 
 // ------------------------------------------------- cleanup
-tk_delete_field( 'tkwy_body', $post_id );
-tk_delete_field( 'tkwy_raw', $post_id );
+tkfi_delete_field( 'tkwy_body', $post_id );
+tkfi_delete_field( 'tkwy_raw', $post_id );
 Fields::flush();
 wp_delete_post( $post_id, true );
 if ( ! is_wp_error( $group ) ) {

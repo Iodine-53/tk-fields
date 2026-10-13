@@ -4,7 +4,7 @@
  */
 
 /**
- * tk/slider frontend — Interactivity API store.
+ * tkfi/slider frontend — Interactivity API store.
  *
  * Slides toggle via the .is-active class (CSS cross-animates slide/fade at
  * 420ms); the root carries data-transition and data-aspect-ratio.
@@ -71,7 +71,7 @@ function advance( c, root, next ) {
 	restartProgress( root );
 }
 
-store( "tk/slider", {
+store( "tkfi/slider", {
 	state: {
 		get isActive() {
 			const c = getContext();

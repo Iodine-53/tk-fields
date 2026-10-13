@@ -16,17 +16,17 @@
  * pairs, or an empty array when unset. Module only registers this tag once
  * the registry actually holds a gallery-type field.
  *
- * @package TK\Fields\Integrations\Elementor\Tags
+ * @package TKFields\Integrations\Elementor\Tags
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Tags;
+namespace TKFields\Integrations\Elementor\Tags;
 
 use Elementor\Modules\DynamicTags\Module as Dynamic_Tags_Module;
-use TK\Fields\Fields;
-use TK\Fields\Integrations\Elementor\Context;
-use TK\Fields\Unset_Value;
+use TKFields\Fields;
+use TKFields\Integrations\Elementor\Context;
+use TKFields\Unset_Value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -43,7 +43,7 @@ class Gallery_Tag extends \Elementor\Core\DynamicTags\Data_Tag {
 	}
 
 	final public function get_group(): array {
-		return array( \TK\Fields\Integrations\Elementor\Module::GROUP );
+		return array( \TKFields\Integrations\Elementor\Module::GROUP );
 	}
 
 	public function get_categories(): array {
@@ -58,7 +58,7 @@ class Gallery_Tag extends \Elementor\Core\DynamicTags\Data_Tag {
 	}
 
 	protected function register_controls(): void {
-		$fields  = \TK\Fields\Field_Registry::instance()->all();
+		$fields  = \TKFields\Field_Registry::instance()->all();
 		$options = array();
 
 		foreach ( $fields as $name => $field ) {

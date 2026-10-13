@@ -24,12 +24,12 @@
  * and the final write goes through Group_Store::create() — the same
  * hardened path as the manual builder.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -342,7 +342,7 @@ final class AI_Import {
 	public static function validate( string $json ): array|\WP_Error {
 		if ( strlen( $json ) > self::MAX_BODY_BYTES ) {
 			return new \WP_Error(
-				'tk_fields_ai_import_too_large',
+				'tkfi_ai_import_too_large',
 				sprintf(
 					/* translators: %d: max kilobytes */
 					__( 'The pasted JSON is too large (max %1$d KB).', 'tk-fields' ),
@@ -366,7 +366,7 @@ final class AI_Import {
 		$data = json_decode( $trimmed, true );
 		if ( ! is_array( $data ) ) {
 			return new \WP_Error(
-				'tk_fields_ai_import_bad_json',
+				'tkfi_ai_import_bad_json',
 				__( 'That is not valid JSON. Paste the raw JSON object the AI returned — no explanations or commentary around it.', 'tk-fields' ),
 				array( 'status' => 400 )
 			);
@@ -944,7 +944,7 @@ final class AI_Import {
 
 		// Group sub-fields — mirrors Group_Store::sanitize_group_sub_fields().
 		if ( 'group' === $type ) {
-			$result = self::validate_sub_fields( $field['sub_fields'] ?? array(), $at, 'tk_group:' . $name . ':', $depth, $valid_types, $count, $warnings, $logic_refs, 'group', $rep_depth );
+			$result = self::validate_sub_fields( $field['sub_fields'] ?? array(), $at, 'tkfi_group:' . $name . ':', $depth, $valid_types, $count, $warnings, $logic_refs, 'group', $rep_depth );
 			if ( is_wp_error( $result ) ) {
 				return $result;
 			}
@@ -957,7 +957,7 @@ final class AI_Import {
 			// (contract Q3: never silently dropped). Zero keys are dropped
 			// on the way through: validate_sub_fields() carries every known
 			// key and validate_field() sanitizes each sub-field in full.
-			$result = self::validate_sub_fields( $field['sub_fields'] ?? array(), $at, 'tk_repeater:' . $name . ':', $depth, $valid_types, $count, $warnings, $logic_refs, 'repeater', $rep_depth + 1 );
+			$result = self::validate_sub_fields( $field['sub_fields'] ?? array(), $at, 'tkfi_repeater:' . $name . ':', $depth, $valid_types, $count, $warnings, $logic_refs, 'repeater', $rep_depth + 1 );
 			if ( is_wp_error( $result ) ) {
 				return $result;
 			}
@@ -1067,7 +1067,7 @@ final class AI_Import {
 					}
 				}
 
-				$result = self::validate_sub_fields( $lfields, $layout_at, 'tk_layout:' . $lkey . ':', $depth, $valid_types, $count, $warnings, $logic_refs, 'layout', $rep_depth );
+				$result = self::validate_sub_fields( $lfields, $layout_at, 'tkfi_layout:' . $lkey . ':', $depth, $valid_types, $count, $warnings, $logic_refs, 'layout', $rep_depth );
 				if ( is_wp_error( $result ) ) {
 					return $result;
 				}
@@ -1460,7 +1460,7 @@ final class AI_Import {
 	 * Shorthand WP_Error with 400 status.
 	 */
 	private static function err( string $message ): \WP_Error {
-		return new \WP_Error( 'tk_fields_ai_import_invalid', $message, array( 'status' => 400 ) );
+		return new \WP_Error( 'tkfi_ai_import_invalid', $message, array( 'status' => 400 ) );
 	}
 
 	// ------------------------------------------------------------------
@@ -1469,12 +1469,12 @@ final class AI_Import {
 
 	/**
 	 * Register the AI import routes. Same capability bar as the rest of
-	 * the tk/v1 namespace (manage_options): Authors get 403, logged-out
+	 * the tkfi/v1 namespace (manage_options): Authors get 403, logged-out
 	 * get 401 — the exact surface pentested in v0.15.1.
 	 */
 	public static function register_routes(): void {
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/ai-import/template',
 			array(
 				array(
@@ -1485,7 +1485,7 @@ final class AI_Import {
 			)
 		);
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/ai-import/validate',
 			array(
 				array(
@@ -1496,7 +1496,7 @@ final class AI_Import {
 			)
 		);
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/ai-import/confirm',
 			array(
 				array(
@@ -1509,7 +1509,7 @@ final class AI_Import {
 	}
 
 	/**
-	 * Permission check: mirrors the tk/v1 namespace bar.
+	 * Permission check: mirrors the tkfi/v1 namespace bar.
 	 */
 	public static function permissions_check(): bool {
 		return current_user_can( 'manage_options' );

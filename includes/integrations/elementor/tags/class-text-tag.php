@@ -30,15 +30,15 @@
  * Map renders the stored address, falling back to "lat,lng" when the
  * address is empty.
  *
- * @package TK\Fields\Integrations\Elementor\Tags
+ * @package TKFields\Integrations\Elementor\Tags
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Tags;
+namespace TKFields\Integrations\Elementor\Tags;
 
 use Elementor\Modules\DynamicTags\Module as Dynamic_Tags_Module;
-use TK\Fields\Unset_Value;
+use TKFields\Unset_Value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -88,7 +88,7 @@ class Text_Tag extends Base_Field_Tag {
 			// [{layout, id, layout_label, fields}]: output the rendered
 			// layouts HTML (rows escaped inside render_rows_html()).
 			// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-			echo \TK\Fields\Flexible_Content::render_rows_html( is_array( $value ) ? $value : array() );
+			echo \TKFields\Flexible_Content::render_rows_html( is_array( $value ) ? $value : array() );
 
 			return;
 		}

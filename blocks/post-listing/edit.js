@@ -4,7 +4,7 @@
  */
 
 /**
- * Editor UI for tk/post-listing — the Gutenberg twin of the Elementor
+ * Editor UI for tkfi/post-listing — the Gutenberg twin of the Elementor
  * TK Post Listing widget. Every inspector control carries a <Tooltip>
  * (non-negotiable). The canvas preview is a live ServerSideRender of
  * render.php, so what you see is the real frontend markup.
@@ -79,7 +79,7 @@
 		return opts;
 	}
 
-	registerBlockType( 'tk/post-listing', {
+	registerBlockType( 'tkfi/post-listing', {
 		edit: function ( props ) {
 			var attributes = props.attributes;
 			var setAttributes = props.setAttributes;
@@ -474,7 +474,7 @@
 						'div',
 						{ key: 'tk-post-listing-preview', className: 'tk-post-listing-editor' },
 						el( ServerSideRender, {
-							block: 'tk/post-listing',
+							block: 'tkfi/post-listing',
 							attributes: attributes,
 							EmptyResponsePlaceholder: function () {
 								return el( 'p', null, __( 'No posts found.', 'tk-fields' ) );

@@ -13,23 +13,23 @@
  * Elementor "TK Related Posts" widget.
  *
  * Sources its posts from a TK Relationship field on the current post
- * (resolved through \TK\Fields\Fields — never postmeta), falling back to
+ * (resolved through \TKFields\Fields — never postmeta), falling back to
  * same-term matching when the field is empty or unset. Cards reuse the TK
  * Post Listing card language (shared CSS classes + shared stylesheet), in
  * the compact horizontal-list spirit of DESIGN-0.16.0.md §5.
  *
- * @package TK\Fields\Integrations\Elementor\Widgets
+ * @package TKFields\Integrations\Elementor\Widgets
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Widgets;
+namespace TKFields\Integrations\Elementor\Widgets;
 
 use Elementor\Controls_Manager;
-use TK\Fields\Field_Registry;
-use TK\Fields\Fields;
-use TK\Fields\Integrations\Elementor\Context as Elementor_Context;
-use TK\Fields\Unset_Value;
+use TKFields\Field_Registry;
+use TKFields\Fields;
+use TKFields\Integrations\Elementor\Context as Elementor_Context;
+use TKFields\Unset_Value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -48,7 +48,7 @@ class Related_Posts_Widget extends Post_Listing_Widget {
 	 * @return string
 	 */
 	public function get_name(): string {
-		return 'tk-related-posts';
+		return 'tkfi-related-posts';
 	}
 
 	/**
@@ -78,7 +78,7 @@ class Related_Posts_Widget extends Post_Listing_Widget {
 	 */
 	protected function register_controls(): void {
 		$this->start_controls_section(
-			'tk_related_source',
+			'tkfi_related_source',
 			array(
 				'label' => __( 'Source', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,
@@ -139,7 +139,7 @@ class Related_Posts_Widget extends Post_Listing_Widget {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_related_heading',
+			'tkfi_related_heading',
 			array(
 				'label' => __( 'Heading', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,
@@ -176,7 +176,7 @@ class Related_Posts_Widget extends Post_Listing_Widget {
 		$this->register_fields_controls();
 
 		$this->start_controls_section(
-			'tk_related_empty',
+			'tkfi_related_empty',
 			array(
 				'label' => __( 'Empty State', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,

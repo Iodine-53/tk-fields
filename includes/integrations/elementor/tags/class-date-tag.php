@@ -15,15 +15,15 @@
  * The formatted value is already localized through date_i18n() with the
  * site's date format; the tag only escapes it.
  *
- * @package TK\Fields\Integrations\Elementor\Tags
+ * @package TKFields\Integrations\Elementor\Tags
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Tags;
+namespace TKFields\Integrations\Elementor\Tags;
 
 use Elementor\Modules\DynamicTags\Module as Dynamic_Tags_Module;
-use TK\Fields\Unset_Value;
+use TKFields\Unset_Value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

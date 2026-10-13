@@ -4,12 +4,12 @@
  */
 
 /**
- * Editor UI for tk/repeater-row.
+ * Editor UI for tkfi/repeater-row.
  *
  * Assigns a stable rowId (derived from the block clientId) exactly once —
  * rows are never identified by array index. Inner blocks are restricted to
  * the repeater's per-instance allowedBlocks (from block context), falling
- * back to the PHP-filtered defaults injected as window.tkFieldsRepeaterDefaults.
+ * back to the PHP-filtered defaults injected as window.tkfiFieldsRepeaterDefaults.
  */
 (function (blocks, blockEditor, components, element, i18n) {
 	'use strict';
@@ -29,7 +29,7 @@
 		'core/list',
 		'core/buttons',
 		'core/quote',
-		'tk/field-value',
+		'tkfi/field-value',
 	];
 
 	function Edit(props) {
@@ -57,13 +57,13 @@
 		);
 
 		var injected =
-			window.tkFieldsRepeaterDefaults && window.tkFieldsRepeaterDefaults.allowedBlocks
-				? window.tkFieldsRepeaterDefaults.allowedBlocks
+			window.tkfiFieldsRepeaterDefaults && window.tkfiFieldsRepeaterDefaults.allowedBlocks
+				? window.tkfiFieldsRepeaterDefaults.allowedBlocks
 				: FALLBACK_DEFAULTS;
 
 		var allowedBlocks =
-			context['tk/repeater-allowed-blocks'] && context['tk/repeater-allowed-blocks'].length
-				? context['tk/repeater-allowed-blocks']
+			context['tkfi/repeater-allowed-blocks'] && context['tkfi/repeater-allowed-blocks'].length
+				? context['tkfi/repeater-allowed-blocks']
 				: injected;
 
 		return el(
@@ -91,7 +91,7 @@
 		return el(InnerBlocks.Content, null);
 	}
 
-	registerBlockType('tk/repeater-row', {
+	registerBlockType('tkfi/repeater-row', {
 		edit: Edit,
 		save: Save,
 	});

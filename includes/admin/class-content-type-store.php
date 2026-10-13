@@ -12,9 +12,9 @@
 /**
  * Content-type (custom post type) persistence + runtime registration.
  *
- * Definitions are stored as a hidden CPT (`tk-content-type`, no core UI —
+ * Definitions are stored as a hidden CPT (`tkfi-content-type`, no core UI —
  * we render our own) with the definition JSON in a single post meta key
- * (`_tk_fields_content_type`); the post title is the plural label and the
+ * (`_tkfi_content_type`); the post title is the plural label and the
  * post status is the definition status. Mirrors Group_Store's shape, with
  * two deliberate differences (see the v0.15.0 consultation notes):
  *
@@ -26,7 +26,7 @@
  *   story.
  *
  * Runtime registration reads an autoloaded option snapshot
- * (`tk_fields_content_types`, slug => sanitized args) — NOT a per-request
+ * (`tkfi_content_types`, slug => sanitized args) — NOT a per-request
  * get_posts() — so plain frontend pageloads cost zero extra queries and
  * need no persistent object cache. The snapshot is rebuilt whenever a
  * definition changes (see rebuild_snapshot()).
@@ -36,12 +36,12 @@
  * cron alike — `admin_init` would miss non-admin saves). The flush is
  * idempotent, so a flag surviving a failed request self-heals.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -49,10 +49,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Content_Type_Store {
 
-	public const CPT             = 'tk-content-type';
-	public const META_KEY        = '_tk_fields_content_type';
-	public const SNAPSHOT_OPTION = 'tk_fields_content_types';
-	public const FLUSH_FLAG      = 'tk_fields_flush_rewrites';
+	public const CPT             = 'tkfi-content-type';
+	public const META_KEY        = '_tkfi_content_type';
+	public const SNAPSHOT_OPTION = 'tkfi_content_types';
+	public const FLUSH_FLAG      = 'tkfi_flush_rewrites';
 
 	/**
 	 * @var self|null
@@ -88,7 +88,7 @@ final class Content_Type_Store {
 		'embed', 'theme', 'category', 'tag', 'any', 'post_type',
 		'comments', 'error', 'paged', 'page_id', 'post_id',
 		// Our own internal types.
-		'tk-field-group', 'tk-content-type',
+		'tkfi-field-group', 'tkfi-content-type',
 	);
 
 	/**
@@ -236,7 +236,7 @@ final class Content_Type_Store {
 
 	/**
 	 * Register the content-type storage post type. Non-public, no core UI,
-	 * no REST — every capability mapped to the custom `manage_tk_fields`
+	 * no REST — every capability mapped to the custom `manage_tkfi`
  * primitive (granted to administrators on init) so only admins
 	 * can touch definitions (closes the XML-RPC custom-fields injection
 	 * path that default `post` caps would leave open to Authors).
@@ -263,14 +263,14 @@ final class Content_Type_Store {
 				'capability_type'     => 'post',
 				'map_meta_cap'        => true,
 				'capabilities'        => array(
-					'edit_post'          => 'manage_tk_fields',
-					'read_post'          => 'manage_tk_fields',
-					'delete_post'        => 'manage_tk_fields',
-					'edit_posts'         => 'manage_tk_fields',
-					'edit_others_posts'  => 'manage_tk_fields',
-					'publish_posts'      => 'manage_tk_fields',
-					'read_private_posts' => 'manage_tk_fields',
-					'create_posts'       => 'manage_tk_fields',
+					'edit_post'          => 'manage_tkfi',
+					'read_post'          => 'manage_tkfi',
+					'delete_post'        => 'manage_tkfi',
+					'edit_posts'         => 'manage_tkfi',
+					'edit_others_posts'  => 'manage_tkfi',
+					'publish_posts'      => 'manage_tkfi',
+					'read_private_posts' => 'manage_tkfi',
+					'create_posts'       => 'manage_tkfi',
 				),
 			)
 		);
@@ -357,13 +357,13 @@ final class Content_Type_Store {
 	private function registration_args( array $def ): array|\WP_Error {
 		$slug = $def['slug'] ?? '';
 		if ( ! is_string( $slug ) || '' === $slug || 1 !== preg_match( '/^[a-z][a-z0-9_]{0,19}$/', $slug ) ) {
-			return new \WP_Error( 'tk_fields_ct_bad_slug', __( 'Invalid slug in stored definition.', 'tk-fields' ) );
+			return new \WP_Error( 'tkfi_ct_bad_slug', __( 'Invalid slug in stored definition.', 'tk-fields' ) );
 		}
 
 		$singular = (string) ( $def['singular'] ?? '' );
 		$plural   = (string) ( $def['plural'] ?? '' );
 		if ( '' === $singular || '' === $plural ) {
-			return new \WP_Error( 'tk_fields_ct_bad_labels', __( 'Singular and plural labels are required.', 'tk-fields' ) );
+			return new \WP_Error( 'tkfi_ct_bad_labels', __( 'Singular and plural labels are required.', 'tk-fields' ) );
 		}
 
 		$labels = $this->generate_labels( $singular, $plural, $def['labels_override'] ?? array() );
@@ -640,13 +640,13 @@ final class Content_Type_Store {
 		$slug = isset( $payload['slug'] ) ? sanitize_key( (string) $payload['slug'] ) : '';
 		$check = $this->validate_slug( $slug, $existing_id );
 		if ( ! $check['valid'] ) {
-			return new \WP_Error( 'tk_fields_ct_invalid_slug', $check['errors'][0], array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_ct_invalid_slug', $check['errors'][0], array( 'status' => 400 ) );
 		}
 
 		$singular = isset( $payload['singular'] ) ? sanitize_text_field( (string) $payload['singular'] ) : '';
 		$plural   = isset( $payload['plural'] ) ? sanitize_text_field( (string) $payload['plural'] ) : '';
 		if ( '' === $singular || '' === $plural ) {
-			return new \WP_Error( 'tk_fields_ct_invalid_labels', __( 'Singular and plural labels are required.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_ct_invalid_labels', __( 'Singular and plural labels are required.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		// rest_base: charset + core-route blocklist + uniqueness. The RAW
@@ -655,16 +655,16 @@ final class Content_Type_Store {
 		$rest_base_raw = isset( $payload['rest_base'] ) ? (string) $payload['rest_base'] : '';
 		$rest_base     = '' !== $rest_base_raw ? sanitize_key( $rest_base_raw ) : $slug;
 		if ( '' !== $rest_base_raw && 1 !== preg_match( '/^[a-z][a-z0-9_\-]{0,39}$/', $rest_base_raw ) ) {
-			return new \WP_Error( 'tk_fields_ct_invalid_rest_base', __( 'REST base must start with a lowercase letter (letters, digits, dashes, underscores; max 40).', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_ct_invalid_rest_base', __( 'REST base must start with a lowercase letter (letters, digits, dashes, underscores; max 40).', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 		if ( in_array( $rest_base, self::RESERVED_REST_BASES, true ) ) {
 			/* translators: %s: REST base slug */
-			return new \WP_Error( 'tk_fields_ct_invalid_rest_base', sprintf( __( '"%1$s" collides with a WordPress core REST route.', 'tk-fields' ), $rest_base ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_ct_invalid_rest_base', sprintf( __( '"%1$s" collides with a WordPress core REST route.', 'tk-fields' ), $rest_base ), array( 'status' => 400 ) );
 		}
 		foreach ( $this->all() as $existing ) {
 			if ( (int) $existing['id'] !== (int) $existing_id && ( $existing['rest_base'] ?? $existing['slug'] ) === $rest_base ) {
 				/* translators: %s: REST base slug */
-				return new \WP_Error( 'tk_fields_ct_invalid_rest_base', sprintf( __( 'Another content type already uses the REST base "%1$s".', 'tk-fields' ), $rest_base ), array( 'status' => 400 ) );
+				return new \WP_Error( 'tkfi_ct_invalid_rest_base', sprintf( __( 'Another content type already uses the REST base "%1$s".', 'tk-fields' ), $rest_base ), array( 'status' => 400 ) );
 			}
 		}
 
@@ -674,7 +674,7 @@ final class Content_Type_Store {
 			: $slug;
 		$rewrite_slug = trim( $rewrite_slug, '/' );
 		if ( 1 !== preg_match( '/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $rewrite_slug ) ) {
-			return new \WP_Error( 'tk_fields_ct_invalid_rewrite', __( 'Rewrite slug must be lowercase letters, digits and single dashes only (no slashes).', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_ct_invalid_rewrite', __( 'Rewrite slug must be lowercase letters, digits and single dashes only (no slashes).', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$has_archive  = ! empty( $payload['has_archive'] );
@@ -684,7 +684,7 @@ final class Content_Type_Store {
 				? trim( (string) $payload['archive_slug'], '/' )
 				: $rewrite_slug;
 			if ( 1 !== preg_match( '/^[a-z0-9]+(?:-[a-z0-9]+)*$/', $archive_slug ) ) {
-				return new \WP_Error( 'tk_fields_ct_invalid_archive', __( 'Archive slug must be lowercase letters, digits and single dashes only.', 'tk-fields' ), array( 'status' => 400 ) );
+				return new \WP_Error( 'tkfi_ct_invalid_archive', __( 'Archive slug must be lowercase letters, digits and single dashes only.', 'tk-fields' ), array( 'status' => 400 ) );
 			}
 		}
 
@@ -696,7 +696,7 @@ final class Content_Type_Store {
 		$hierarchical = ! empty( $payload['hierarchical'] );
 		if ( $hierarchical && ! in_array( 'page-attributes', $supports, true ) ) {
 			return new \WP_Error(
-				'tk_fields_ct_hierarchical_needs_attributes',
+				'tkfi_ct_hierarchical_needs_attributes',
 				__( 'Hierarchical content types need the "Page attributes" support enabled (it renders the parent picker).', 'tk-fields' ),
 				array( 'status' => 400 )
 			);
@@ -860,7 +860,7 @@ final class Content_Type_Store {
 		$json = wp_json_encode( $clean );
 		if ( false === $json ) {
 			wp_delete_post( $post_id, true );
-			return new \WP_Error( 'tk_fields_ct_encode_failed', __( 'Could not encode the content type definition.', 'tk-fields' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'tkfi_ct_encode_failed', __( 'Could not encode the content type definition.', 'tk-fields' ), array( 'status' => 500 ) );
 		}
 		update_post_meta( $post_id, self::META_KEY, $json );
 
@@ -885,12 +885,12 @@ final class Content_Type_Store {
 	public function update( int $id, array $payload ): array|\WP_Error {
 		$post = get_post( $id );
 		if ( ! $post instanceof \WP_Post || self::CPT !== $post->post_type ) {
-			return new \WP_Error( 'tk_fields_ct_not_found', __( 'Content type not found.', 'tk-fields' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'tkfi_ct_not_found', __( 'Content type not found.', 'tk-fields' ), array( 'status' => 404 ) );
 		}
 
 		$current = $this->read_definition( $post );
 		if ( null === $current ) {
-			return new \WP_Error( 'tk_fields_ct_invalid', __( 'The stored definition is invalid.', 'tk-fields' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'tkfi_ct_invalid', __( 'The stored definition is invalid.', 'tk-fields' ), array( 'status' => 500 ) );
 		}
 
 		// Slug lock: renaming with existing posts orphans them (post_type
@@ -898,7 +898,7 @@ final class Content_Type_Store {
 		$new_slug = isset( $payload['slug'] ) ? sanitize_key( (string) $payload['slug'] ) : '';
 		if ( '' !== $new_slug && $new_slug !== $current['slug'] && $this->post_count( $current['slug'] ) > 0 ) {
 			return new \WP_Error(
-				'tk_fields_ct_slug_locked',
+				'tkfi_ct_slug_locked',
 				__( 'The slug cannot be changed while this content type has posts. Use the slug migration action instead.', 'tk-fields' ),
 				array( 'status' => 400 )
 			);
@@ -922,7 +922,7 @@ final class Content_Type_Store {
 
 		$json = wp_json_encode( $clean );
 		if ( false === $json ) {
-			return new \WP_Error( 'tk_fields_ct_encode_failed', __( 'Could not encode the content type definition.', 'tk-fields' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'tkfi_ct_encode_failed', __( 'Could not encode the content type definition.', 'tk-fields' ), array( 'status' => 500 ) );
 		}
 		update_post_meta( $id, self::META_KEY, $json );
 
@@ -952,12 +952,12 @@ final class Content_Type_Store {
 
 		$post = get_post( $id );
 		if ( ! $post instanceof \WP_Post || self::CPT !== $post->post_type ) {
-			return new \WP_Error( 'tk_fields_ct_not_found', __( 'Content type not found.', 'tk-fields' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'tkfi_ct_not_found', __( 'Content type not found.', 'tk-fields' ), array( 'status' => 404 ) );
 		}
 
 		$current = $this->read_definition( $post );
 		if ( null === $current ) {
-			return new \WP_Error( 'tk_fields_ct_invalid', __( 'The stored definition is invalid.', 'tk-fields' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'tkfi_ct_invalid', __( 'The stored definition is invalid.', 'tk-fields' ), array( 'status' => 500 ) );
 		}
 
 		$old_slug = $current['slug'];
@@ -968,7 +968,7 @@ final class Content_Type_Store {
 
 		$check = $this->validate_slug( $new_slug, $id );
 		if ( ! $check['valid'] ) {
-			return new \WP_Error( 'tk_fields_ct_invalid_slug', $check['errors'][0], array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_ct_invalid_slug', $check['errors'][0], array( 'status' => 400 ) );
 		}
 
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- post_type is a DB key; no API exists for bulk re-keying.
@@ -976,7 +976,7 @@ final class Content_Type_Store {
 		// phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery -- post_type is a DB key; no API exists for bulk re-keying.
 		$migrated = $wpdb->update( $wpdb->posts, array( 'post_type' => $new_slug ), array( 'post_type' => $old_slug ) );
 		if ( false === $migrated ) {
-			return new \WP_Error( 'tk_fields_ct_migrate_failed', __( 'Could not migrate posts to the new slug.', 'tk-fields' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'tkfi_ct_migrate_failed', __( 'Could not migrate posts to the new slug.', 'tk-fields' ), array( 'status' => 500 ) );
 		}
 		// The bulk UPDATE bypasses the object cache — clear it for the
 		// moved posts so reads in this request see the new type.
@@ -996,7 +996,7 @@ final class Content_Type_Store {
 
 		$json = wp_json_encode( $current );
 		if ( false === $json ) {
-			return new \WP_Error( 'tk_fields_ct_encode_failed', __( 'Could not encode the content type definition.', 'tk-fields' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'tkfi_ct_encode_failed', __( 'Could not encode the content type definition.', 'tk-fields' ), array( 'status' => 500 ) );
 		}
 		update_post_meta( $id, self::META_KEY, $json );
 
@@ -1017,14 +1017,14 @@ final class Content_Type_Store {
 	public function trash( int $id ): bool|\WP_Error {
 		$post = get_post( $id );
 		if ( ! $post instanceof \WP_Post || self::CPT !== $post->post_type ) {
-			return new \WP_Error( 'tk_fields_ct_not_found', __( 'Content type not found.', 'tk-fields' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'tkfi_ct_not_found', __( 'Content type not found.', 'tk-fields' ), array( 'status' => 404 ) );
 		}
 		$def  = $this->read_definition( $post );
 		$slug = is_array( $def ) ? (string) ( $def['slug'] ?? '' ) : '';
 
 		if ( 'trash' !== $post->post_status ) {
 			if ( ! wp_trash_post( $id ) ) {
-				return new \WP_Error( 'tk_fields_ct_trash_failed', __( 'Could not trash the content type.', 'tk-fields' ), array( 'status' => 500 ) );
+				return new \WP_Error( 'tkfi_ct_trash_failed', __( 'Could not trash the content type.', 'tk-fields' ), array( 'status' => 500 ) );
 			}
 		}
 
@@ -1045,14 +1045,14 @@ final class Content_Type_Store {
 	public function delete( int $id ): bool|\WP_Error {
 		$post = get_post( $id );
 		if ( ! $post instanceof \WP_Post || self::CPT !== $post->post_type ) {
-			return new \WP_Error( 'tk_fields_ct_not_found', __( 'Content type not found.', 'tk-fields' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'tkfi_ct_not_found', __( 'Content type not found.', 'tk-fields' ), array( 'status' => 404 ) );
 		}
 		$def  = $this->read_definition( $post );
 		$slug = is_array( $def ) ? (string) ( $def['slug'] ?? '' ) : '';
 
 		$deleted = wp_delete_post( $id, true );
 		if ( ! $deleted ) {
-			return new \WP_Error( 'tk_fields_ct_delete_failed', __( 'Could not delete the content type.', 'tk-fields' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'tkfi_ct_delete_failed', __( 'Could not delete the content type.', 'tk-fields' ), array( 'status' => 500 ) );
 		}
 
 		$this->rebuild_snapshot();
@@ -1209,7 +1209,7 @@ final class Content_Type_Store {
 		}
 
 		return array(
-			'format'        => 'tk-content-types',
+			'format'        => 'tkfi-content-types',
 			'version'       => 1,
 			'exported_at'   => gmdate( 'c' ),
 			'plugin'        => 'tk-fields',
@@ -1226,19 +1226,19 @@ final class Content_Type_Store {
 	 * @return array{created: array, skipped: array, warnings: array}|WP_Error
 	 */
 	public function import( array $doc ): array|\WP_Error {
-		if ( ( $doc['format'] ?? '' ) !== 'tk-content-types' ) {
-			return new \WP_Error( 'tk_fields_ct_import_format', __( 'Not a TK Fields content-types export (missing format marker).', 'tk-fields' ), array( 'status' => 400 ) );
+		if ( ( $doc['format'] ?? '' ) !== 'tkfi-content-types' ) {
+			return new \WP_Error( 'tkfi_ct_import_format', __( 'Not a TK Fields content-types export (missing format marker).', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 		$version = (int) ( $doc['version'] ?? 0 );
 		if ( $version < 1 || $version > 1 ) {
-			return new \WP_Error( 'tk_fields_ct_import_version', __( 'Unsupported content-types export version.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_ct_import_version', __( 'Unsupported content-types export version.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 		$items = $doc['content_types'] ?? null;
 		if ( ! is_array( $items ) ) {
-			return new \WP_Error( 'tk_fields_ct_import_shape', __( 'The export contains no content_types array.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_ct_import_shape', __( 'The export contains no content_types array.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 		if ( count( $items ) > 100 ) {
-			return new \WP_Error( 'tk_fields_ct_import_too_many', __( 'Import is limited to 100 content types per file.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_ct_import_too_many', __( 'Import is limited to 100 content types per file.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$created  = array();

@@ -10,14 +10,14 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/group.
+ * Server render for tkfi/group.
  *
  * Displays a group field as a <fieldset>: the legend is the group label
  * and each row is one sub-field's label + formatted value. Values resolve
  * through the Fields service only — never synced into attributes. Empty
  * (unset) sub-fields are skipped; a fully empty group renders nothing.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
@@ -31,7 +31,7 @@ if ( '' === $field_name ) {
 	return;
 }
 
-$registry = \TK\Fields\Field_Registry::instance();
+$registry = \TKFields\Field_Registry::instance();
 $field    = $registry->get( $field_name );
 if ( null === $field || 'group' !== ( $field['type'] ?? '' ) ) {
 	return;
@@ -42,12 +42,12 @@ if ( $post_id <= 0 ) {
 	return;
 }
 
-$values = \TK\Fields\Fields::get( $field_name, $post_id, true );
-if ( \TK\Fields\Unset_Value::is_unset( $values ) || ! is_array( $values ) ) {
+$values = \TKFields\Fields::get( $field_name, $post_id, true );
+if ( \TKFields\Unset_Value::is_unset( $values ) || ! is_array( $values ) ) {
 	return;
 }
 
-if ( ! function_exists( 'tk_group_display_value' ) ) {
+if ( ! function_exists( 'tkfi_group_display_value' ) ) {
 	/**
 	 * Type-aware, fully escaped display markup for one sub-field value.
 	 *
@@ -55,7 +55,7 @@ if ( ! function_exists( 'tk_group_display_value' ) ) {
 	 * @param mixed $value Formatted value.
 	 * @return string HTML (already escaped).
 	 */
-	function tk_group_display_value( $child, $value ) {
+	function tkfi_group_display_value( $child, $value ) {
 		$type = (string) ( $child['type'] ?? 'text' );
 
 		if ( is_bool( $value ) ) {
@@ -134,7 +134,7 @@ foreach ( $children as $short => $child ) {
 	if ( ! array_key_exists( $short, $values ) ) {
 		continue;
 	}
-	$html = tk_group_display_value( $child, $values[ $short ] );
+	$html = tkfi_group_display_value( $child, $values[ $short ] );
 	if ( '' === $html ) {
 		continue;
 	}
@@ -144,7 +144,7 @@ foreach ( $children as $short => $child ) {
 	$rows .= sprintf(
 		'<div class="tkf-group__row"><dt class="tkf-group__term">%s</dt><dd class="tkf-group__value">%s</dd></div>',
 		esc_html( $child_label ),
-		$html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in tk_group_display_value().
+		$html // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- escaped in tkfi_group_display_value().
 	);
 }
 

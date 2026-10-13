@@ -4,7 +4,7 @@
  */
 
 /**
- * Editor UI for tk/group.
+ * Editor UI for tkfi/group.
  *
  * Display block: the inspector names the group field; the canvas shows the
  * server render (render.php). Classic script using wp.* globals only —
@@ -27,7 +27,7 @@
 	var useEffect = element.useEffect;
 
 	// v0.12.0: field-group → group-field cascade picker (shared pattern
-	// with tk/field-value/edit.js; classic scripts can't share modules).
+	// with tkfi/field-value/edit.js; classic scripts can't share modules).
 	var fieldGroupsCache = { state: 'idle', groups: [], waiters: [] };
 
 	function loadFieldGroups() {
@@ -43,11 +43,11 @@
 			});
 			fieldGroupsCache.waiters = [];
 		};
-		apiFetch({ path: '/tk/v1/groups' }).then(
+		apiFetch({ path: '/tkfi/v1/groups' }).then(
 			function (res) {
 				var list = (res && res.groups) || [];
 				var fetches = list.map(function (g) {
-					return apiFetch({ path: '/tk/v1/groups/' + g.id }).then(
+					return apiFetch({ path: '/tkfi/v1/groups/' + g.id }).then(
 						function (full) {
 							return (full && full.group) || null;
 						},
@@ -220,7 +220,7 @@
 		);
 	}
 
-	blocks.registerBlockType('tk/group', {
+	blocks.registerBlockType('tkfi/group', {
 		edit: function (props) {
 			var attributes = props.attributes;
 			var setAttributes = props.setAttributes;

@@ -15,12 +15,12 @@
  * Adapters know WHERE a field value lives (postmeta today, custom tables in a
  * later phase). No integration above the Fields service may know this.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

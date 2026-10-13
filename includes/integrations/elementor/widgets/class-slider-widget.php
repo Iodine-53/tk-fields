@@ -23,12 +23,12 @@
  * handle `tk-widgets`) plus this widget's own stylesheet
  * (assets/elementor/css/tk-slider.css).
  *
- * @package TK\Fields\Integrations\Elementor\Widgets
+ * @package TKFields\Integrations\Elementor\Widgets
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Widgets;
+namespace TKFields\Integrations\Elementor\Widgets;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -50,16 +50,16 @@ final class Slider_Widget extends \Elementor\Widget_Base {
 
 		wp_register_style(
 			'tk-widget-slider',
-			plugins_url( 'assets/elementor/css/tk-slider.css', TK_FIELDS_FILE ),
+			plugins_url( 'assets/elementor/css/tk-slider.css', TKFI_FILE ),
 			array(),
-			TK_FIELDS_VERSION
+			TKFI_VERSION
 		);
 
 		wp_register_script(
 			'tk-widget-slider',
-			plugins_url( 'assets/elementor/js/tk-slider.js', TK_FIELDS_FILE ),
+			plugins_url( 'assets/elementor/js/tk-slider.js', TKFI_FILE ),
 			array(),
-			TK_FIELDS_VERSION,
+			TKFI_VERSION,
 			true
 		);
 	}
@@ -68,7 +68,7 @@ final class Slider_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_name(): string {
-		return 'tk-slider';
+		return 'tkfi-slider';
 	}
 
 	/**
@@ -126,7 +126,7 @@ final class Slider_Widget extends \Elementor\Widget_Base {
 	 */
 	private function register_content_controls(): void {
 		$this->start_controls_section(
-			'tk_slider_content',
+			'tkfi_slider_content',
 			array(
 				'label' => __( 'Content', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
@@ -340,7 +340,7 @@ final class Slider_Widget extends \Elementor\Widget_Base {
 	 */
 	private function register_style_controls(): void {
 		$this->start_controls_section(
-			'tk_slider_style_arrows',
+			'tkfi_slider_style_arrows',
 			array(
 				'label' => __( 'Arrows', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
@@ -394,7 +394,7 @@ final class Slider_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_slider_style_dots',
+			'tkfi_slider_style_dots',
 			array(
 				'label' => __( 'Dots & Progress', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
@@ -440,7 +440,7 @@ final class Slider_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_slider_style_caption',
+			'tkfi_slider_style_caption',
 			array(
 				'label' => __( 'Caption', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
@@ -542,7 +542,7 @@ final class Slider_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_slider_style_button',
+			'tkfi_slider_style_button',
 			array(
 				'label' => __( 'Button', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
@@ -597,7 +597,7 @@ final class Slider_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_slider_style_motion',
+			'tkfi_slider_style_motion',
 			array(
 				'label' => __( 'Motion', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,

@@ -29,7 +29,7 @@
  * eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -208,7 +208,7 @@ $term = $term_id > 0 ? get_term( $term_id ) : null;
 if ( $term instanceof \WP_Term ) {
 	$check( true === Fields::update( 'fc_sections', $rows_happy, $term ), 'flexible update on term accepted' );
 	$meta = get_term_meta( $term_id, 'fc_sections', true );
-	$check( is_string( $meta ) && false !== strpos( $meta, '<!-- wp:tk/flexible-content' ), 'term meta holds serialized block markup' );
+	$check( is_string( $meta ) && false !== strpos( $meta, '<!-- wp:tkfi/flexible-content' ), 'term meta holds serialized block markup' );
 
 	$got = Fields::get( 'fc_sections', $term );
 	$check( is_array( $got ) && 'Hero' === ( $got[0]['layout_label'] ?? null ), 'term read returns formatted rows' );
@@ -228,7 +228,7 @@ $check( false === Fields::update( 'fc_sections', $rows_happy, $post_id ), 'flexi
 
 // ------------------------------------------- flexible: serialize round-trip
 $markup = Flexible_Content::serialize_rows( $flex, $san );
-$check( false !== strpos( $markup, 'tk/flexible-content' ) && false !== strpos( $markup, 'tk/flexible-layout' ), 'serialize_rows emits block markup' );
+$check( false !== strpos( $markup, 'tkfi/flexible-content' ) && false !== strpos( $markup, 'tkfi/flexible-layout' ), 'serialize_rows emits block markup' );
 $back = Flexible_Content::rows_from_markup( 'fc_sections', $markup );
 $check( 'hero' === ( $back[0]['layout'] ?? null ) && 'Hi' === ( $back[0]['fields']['headline'] ?? null ), 'serialize/parse round-trips rows' );
 
@@ -239,15 +239,15 @@ $check( 'hero' === ( $back[0]['layout'] ?? null ) && 'Hi' === ( $back[0]['fields
 // container saves return InnerBlocks.Content.
 $editor_markup = serialize_blocks( array(
 	array(
-		'blockName'    => 'tk/flexible-content',
+		'blockName'    => 'tkfi/flexible-content',
 		'attrs'        => array( 'fieldName' => 'fc_sections', 'fieldKey' => 'flex-test1' ),
 		'innerBlocks'  => array(
 			array(
-				'blockName'   => 'tk/flexible-layout',
+				'blockName'   => 'tkfi/flexible-layout',
 				'attrs'       => array( 'layout' => 'hero', 'layoutId' => 'layout-row1', 'fieldKey' => 'flex-test1' ),
 				'innerBlocks' => array(
 					array(
-						'blockName'   => 'tk/field-value',
+						'blockName'   => 'tkfi/field-value',
 						'attrs'       => array( 'fieldName' => 'headline', 'fieldType' => 'text', 'value' => 'Hi', 'fieldKey' => 'flex-test1' ),
 						'innerBlocks' => array(),
 						'innerContent' => array(),

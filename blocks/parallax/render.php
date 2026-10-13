@@ -10,7 +10,7 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/parallax.
+ * Server render for tkfi/parallax.
  *
  * Markup contract (kept framework-agnostic so the phase-3 Elementor adapter
  * can reuse it): .tk-parallax > .tk-parallax-bg[data-speed] +
@@ -21,7 +21,7 @@
  * opacity is adjustable. disableOnMobile (default on) degrades to a static
  * cover background on narrow screens.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

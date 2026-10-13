@@ -10,22 +10,22 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/accordion.
+ * Server render for tkfi/accordion.
  *
  * Instance state lives in context (openIds), never global state. When
  * openFirst is set, the first inner item's itemId seeds openIds.
  *
  * Visual style is driven by the `variant` attribute (card|minimal|filled)
  * and `iconPosition` (left|right), emitted as modifier classes on the root.
- * The tk/accordion-item children read these purely via CSS descendant
+ * The tkfi/accordion-item children read these purely via CSS descendant
  * selectors — no extra context needed.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -48,7 +48,7 @@ if ( ! in_array( $icon_position, array( 'left', 'right' ), true ) ) {
 $open_ids = array();
 if ( $open_first && ! empty( $block->inner_blocks ) ) {
 	$first = $block->inner_blocks[0];
-	if ( 'tk/accordion-item' === $first->name && ! empty( $first->attributes['itemId'] ) ) {
+	if ( 'tkfi/accordion-item' === $first->name && ! empty( $first->attributes['itemId'] ) ) {
 		$open_ids[] = (string) $first->attributes['itemId'];
 	}
 }
@@ -65,4 +65,4 @@ $context = wp_json_encode(
 	)
 );
 ?>
-<div class="<?php echo esc_attr( $classes ); ?>" data-wp-interactive="tk/accordion" data-wp-context='<?php echo $context; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>'><?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
+<div class="<?php echo esc_attr( $classes ); ?>" data-wp-interactive="tkfi/accordion" data-wp-context='<?php echo $context; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>'><?php echo $content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>

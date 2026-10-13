@@ -12,23 +12,23 @@
 /**
  * Elementor "TK Repeater" widget.
  *
- * Loops over the rows of a tk/repeater block (stored natively in
+ * Loops over the rows of a tkfi/repeater block (stored natively in
  * post_content) and renders each row's actual InnerBlocks through
- * render_block(), reusing the Gutenberg render pipeline — so tk/field-value
+ * render_block(), reusing the Gutenberg render pipeline — so tkfi/field-value
  * blocks inside each row render exactly as they do in the block editor.
  * This is the loop-template behavior.
  *
- * Values are resolved through \TK\Fields\Fields — no postmeta reads.
+ * Values are resolved through \TKFields\Fields — no postmeta reads.
  *
- * @package TK\Fields\Integrations\Elementor\Widgets
+ * @package TKFields\Integrations\Elementor\Widgets
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Widgets;
+namespace TKFields\Integrations\Elementor\Widgets;
 
-use TK\Fields\Fields;
-use TK\Fields\Integrations\Elementor\Context;
+use TKFields\Fields;
+use TKFields\Integrations\Elementor\Context;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -43,7 +43,7 @@ final class Repeater_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_name(): string {
-		return 'tk-repeater';
+		return 'tkfi-repeater';
 	}
 
 	/**
@@ -79,7 +79,7 @@ final class Repeater_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function register_controls(): void {
 		$this->start_controls_section(
-			'tk_repeater_content',
+			'tkfi_repeater_content',
 			array(
 				'label' => __( 'Content', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
@@ -174,7 +174,7 @@ final class Repeater_Widget extends \Elementor\Widget_Base {
 		$this->add_render_attribute(
 			'wrapper',
 			'class',
-			array( 'tk-repeater', 'tk-repeater--' . $layout )
+			array( 'tkfi-repeater', 'tk-repeater--' . $layout )
 		);
 
 		if ( 'grid' === $layout ) {

@@ -16,15 +16,15 @@
  * is available through the TK Text tag) and page_link fields (the
  * formatted page_link value already IS the resolved URL string).
  *
- * @package TK\Fields\Integrations\Elementor\Tags
+ * @package TKFields\Integrations\Elementor\Tags
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Tags;
+namespace TKFields\Integrations\Elementor\Tags;
 
 use Elementor\Modules\DynamicTags\Module as Dynamic_Tags_Module;
-use TK\Fields\Unset_Value;
+use TKFields\Unset_Value;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -66,8 +66,8 @@ class URL_Tag extends Base_Field_Tag {
 			// The formatted oembed value is embed HTML; the URL category
 			// wants the raw stored URL instead.
 			$key = $this->get_settings( 'field_key' );
-			$value = \TK\Fields\Fields::get( $key, \TK\Fields\Integrations\Elementor\Context::resolve_post_id(), false );
-			if ( \TK\Fields\Unset_Value::is_unset( $value ) ) {
+			$value = \TKFields\Fields::get( $key, \TKFields\Integrations\Elementor\Context::resolve_post_id(), false );
+			if ( \TKFields\Unset_Value::is_unset( $value ) ) {
 				return;
 			}
 		}

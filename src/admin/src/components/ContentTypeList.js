@@ -113,7 +113,7 @@ export default function ContentTypeList( { navigate, notify } ) {
 		api
 			.exportContentTypes()
 			.then( ( doc ) => {
-				downloadJson( doc, 'tk-content-types.json' );
+				downloadJson( doc, 'tkfi-content-types.json' );
 				notify( __( 'Content types exported.', 'tk-fields' ) );
 			} )
 			.catch( ( err ) => notify( err.message, 'error' ) );
@@ -123,7 +123,7 @@ export default function ContentTypeList( { navigate, notify } ) {
 		api
 			.exportContentTypes( [ type.id ] )
 			.then( ( doc ) => {
-				downloadJson( doc, `tk-content-type-${ type.slug }.json` );
+				downloadJson( doc, `tkfi-content-type-${ type.slug }.json` );
 				notify(
 					sprintf(
 						/* translators: %s: content type slug */
@@ -167,7 +167,7 @@ export default function ContentTypeList( { navigate, notify } ) {
 			setImportPreview( { error: __( 'Not valid JSON.', 'tk-fields' ) } );
 			return;
 		}
-		if ( doc.format !== 'tk-content-types' || ! Array.isArray( doc.content_types ) ) {
+		if ( doc.format !== 'tkfi-content-types' || ! Array.isArray( doc.content_types ) ) {
 			setImportPreview( {
 				error: __( 'Not a TK Fields content-types export.', 'tk-fields' ),
 			} );
@@ -414,7 +414,7 @@ export default function ContentTypeList( { navigate, notify } ) {
 									rows={ 6 }
 									value={ importText }
 									onChange={ setImportText }
-									placeholder='{"format":"tk-content-types","version":1,…}'
+									placeholder='{"format":"tkfi-content-types","version":1,…}'
 								/>
 							</TKControl>
 							<p>

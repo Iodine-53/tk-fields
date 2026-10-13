@@ -19,12 +19,12 @@
  * Zero-pointer contract: get_option() with a sentinel default is the
  * arbiter, so a stored false/''/0 reads back as itself, not as "unset".
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

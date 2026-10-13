@@ -59,8 +59,8 @@ dom.window.wp = {
 dom.window.ReactJSXRuntime = req( 'react/jsx-runtime' );
 
 // ---- localized config ----
-dom.window.TK_FIELDS_ADMIN = {
-	root: 'http://localhost/wp-json/tk/v1',
+dom.window.TKFI_ADMIN = {
+	root: 'http://localhost/wp-json/tkfi/v1',
 	nonce: 'test-nonce',
 	adminUrl: 'http://localhost/wp-admin/',
 };
@@ -83,16 +83,16 @@ global.fetch = async ( url, opts = {} ) => {
 		ok: status >= 200 && status < 300, status,
 		json: async () => data,
 	} );
-	if ( url.endsWith( '/wp-json/tk/v1/groups' ) && ( opts.method || 'GET' ) === 'GET' ) {
+	if ( url.endsWith( '/wp-json/tkfi/v1/groups' ) && ( opts.method || 'GET' ) === 'GET' ) {
 		return json( { groups: [] } );
 	}
-	if ( url.endsWith( '/wp-json/tk/v1/field-types' ) ) {
+	if ( url.endsWith( '/wp-json/tkfi/v1/field-types' ) ) {
 		return json( { types: fieldTypes } );
 	}
 	if ( url.includes( '/wp/v2/types' ) ) {
 		return json( { post: { slug: 'post', name: 'Posts' }, page: { slug: 'page', name: 'Pages' } } );
 	}
-	if ( url.endsWith( '/wp-json/tk/v1/groups' ) && opts.method === 'POST' ) {
+	if ( url.endsWith( '/wp-json/tkfi/v1/groups' ) && opts.method === 'POST' ) {
 		savedPayload = JSON.parse( opts.body );
 		return json( { group: { ...savedPayload, id: 7 } }, 201 );
 	}
@@ -147,9 +147,9 @@ dom.window.document.dispatchEvent( new dom.window.Event( 'DOMContentLoaded' ) );
 	);
 	await click( helpTab );
 	await tick( 60 );
-	assert( text().includes( 'tk_get_field' ), 'help shows tk_get_field snippet' );
+	assert( text().includes( 'tkfi_get_field' ), 'help shows tkfi_get_field snippet' );
 	assert( text().includes( 'Migrating from ACF' ), 'help shows ACF migration notes' );
-	assert( text().includes( 'TK_FIELDS_ACF_COMPAT' ), 'help shows shim opt-in constant' );
+	assert( text().includes( 'TKFI_ACF_COMPAT' ), 'help shows shim opt-in constant' );
 
 	// Back to Fields tab, open type picker
 	const fieldsTab = [ ...document.querySelectorAll( '[role="tab"]' ) ].find( ( b ) =>
@@ -248,11 +248,11 @@ dom.window.document.dispatchEvent( new dom.window.Event( 'DOMContentLoaded' ) );
 	const labelInput = cardBody.querySelectorAll( 'input[type="text"]' )[ 0 ];
 	await setInput( labelInput, 'Hero Price' );
 	await tick( 30 );
-	assert( text().includes( "tk_get_field( 'hero_price' )" ), 'auto-slug generated hero_price' );
+	assert( text().includes( "tkfi_get_field( 'hero_price' )" ), 'auto-slug generated hero_price' );
 
 	await click( saveBtn );
 	await tick( 120 );
-	assert( calls.some( ( c ) => c.method === 'POST' && c.url.endsWith( '/tk/v1/groups' ) ), 'POST /groups issued' );
+	assert( calls.some( ( c ) => c.method === 'POST' && c.url.endsWith( '/tkfi/v1/groups' ) ), 'POST /groups issued' );
 	assert( savedPayload && savedPayload.title === 'Event details', 'payload has title' );
 	assert( savedPayload.fields[ 0 ].name === 'hero_price', 'payload field name slugged' );
 	assert(

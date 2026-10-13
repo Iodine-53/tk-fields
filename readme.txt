@@ -4,7 +4,7 @@ Tags: custom fields, field groups, gutenberg blocks, elementor, post meta
 Requires at least: 6.8
 Tested up to: 7.1
 Requires PHP: 8.1
-Stable tag: 0.20.7
+Stable tag: 0.20.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -23,7 +23,7 @@ Create a field group, attach location rules (post type, taxonomy, page template 
 * Gutenberg: Field Value and Field Group blocks with a block-bindings source, so field values can feed any block that supports bindings.
 * Elementor: typed dynamic tags for every field type, plus a repeater widget.
 * Classic editor: meta boxes render your fields on the post edit screen.
-* Developers: a canonical `tk_*()` PHP API, a REST API (`tk/v1`), WP-CLI commands, AI context export, and read-only Abilities.
+* Developers: a canonical `tkfi_*()` PHP API, a REST API (`tkfi/v1`), WP-CLI commands, AI context export, and read-only Abilities.
 
 **Interoperability**
 
@@ -92,13 +92,16 @@ oEmbed fields use WordPress core's oEmbed discovery. When an editor pastes a URL
 
 == Changelog ==
 
+= 0.20.8 =
+* Compliance: full prefix migration per the wordpress.org review — every function, class, constant, option, hook, post type, block, widget and the REST namespace now uses the four-character `tkfi` prefix (namespace `TKFields`, constants `TKFI_*`, functions/options `tkfi_*`, REST base `tkfi/v1`, blocks `tkfi/*`). The plugin slug and text domain remain `tk-fields`. Stored names changed accordingly; the plugin has not been publicly released, so no sites carry the old names.
+
 = 0.20.7 =
 * Compliance: the admin build's `.npmrc` no longer ships in the release zip — the release builder now fails the build if any hidden file lands in the staged tree (the wordpress.org upload scan rejected 0.20.6 for it).
 
 = 0.20.6 =
 * Compliance: added an "External services" readme section documenting the Map field's Photon geocoder address search (opt-in, editor-side only) and the OpenStreetMap tile preview, with terms and privacy links; corrected the main file header, which wrongly claimed there is no external service.
 * Compliance: the public GitHub repository the Plugin URI points to (https://github.com/iodine-53/tk-fields) now exists and holds the plugin source.
-* Housekeeping: the TK_FIELDS_VERSION constant and the admin app's package.json version now track the plugin version.
+* Housekeeping: the TKFI_VERSION constant and the admin app's package.json version now track the plugin version.
 
 = 0.20.5 =
 * Compliance: finishes the Plugin Check pass — the remaining 5 errors from the 0.20.4 re-check are resolved (translators comments placed directly above their calls, documented ignore for the int-cast user ID, direct-access guard moved to the top of class-blocks.php).
@@ -117,7 +120,7 @@ oEmbed fields use WordPress core's oEmbed discovery. When an editor pastes a URL
 * Polish: replaced a joke placeholder URL in the AI context export's oEmbed sample value with a neutral example.com URL.
 
 = 0.20.1 =
-* New: field-group renderer — opening a post in the block editor now automatically inserts the `tk/field-repeater` wrapper for every top-level repeater field in the post's assigned field groups (new `tk/v1/post-repeaters` endpoint, `edit_posts`-gated like the sibling field-def route; schema only, no values). Insertion is idempotent: exactly one wrapper per field, matched by the canonical fieldKey, and a wrapper you remove mid-session is never re-inserted until the next editor load. Repeater fields are now fully usable through the editor UI — no console calls needed.
+* New: field-group renderer — opening a post in the block editor now automatically inserts the `tkfi/field-repeater` wrapper for every top-level repeater field in the post's assigned field groups (new `tkfi/v1/post-repeaters` endpoint, `edit_posts`-gated like the sibling field-def route; schema only, no values). Insertion is idempotent: exactly one wrapper per field, matched by the canonical fieldKey, and a wrapper you remove mid-session is never re-inserted until the next editor load. Repeater fields are now fully usable through the editor UI — no console calls needed.
 * Compliance: the Elementor repeater dynamic tag now escapes its output — one escaped text line per row — closing a stored-XSS path when a sub-field carries the "allow unfiltered HTML" opt-in. The tag's typed data layer (`get_value()`) is unchanged; the escaping lives at the rendering boundary, the same role `render()` plays in the sibling tags.
 * Compliance: password sub-fields inside repeaters, groups, and flexible-content layouts are now unconditionally excluded from AI context export, matching the long-standing top-level password exclusion. The export is schema-only (values were never exposed); this closes the shape disclosure gap.
 * Compliance: added the missing `tk-fields` text domain to a validation message in the repeater block editor.
@@ -126,13 +129,13 @@ oEmbed fields use WordPress core's oEmbed discovery. When an editor pastes a URL
 * ACF import UX: the import dialog now explains how the direct import works (reads field groups straight from the active ACF plugin — no export file needed; skips are reported with reasons). When ACF is not active, the dialog offers an "Import with AI" fallback: a copy-to-clipboard transformer prompt (generated server-side from the live FIELD_SHAPE, so it can't drift) to paste into ChatGPT/Claude/Gemini together with the ACF JSON export, with the next step spelled out — paste the AI's JSON into "Import from AI".
 
 = 0.20.0 =
-* New: repeater field type — repeatable rows of sub-fields, nested two levels deep (e.g. course modules → lessons). Rows are stored as native `tk/field-repeater` blocks with stable row IDs (never array indexes); context is a full path stack end-to-end, so nested saves can never overwrite a sibling row's data.
+* New: repeater field type — repeatable rows of sub-fields, nested two levels deep (e.g. course modules → lessons). Rows are stored as native `tkfi/field-repeater` blocks with stable row IDs (never array indexes); context is a full path stack end-to-end, so nested saves can never overwrite a sibling row's data.
 * Repeater settings: min/max row counts, add-row button label, list/grid row layout, and collapsed (which sub-field drives the row summary). Builder UI with sub-field editing, tooltips on every control, and a block-editor-only badge — no classic-editor UI in v1, same as flexible content.
-* Repeater reads return the typed CQ1 shape (`list<array<string,mixed>>`, recursive — an image sub-field returns the identical DTO as a top-level image field); `tk_get_sub_field()` resolves against the nested row-context stack.
+* Repeater reads return the typed CQ1 shape (`list<array<string,mixed>>`, recursive — an image sub-field returns the identical DTO as a top-level image field); `tkfi_get_sub_field()` resolves against the nested row-context stack.
 * "Import from AI" accepts repeaters: `sub_fields` (recursive), `min`/`max`, `button_label`, `layout` (`list`|`grid`, ACF table/row/block layouts mapped), `collapsed` — all carried with zero dropped settings; depth 3+ nesting is a hard error, never a silent drop. The ACF importer re-maps ACF `repeater` fields to TK repeaters (no auto-migration of existing groups).
 * New Elementor dynamic tag (tk-fields-repeater): resolves a repeater field + dot-notation sub-field path through the Fields service typed read, one entry per row in stored order; the existing repeater widget stays the render primitive.
-* New `tk/field-repeater` block: dedicated wrapper with stable fieldKey identity (no editable field name), composed from the existing row machinery; nested wrappers resolve recursively; copy/paste across posts regenerates row IDs.
-* Note: `tk/field-repeater` blocks are inserted automatically by the field-group renderer — the block stays out of the inserter by design, and `window.tkFieldRepeater.createFromFieldDef()` remains the programmatic entry point.
+* New `tkfi/field-repeater` block: dedicated wrapper with stable fieldKey identity (no editable field name), composed from the existing row machinery; nested wrappers resolve recursively; copy/paste across posts regenerates row IDs.
+* Note: `tkfi/field-repeater` blocks are inserted automatically by the field-group renderer — the block stays out of the inserter by design, and `window.tkFieldRepeater.createFromFieldDef()` remains the programmatic entry point.
 
 = 0.19.0 =
 * Feature: "Import from AI" is now full-fidelity — the importer carries all ~35 field settings, not just the basic seven. Conditional logic, defaults, placeholders, min/max/step/maxlength, choices + multiple, toolbar presets, map settings (search, default lat/lng/zoom), relationship/post-object settings (post types, allow external), taxonomy settings (taxonomy, field type, save/load terms), user roles, file MIME types and image size, allow_unfiltered, message text, clone targets, group sub-fields, and flexible-content layouts (keys, labels, min/max, button label) all survive the round trip. See FIXES-0.19.0.md.
@@ -140,9 +143,9 @@ oEmbed fields use WordPress core's oEmbed discovery. When an editor pastes a URL
 * Unknown field or group keys are reported as warnings instead of being silently dropped; conditional logic is structurally validated and must reference another top-level field in the same group.
 
 = 0.18.0 =
-* Security: the tk/field-value block's wysiwyg renderer now resolves the field through the field registry and sanitizes the value with that field's own sanitizer — a hand-crafted block (block-comment JSON is editable by contributors/authors) can no longer smuggle raw HTML/script onto the frontend. Unknown fields, or a type mismatch between the block attributes and the registered field, refuse to render. See FIXES-0.18.0.md.
+* Security: the tkfi/field-value block's wysiwyg renderer now resolves the field through the field registry and sanitizes the value with that field's own sanitizer — a hand-crafted block (block-comment JSON is editable by contributors/authors) can no longer smuggle raw HTML/script onto the frontend. Unknown fields, or a type mismatch between the block attributes and the registered field, refuse to render. See FIXES-0.18.0.md.
 * Compliance: the Leaflet map library is now vendored locally (assets/leaflet/, BSD-2-Clause) instead of loading from the unpkg CDN — all editor JavaScript and CSS ships inside the plugin.
-* Improved: uninstall now removes field-group definition posts and the custom `manage_tk_fields` capability (field values on posts/terms/users are still left untouched).
+* Improved: uninstall now removes field-group definition posts and the custom `manage_tkfi` capability (field values on posts/terms/users are still left untouched).
 * Improved: readme Privacy section now discloses that the map field's editor preview loads OpenStreetMap tiles; the search help text says the same.
 * Improved: release zip no longer ships development files (tests, package manifests, internal dev notes, consultation scratch files).
 * Fixed: ABSPATH direct-access guards added to the three generated asset manifests that lacked them; duplicate `= 0.16.0 =` changelog heading merged into `= 0.15.1 =`.
@@ -192,7 +195,7 @@ oEmbed fields use WordPress core's oEmbed discovery. When an editor pastes a URL
 
 = 0.12.1 =
 * Fixed: sub-field labels no longer truncate in the collapsed group-options row.
-* Fixed: hand-written `tk/field-value` block markup now validates in the block editor.
+* Fixed: hand-written `tkfi/field-value` block markup now validates in the block editor.
 
 = 0.12.0 =
 * Rebuilt field-group builder UI: searchable type picker with category tabs and icon tiles, one recursive field-row component for nested fields, AND/OR location rule groups, adaptive settings tabs, Flexible Content layouts screen, block-editor-only badges in the picker, and a one-click importer for other field plugins.

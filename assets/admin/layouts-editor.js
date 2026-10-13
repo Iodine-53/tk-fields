@@ -27,7 +27,7 @@
  * this classic script (it is a bundle dependency). It is read lazily at
  * render time, never at module top level.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 (function (element, components, i18n) {
 	'use strict';

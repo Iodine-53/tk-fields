@@ -11,7 +11,7 @@
 	var RichText = wp.blockEditor.RichText;
 	var __ = wp.i18n.__;
 
-	registerBlockType( 'tk/accordion-item', {
+	registerBlockType( 'tkfi/accordion-item', {
 		edit: function ( props ) {
 			var attributes = props.attributes;
 			var setAttributes = props.setAttributes;

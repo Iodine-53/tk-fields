@@ -494,7 +494,7 @@ function UniversalControls( { field, fieldTypes, onUpdate, markTouched } ) {
 			<TKControl
 				label={ __( 'Field name', 'tk-fields' ) }
 				tooltip={ __(
-					'The machine name used in template code: tk_get_field( \'name\' ). Auto-generated from the label; you can edit it. Lowercase letters, numbers and underscores only, unique within the group.',
+					'The machine name used in template code: tkfi_get_field( \'name\' ). Auto-generated from the label; you can edit it. Lowercase letters, numbers and underscores only, unique within the group.',
 					'tk-fields'
 				) }
 				required
@@ -503,7 +503,7 @@ function UniversalControls( { field, fieldTypes, onUpdate, markTouched } ) {
 					field.name
 						? sprintf(
 								/* translators: %s: field name */
-								__( 'Used as tk_get_field( \'%s\' ).', 'tk-fields' ),
+								__( 'Used as tkfi_get_field( \'%s\' ).', 'tk-fields' ),
 								field.name
 						  )
 						: undefined
@@ -716,7 +716,7 @@ function FieldSettings( { field, siblings, fieldTypes, onUpdate, markTouched } )
 									<TKControl
 										label={ __( 'Field name', 'tk-fields' ) }
 										tooltip={ __(
-											'The machine name used in template code: tk_get_field( \'name\' ). Auto-generated from the label; you can edit it. Lowercase letters, numbers and underscores only, unique within the group.',
+											'The machine name used in template code: tkfi_get_field( \'name\' ). Auto-generated from the label; you can edit it. Lowercase letters, numbers and underscores only, unique within the group.',
 											'tk-fields'
 										) }
 										required

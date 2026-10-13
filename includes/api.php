@@ -12,19 +12,19 @@
 /**
  * Canonical TK Fields function API.
  *
- * These global tk_* functions are the public PHP API and are always loaded.
+ * These global tkfi_* functions are the public PHP API and are always loaded.
  * The ACF-compatible aliases (get_field() etc.) live in the OPT-IN shim at
  * includes/compat/acf-shim.php and are never defined here.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-use TK\Fields\Fields;
-use TK\Fields\Field_Registry;
-use TK\Fields\Unset_Value;
-use TK\Fields\Repeater_Loop;
+use TKFields\Fields;
+use TKFields\Field_Registry;
+use TKFields\Unset_Value;
+use TKFields\Repeater_Loop;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -36,9 +36,9 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @param string            $selector Field name.
  * @param int|WP_Post|WP_Term|WP_User|string|null $post_id Object: post ID, WP_Post, WP_Term, WP_User, the string 'option' (site-wide fields), or null for the current post.
  * @param bool              $format   Apply the field type's display formatting.
- * @return mixed The value, or TK\Fields\Unset_Value::get() when nothing is stored.
+ * @return mixed The value, or TKFields\Unset_Value::get() when nothing is stored.
  */
-function tk_get_field( string $selector, int|WP_Post|WP_Term|WP_User|string|null $post_id = null, bool $format = true ): mixed {
+function tkfi_get_field( string $selector, int|WP_Post|WP_Term|WP_User|string|null $post_id = null, bool $format = true ): mixed {
 	return Fields::get( $selector, $post_id, $format );
 }
 
@@ -48,7 +48,7 @@ function tk_get_field( string $selector, int|WP_Post|WP_Term|WP_User|string|null
  * @param string           $selector Field name.
  * @param int|WP_Post|WP_Term|WP_User|string|null $post_id Object: post ID, WP_Post, WP_Term, WP_User, the string 'option' (site-wide fields), or null for the current post.
  */
-function tk_the_field( string $selector, int|WP_Post|WP_Term|WP_User|string|null $post_id = null ): void {
+function tkfi_the_field( string $selector, int|WP_Post|WP_Term|WP_User|string|null $post_id = null ): void {
 	$value = Fields::get( $selector, $post_id, true );
 
 	if ( Unset_Value::is_unset( $value ) || null === $value ) {
@@ -76,30 +76,30 @@ function tk_the_field( string $selector, int|WP_Post|WP_Term|WP_User|string|null
 /**
  * Whether a repeater field has rows. Powers the loop idiom:
  *
- *   while ( tk_have_rows( 'team' ) ) {
- *       tk_the_row();
- *       echo tk_get_sub_field( 'name' );
+ *   while ( tkfi_have_rows( 'team' ) ) {
+ *       tkfi_the_row();
+ *       echo tkfi_get_sub_field( 'name' );
  *   }
  *
  * First call for a selector starts the loop; later calls continue it and
  * return whether more rows remain (popping the loop when exhausted).
  *
  * Nested repeaters (to 2 levels) loop through the ACTIVE ROW's rows:
- * call tk_have_rows( 'lessons' ) inside the outer loop and it resolves
+ * call tkfi_have_rows( 'lessons' ) inside the outer loop and it resolves
  * the current row's nested wrapper — each nested loop is scoped to its
  * row by the full path stack, so sibling rows can never collide.
  *
  * @param string           $selector Field name.
  * @param int|WP_Post|null $post_id  Post ID, WP_Post, or null for the current post.
  */
-function tk_have_rows( string $selector, int|WP_Post|null $post_id = null ): bool {
+function tkfi_have_rows( string $selector, int|WP_Post|null $post_id = null ): bool {
 	return Repeater_Loop::have_rows( $selector, $post_id );
 }
 
 /**
  * Advance the active repeater loop to the next row.
  */
-function tk_the_row(): void {
+function tkfi_the_row(): void {
 	Repeater_Loop::the_row();
 }
 
@@ -108,12 +108,12 @@ function tk_the_row(): void {
  * active row or the sub-field is absent.
  *
  * Scalar sub-fields only: a nested repeater sub-field is traversed with
- * its own tk_have_rows() loop (see tk_have_rows()), not read here.
+ * its own tkfi_have_rows() loop (see tkfi_have_rows()), not read here.
  *
  * @param string $name Sub-field name.
  * @return mixed|null
  */
-function tk_get_sub_field( string $name ) {
+function tkfi_get_sub_field( string $name ) {
 	return Repeater_Loop::get_sub_field( $name );
 }
 
@@ -122,7 +122,7 @@ function tk_get_sub_field( string $name ) {
  *
  * @param string $name Sub-field name.
  */
-function tk_the_sub_field( string $name ): void {
+function tkfi_the_sub_field( string $name ): void {
 	$value = Repeater_Loop::get_sub_field( $name );
 
 	if ( null === $value ) {
@@ -145,7 +145,7 @@ function tk_the_sub_field( string $name ): void {
 /**
  * Stable ID of the current repeater row, or null when there is no active row.
  */
-function tk_get_row_id(): ?string {
+function tkfi_get_row_id(): ?string {
 	return Repeater_Loop::get_row_id();
 }
 
@@ -157,7 +157,7 @@ function tk_get_row_id(): ?string {
  * @param mixed            $value    Raw value.
  * @param int|WP_Post|WP_Term|WP_User|string|null $post_id Object: post ID, WP_Post, WP_Term, WP_User, the string 'option' (site-wide fields), or null for the current post.
  */
-function tk_update_field( string $selector, mixed $value, int|WP_Post|WP_Term|WP_User|string|null $post_id = null ): bool {
+function tkfi_update_field( string $selector, mixed $value, int|WP_Post|WP_Term|WP_User|string|null $post_id = null ): bool {
 	return Fields::update( $selector, $value, $post_id );
 }
 
@@ -167,7 +167,7 @@ function tk_update_field( string $selector, mixed $value, int|WP_Post|WP_Term|WP
  * @param string           $selector Field name.
  * @param int|WP_Post|WP_Term|WP_User|string|null $post_id Object: post ID, WP_Post, WP_Term, WP_User, the string 'option' (site-wide fields), or null for the current post.
  */
-function tk_delete_field( string $selector, int|WP_Post|WP_Term|WP_User|string|null $post_id = null ): bool {
+function tkfi_delete_field( string $selector, int|WP_Post|WP_Term|WP_User|string|null $post_id = null ): bool {
 	return Fields::delete( $selector, $post_id );
 }
 
@@ -177,7 +177,7 @@ function tk_delete_field( string $selector, int|WP_Post|WP_Term|WP_User|string|n
  * @param int|WP_Post|WP_Term|WP_User|string|null $post_id Object: post ID, WP_Post, WP_Term, WP_User, the string 'option' (site-wide fields), or null for the current post.
  * @return array<string, mixed> Field name => formatted value.
  */
-function tk_get_fields( int|WP_Post|WP_Term|WP_User|string|null $post_id = null ): array {
+function tkfi_get_fields( int|WP_Post|WP_Term|WP_User|string|null $post_id = null ): array {
 	return Fields::get_fields( $post_id );
 }
 
@@ -186,15 +186,15 @@ function tk_get_fields( int|WP_Post|WP_Term|WP_User|string|null $post_id = null 
  *
  * @param string $selector Field name.
  */
-function tk_get_field_object( string $selector ): ?array {
+function tkfi_get_field_object( string $selector ): ?array {
 	return Field_Registry::instance()->get( $selector );
 }
 
 /**
  * Check whether an API return value means "no value stored".
  *
- * @param mixed $value Value returned by tk_get_field() / Fields::get().
+ * @param mixed $value Value returned by tkfi_get_field() / Fields::get().
  */
-function tk_is_unset( mixed $value ): bool {
+function tkfi_is_unset( mixed $value ): bool {
 	return Unset_Value::is_unset( $value );
 }

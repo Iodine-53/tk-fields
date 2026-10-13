@@ -4,7 +4,7 @@
  */
 
 /**
- * Editor UI for tk/repeater.
+ * Editor UI for tkfi/repeater.
  *
  * No build step: classic script using wp.* globals only. The block metadata
  * (attributes, providesContext, category) comes from block.json via the
@@ -46,7 +46,7 @@
 						Tooltip,
 						{
 							text: __(
-								"Used by tk_have_rows('name') in templates — must be unique per post.",
+								"Used by tkfi_have_rows('name') in templates — must be unique per post.",
 								'tk-fields'
 							),
 						},
@@ -88,8 +88,8 @@
 				'div',
 				blockProps,
 				el(InnerBlocks, {
-					allowedBlocks: ['tk/repeater-row'],
-					template: [['tk/repeater-row']],
+					allowedBlocks: ['tkfi/repeater-row'],
+					template: [['tkfi/repeater-row']],
 					renderAppender: InnerBlocks.ButtonBlockAppender,
 				})
 			)
@@ -101,7 +101,7 @@
 		return el(InnerBlocks.Content, null);
 	}
 
-	registerBlockType('tk/repeater', {
+	registerBlockType('tkfi/repeater', {
 		edit: Edit,
 		save: Save,
 	});

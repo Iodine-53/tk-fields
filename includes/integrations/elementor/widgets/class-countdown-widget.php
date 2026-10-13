@@ -23,12 +23,12 @@
  * handle `tk-widgets`) plus this widget's own stylesheet
  * (assets/elementor/css/tk-countdown.css).
  *
- * @package TK\Fields\Integrations\Elementor\Widgets
+ * @package TKFields\Integrations\Elementor\Widgets
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Widgets;
+namespace TKFields\Integrations\Elementor\Widgets;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -50,16 +50,16 @@ final class Countdown_Widget extends \Elementor\Widget_Base {
 
 		wp_register_style(
 			'tk-widget-countdown',
-			plugins_url( 'assets/elementor/css/tk-countdown.css', TK_FIELDS_FILE ),
+			plugins_url( 'assets/elementor/css/tk-countdown.css', TKFI_FILE ),
 			array(),
-			TK_FIELDS_VERSION
+			TKFI_VERSION
 		);
 
 		wp_register_script(
 			'tk-widget-countdown',
-			plugins_url( 'assets/elementor/js/tk-countdown.js', TK_FIELDS_FILE ),
+			plugins_url( 'assets/elementor/js/tk-countdown.js', TKFI_FILE ),
 			array(),
-			TK_FIELDS_VERSION,
+			TKFI_VERSION,
 			true
 		);
 	}
@@ -68,7 +68,7 @@ final class Countdown_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_name(): string {
-		return 'tk-countdown';
+		return 'tkfi-countdown';
 	}
 
 	/**
@@ -126,7 +126,7 @@ final class Countdown_Widget extends \Elementor\Widget_Base {
 	 */
 	private function register_content_controls(): void {
 		$this->start_controls_section(
-			'tk_countdown_content',
+			'tkfi_countdown_content',
 			array(
 				'label' => __( 'Content', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
@@ -269,7 +269,7 @@ final class Countdown_Widget extends \Elementor\Widget_Base {
 	 */
 	private function register_style_controls(): void {
 		$this->start_controls_section(
-			'tk_countdown_style_digits',
+			'tkfi_countdown_style_digits',
 			array(
 				'label' => __( 'Digits', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
@@ -342,7 +342,7 @@ final class Countdown_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_countdown_style_cards',
+			'tkfi_countdown_style_cards',
 			array(
 				'label'     => __( 'Cards', 'tk-fields' ),
 				'tab'       => \Elementor\Controls_Manager::TAB_STYLE,
@@ -401,7 +401,7 @@ final class Countdown_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_countdown_style_layout',
+			'tkfi_countdown_style_layout',
 			array(
 				'label' => __( 'Spacing', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,

@@ -10,20 +10,20 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/flexible-content.
+ * Server render for tkfi/flexible-content.
  *
- * The inner tk/flexible-layout blocks render themselves (each wraps its
- * rendered tk/field-value sub-fields in the row markup); this template
+ * The inner tkfi/flexible-layout blocks render themselves (each wraps its
+ * rendered tkfi/field-value sub-fields in the row markup); this template
  * only adds the field wrapper. The formatted-rows read path
- * (tk_get_field() with format=true, Elementor) uses
+ * (tkfi_get_field() with format=true, Elementor) uses
  * Flexible_Content::render_rows_html() instead.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

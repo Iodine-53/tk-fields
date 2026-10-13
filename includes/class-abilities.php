@@ -20,15 +20,15 @@
  * - `tk-fields/get-field-value`  — one field value for one post object.
  *
  * Disabled by default: abilities (and their category) are registered only
- * when the `tk_fields_abilities_enabled` option is truthy or the
- * `tk_fields_abilities_enabled` filter returns true. There are no write
+ * when the `tkfi_abilities_enabled` option is truthy or the
+ * `tkfi_abilities_enabled` filter returns true. There are no write
  * abilities — writes are explicitly deferred to v1.1+.
  *
  * Every read resolves through the Fields service (`Fields::get()`) — raw
  * post meta is never touched here. Two permission layers guard every read:
  *
  * 1. Top-level capability: `current_user_can( apply_filters(
- *    'tk_fields_ability_capability', 'manage_options', $group_or_null ) )` —
+ *    'tkfi_ability_capability', 'manage_options', $group_or_null ) )` —
  *    filterable per field group from day one.
  * 2. Object-level: for `get-field-value`, `current_user_can( 'read_post',
  *    $post_id )`, mirroring core's post-meta binding source. A missing post
@@ -36,17 +36,17 @@
  *    check passed.
  *
  * Denials return a 403 `WP_Error` — never the value. Every successful read
- * fires `tk_fields_ability_read`.
+ * fires `tkfi_ability_read`.
  *
  * No polyfill for WP < 6.9: `init()` feature-detects `wp_register_ability`
  * and bails when the Abilities API is absent.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -76,17 +76,17 @@ final class Abilities {
 
 	/**
 	 * Whether the Abilities API surface is enabled. Disabled by default:
-	 * opt in via the `tk_fields_abilities_enabled` option or filter.
+	 * opt in via the `tkfi_abilities_enabled` option or filter.
 	 */
 	public static function enabled(): bool {
-		$enabled = (bool) get_option( 'tk_fields_abilities_enabled', false );
+		$enabled = (bool) get_option( 'tkfi_abilities_enabled', false );
 
 		/**
 		 * Filter whether the TK Fields read-only Abilities API surface is enabled.
 		 *
 		 * @param bool $enabled Whether the abilities are registered. Default false.
 		 */
-		return (bool) apply_filters( 'tk_fields_abilities_enabled', $enabled );
+		return (bool) apply_filters( 'tkfi_abilities_enabled', $enabled );
 	}
 
 	/**
@@ -231,7 +231,7 @@ final class Abilities {
 		 * @param string     $capability Capability slug. Default 'manage_options'.
 		 * @param array|null $group      The persisted field group the field belongs to, or null.
 		 */
-		$capability = apply_filters( 'tk_fields_ability_capability', 'manage_options', $group );
+		$capability = apply_filters( 'tkfi_ability_capability', 'manage_options', $group );
 
 		return current_user_can( (string) $capability );
 	}
@@ -257,7 +257,7 @@ final class Abilities {
 	 */
 	private static function forbidden( string $ability_name ): \WP_Error {
 		return new \WP_Error(
-			'tk_fields_ability_forbidden',
+			'tkfi_ability_forbidden',
 			sprintf(
 				/* translators: %s: ability name. */
 				__( 'You do not have permission to use the "%s" ability.', 'tk-fields' ),
@@ -298,7 +298,7 @@ final class Abilities {
 			$group = $registry->get_group( $group_id );
 			if ( null === $group || ! empty( $group['exclude_from_ai'] ) ) {
 				return new \WP_Error(
-					'tk_fields_group_not_found',
+					'tkfi_group_not_found',
 					__( 'Field group not found.', 'tk-fields' ),
 					array( 'status' => 404 )
 				);
@@ -321,7 +321,7 @@ final class Abilities {
 		 * @param array  $input        Normalized input.
 		 * @param int    $user_id      Current user ID.
 		 */
-		do_action( 'tk_fields_ability_read', self::ABILITY_SCHEMA, $input, get_current_user_id() );
+		do_action( 'tkfi_ability_read', self::ABILITY_SCHEMA, $input, get_current_user_id() );
 
 		return array( 'groups' => $groups );
 	}
@@ -415,7 +415,7 @@ final class Abilities {
 		$value = Fields::get( $field, $object_id, $format );
 
 		/** This action is documented in execute_get_schema(). */
-		do_action( 'tk_fields_ability_read', self::ABILITY_VALUE, $input, get_current_user_id() );
+		do_action( 'tkfi_ability_read', self::ABILITY_VALUE, $input, get_current_user_id() );
 
 		if ( Unset_Value::is_unset( $value ) ) {
 			return array( 'unset' => true );

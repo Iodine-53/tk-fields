@@ -13,38 +13,38 @@
  * Repeater rows and the template loop.
  *
  * Repeaters are parent/child blocks stored as native block markup: a
- * tk/field-repeater wrapper (identified by fieldKey, with a fieldName
- * fallback) holding tk/repeater-row children in post_content — they never
- * touch postmeta on posts. Nested repeaters (a tk/field-repeater inside a
- * tk/repeater-row) are supported to 2 levels. This file owns:
+ * tkfi/field-repeater wrapper (identified by fieldKey, with a fieldName
+ * fallback) holding tkfi/repeater-row children in post_content — they never
+ * touch postmeta on posts. Nested repeaters (a tkfi/field-repeater inside a
+ * tkfi/repeater-row) are supported to 2 levels. This file owns:
  *
- * - Repeater_Row: a typed wrapper around one parsed tk/repeater-row block.
+ * - Repeater_Row: a typed wrapper around one parsed tkfi/repeater-row block.
  * - Repeater: the static parse/serialize engine (posts + serialized markup
  *   for term/user/option storage), mirroring Flexible_Content.
  * - Repeater_Loop: a static-stack template engine behind the
- *   while ( tk_have_rows( 'x' ) ) { tk_the_row(); ... } idiom, with a
+ *   while ( tkfi_have_rows( 'x' ) ) { tkfi_the_row(); ... } idiom, with a
  *   full path stack so nested loops stay row-scoped.
  * - The "TK Fields" block category registration.
  * - The editor-side default allowed-blocks list for rows (filterable via
- *   tk_fields_repeater_allowed_blocks), injected before the row editor
+ *   tkfi_repeater_allowed_blocks), injected before the row editor
  *   script.
  *
  * Load-bearing invariant: value order is presentation; the persisted row
  * id is identity; context is a path stack end-to-end (render AND save).
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * One repeater row: a parsed tk/repeater-row block and its sub-fields.
+ * One repeater row: a parsed tkfi/repeater-row block and its sub-fields.
  */
 class Repeater_Row {
 
@@ -83,9 +83,9 @@ class Repeater_Row {
 	}
 
 	/**
-	 * The value of one sub-field (tk/field-value with matching fieldName).
+	 * The value of one sub-field (tkfi/field-value with matching fieldName).
 	 * Scans inner blocks depth-first in document order; first match wins.
-	 * Never descends into nested tk/field-repeater (or legacy tk/repeater)
+	 * Never descends into nested tkfi/field-repeater (or legacy tkfi/repeater)
 	 * subtrees — a nested repeater's values belong to its own loop, not to
 	 * this row's scalar namespace. Returns the canonicalized value
 	 * attribute, or null when absent.
@@ -95,7 +95,7 @@ class Repeater_Row {
 	 */
 	public function get_field( string $name ) {
 		foreach ( self::walk_inner_blocks( $this->block['innerBlocks'] ?? array() ) as $inner ) {
-			if ( 'tk/field-value' !== ( $inner['blockName'] ?? '' ) ) {
+			if ( 'tkfi/field-value' !== ( $inner['blockName'] ?? '' ) ) {
 				continue;
 			}
 			if ( ( $inner['attrs']['fieldName'] ?? '' ) === $name ) {
@@ -116,7 +116,7 @@ class Repeater_Row {
 		$fields = array();
 
 		foreach ( self::walk_inner_blocks( $this->block['innerBlocks'] ?? array() ) as $inner ) {
-			if ( 'tk/field-value' !== ( $inner['blockName'] ?? '' ) ) {
+			if ( 'tkfi/field-value' !== ( $inner['blockName'] ?? '' ) ) {
 				continue;
 			}
 			$name = (string) ( $inner['attrs']['fieldName'] ?? '' );
@@ -139,7 +139,7 @@ class Repeater_Row {
 	}
 
 	/**
-	 * The nested tk/field-repeater wrapper for one repeater sub-field of
+	 * The nested tkfi/field-repeater wrapper for one repeater sub-field of
 	 * this row, or null when the row has none.
 	 *
 	 * Matched by fieldKey (the sub-field's key) first, fieldName (the
@@ -154,7 +154,7 @@ class Repeater_Row {
 	 */
 	public function get_nested_wrapper( string $name, string $key ): ?array {
 		foreach ( self::walk_sibling_blocks( $this->block['innerBlocks'] ?? array() ) as $block ) {
-			if ( 'tk/field-repeater' !== ( $block['blockName'] ?? '' ) ) {
+			if ( 'tkfi/field-repeater' !== ( $block['blockName'] ?? '' ) ) {
 				continue;
 			}
 			$attrs       = $block['attrs'] ?? array();
@@ -176,10 +176,10 @@ class Repeater_Row {
 	/**
 	 * Depth-first walk of parsed inner blocks (document order).
 	 *
-	 * Nested repeater wrappers (tk/field-repeater, legacy tk/repeater) are
+	 * Nested repeater wrappers (tkfi/field-repeater, legacy tkfi/repeater) are
 	 * yielded themselves but never descended into: their inner values
 	 * belong to the nested repeater's own scope, and a row's own
-	 * tk/field-value scan must not see them. Safe for legacy markup —
+	 * tkfi/field-value scan must not see them. Safe for legacy markup —
 	 * V1 repeaters never nested, so no legacy row contains a wrapper.
 	 *
 	 * @param array<int, array<string, mixed>> $blocks
@@ -189,7 +189,7 @@ class Repeater_Row {
 		foreach ( $blocks as $block ) {
 			yield $block;
 			$block_name = $block['blockName'] ?? '';
-			if ( 'tk/field-repeater' === $block_name || 'tk/repeater' === $block_name ) {
+			if ( 'tkfi/field-repeater' === $block_name || 'tkfi/repeater' === $block_name ) {
 				continue;
 			}
 			if ( ! empty( $block['innerBlocks'] ) && is_array( $block['innerBlocks'] ) ) {
@@ -210,7 +210,7 @@ class Repeater_Row {
 	private static function walk_sibling_blocks( array $blocks ): \Generator {
 		foreach ( $blocks as $block ) {
 			$block_name = $block['blockName'] ?? '';
-			if ( 'tk/field-repeater' === $block_name || 'tk/repeater' === $block_name ) {
+			if ( 'tkfi/field-repeater' === $block_name || 'tkfi/repeater' === $block_name ) {
 				yield $block;
 				continue;
 			}
@@ -250,8 +250,8 @@ class Repeater_Row {
  * The static parse/serialize engine for repeater fields, mirroring
  * Flexible_Content.
  *
- * Posts: rows live as tk/repeater-row children of the field's
- * tk/field-repeater wrapper in post_content (the block editor owns those
+ * Posts: rows live as tkfi/repeater-row children of the field's
+ * tkfi/field-repeater wrapper in post_content (the block editor owns those
  * writes). Terms, users, options: rows are serialized block markup in a
  * single meta/option row. Parsed rows are canonical:
  * [ ['id' => row id, 'fields' => [name => value]], ... ] with nested
@@ -263,7 +263,7 @@ final class Repeater {
 	/**
 	 * Row objects for a repeater field on a post, in document order.
 	 *
-	 * First matching top-level tk/field-repeater wrapper wins (repeater
+	 * First matching top-level tkfi/field-repeater wrapper wins (repeater
 	 * parity); nested wrappers are not traversed here — they resolve
 	 * through the active row (Repeater_Row::get_nested_wrapper()).
 	 *
@@ -282,7 +282,7 @@ final class Repeater {
 	}
 
 	/**
-	 * Legacy-only row parse: the FIRST top-level tk/repeater block whose
+	 * Legacy-only row parse: the FIRST top-level tkfi/repeater block whose
 	 * fieldName matches, mapped to Repeater_Row objects. BC for callers
 	 * that predate field registration (V1 matched by fieldName alone).
 	 *
@@ -298,14 +298,14 @@ final class Repeater {
 
 		$rows = array();
 		foreach ( parse_blocks( $post->post_content ) as $block ) {
-			if ( 'tk/repeater' !== ( $block['blockName'] ?? '' ) ) {
+			if ( 'tkfi/repeater' !== ( $block['blockName'] ?? '' ) ) {
 				continue;
 			}
 			if ( (string) ( $block['attrs']['fieldName'] ?? '' ) !== $selector ) {
 				continue;
 			}
 			foreach ( $block['innerBlocks'] ?? array() as $inner ) {
-				if ( 'tk/repeater-row' === ( $inner['blockName'] ?? '' ) ) {
+				if ( 'tkfi/repeater-row' === ( $inner['blockName'] ?? '' ) ) {
 					$rows[] = new Repeater_Row( $inner );
 				}
 			}
@@ -368,14 +368,14 @@ final class Repeater {
 	 * own definition, so depth-2 rows parse to the same canonical shape.
 	 *
 	 * @param array<string, mixed> $field   Repeater field definition.
-	 * @param array<string, mixed> $wrapper Parsed tk/field-repeater block.
+	 * @param array<string, mixed> $wrapper Parsed tkfi/field-repeater block.
 	 * @return array<int, array<string, mixed>>
 	 */
 	public static function rows_from_wrapper( array $field, array $wrapper ): array {
 		$rows = array();
 
 		foreach ( $wrapper['innerBlocks'] ?? array() as $inner ) {
-			if ( 'tk/repeater-row' !== ( $inner['blockName'] ?? '' ) ) {
+			if ( 'tkfi/repeater-row' !== ( $inner['blockName'] ?? '' ) ) {
 				continue;
 			}
 			$rows[] = array(
@@ -389,10 +389,10 @@ final class Repeater {
 
 	/**
 	 * Walk parsed top-level blocks for the first matching wrapper and map
-	 * its tk/repeater-row children to Repeater_Row objects.
+	 * its tkfi/repeater-row children to Repeater_Row objects.
 	 *
-	 * The new tk/field-repeater wrapper is tried first; the legacy
-	 * tk/repeater block (V1, matched by fieldName only) is the BC
+	 * The new tkfi/field-repeater wrapper is tried first; the legacy
+	 * tkfi/repeater block (V1, matched by fieldName only) is the BC
 	 * fallback. First matching top-level block wins.
 	 *
 	 * @param array<string, mixed>            $field    Repeater field definition.
@@ -408,7 +408,7 @@ final class Repeater {
 
 			$rows = array();
 			foreach ( $block['innerBlocks'] ?? array() as $inner ) {
-				if ( 'tk/repeater-row' === ( $inner['blockName'] ?? '' ) ) {
+				if ( 'tkfi/repeater-row' === ( $inner['blockName'] ?? '' ) ) {
 					$rows[] = new Repeater_Row( $inner );
 				}
 			}
@@ -417,7 +417,7 @@ final class Repeater {
 		}
 
 		foreach ( $blocks as $block ) {
-			if ( 'tk/repeater' !== ( $block['blockName'] ?? '' ) ) {
+			if ( 'tkfi/repeater' !== ( $block['blockName'] ?? '' ) ) {
 				continue;
 			}
 			if ( (string) ( $block['attrs']['fieldName'] ?? '' ) !== $selector ) {
@@ -426,7 +426,7 @@ final class Repeater {
 
 			$rows = array();
 			foreach ( $block['innerBlocks'] ?? array() as $inner ) {
-				if ( 'tk/repeater-row' === ( $inner['blockName'] ?? '' ) ) {
+				if ( 'tkfi/repeater-row' === ( $inner['blockName'] ?? '' ) ) {
 					$rows[] = new Repeater_Row( $inner );
 				}
 			}
@@ -438,7 +438,7 @@ final class Repeater {
 	}
 
 	/**
-	 * Whether a parsed block is this field's tk/field-repeater wrapper.
+	 * Whether a parsed block is this field's tkfi/field-repeater wrapper.
 	 * fieldKey (Q1 identity) wins when both sides carry one; fieldName is
 	 * the fallback (covers definitions built without keys).
 	 *
@@ -447,7 +447,7 @@ final class Repeater {
 	 * @param string               $selector Field name.
 	 */
 	private static function wrapper_matches( array $block, array $field, string $selector ): bool {
-		if ( 'tk/field-repeater' !== ( $block['blockName'] ?? '' ) ) {
+		if ( 'tkfi/field-repeater' !== ( $block['blockName'] ?? '' ) ) {
 			return false;
 		}
 		$attrs     = $block['attrs'] ?? array();
@@ -463,7 +463,7 @@ final class Repeater {
 	/**
 	 * One row's sub-field values from its parsed inner blocks.
 	 *
-	 * The row's OWN tk/field-value blocks are collected without descending
+	 * The row's OWN tkfi/field-value blocks are collected without descending
 	 * into nested repeater subtrees (the CQ3 scoping fix: a nested
 	 * repeater's values can never leak into the parent row's namespace).
 	 * Nested repeater sub-fields recurse through rows_from_wrapper() on
@@ -480,7 +480,7 @@ final class Repeater {
 
 		$flat = array();
 		foreach ( self::walk_scoped_blocks( $blocks ) as $inner ) {
-			if ( 'tk/field-value' !== ( $inner['blockName'] ?? '' ) ) {
+			if ( 'tkfi/field-value' !== ( $inner['blockName'] ?? '' ) ) {
 				continue;
 			}
 			$name = (string) ( $inner['attrs']['fieldName'] ?? '' );
@@ -544,7 +544,7 @@ final class Repeater {
 	private static function walk_scoped_blocks( array $blocks ): \Generator {
 		foreach ( $blocks as $block ) {
 			$block_name = $block['blockName'] ?? '';
-			if ( 'tk/field-repeater' === $block_name || 'tk/repeater' === $block_name ) {
+			if ( 'tkfi/field-repeater' === $block_name || 'tkfi/repeater' === $block_name ) {
 				continue;
 			}
 			yield $block;
@@ -559,10 +559,10 @@ final class Repeater {
 	 * (term meta, user meta, options). The markup round-trips through
 	 * rows_from_markup() losslessly.
 	 *
-	 * Structure: tk/field-repeater > tk/repeater-row (rowId attr) >
-	 * tk/field-value per scalar sub (value attribute canonicalized exactly
-	 * as the editor writes it), nested tk/field-repeater per nested
-	 * repeater sub, flattened tk/field-value per group leaf (keyed by short
+	 * Structure: tkfi/field-repeater > tkfi/repeater-row (rowId attr) >
+	 * tkfi/field-value per scalar sub (value attribute canonicalized exactly
+	 * as the editor writes it), nested tkfi/field-repeater per nested
+	 * repeater sub, flattened tkfi/field-value per group leaf (keyed by short
 	 * leaf name; never shadowing a top-level sub name).
 	 *
 	 * @param array<string, mixed>            $field Repeater field definition (needs name, key, sub_fields).
@@ -573,7 +573,7 @@ final class Repeater {
 	}
 
 	/**
-	 * Build the tk/field-repeater wrapper block array for canonical rows.
+	 * Build the tkfi/field-repeater wrapper block array for canonical rows.
 	 *
 	 * @param array<string, mixed>            $field Repeater field definition.
 	 * @param array<int, array<string,mixed>> $rows  Canonical sanitized rows.
@@ -589,7 +589,7 @@ final class Repeater {
 			}
 			$subs    = self::serialize_row_values( $children, (array) ( $row['fields'] ?? array() ) );
 			$inner[] = array(
-				'blockName'    => 'tk/repeater-row',
+				'blockName'    => 'tkfi/repeater-row',
 				'attrs'        => array( 'rowId' => (string) ( $row['id'] ?? '' ) ),
 				'innerBlocks'  => $subs,
 				'innerHTML'    => '',
@@ -600,7 +600,7 @@ final class Repeater {
 		}
 
 		return array(
-			'blockName'    => 'tk/field-repeater',
+			'blockName'    => 'tkfi/field-repeater',
 			'attrs'        => array(
 				'fieldName' => (string) ( $field['name'] ?? '' ),
 				'fieldKey'  => isset( $field['key'] ) ? (string) $field['key'] : '',
@@ -660,7 +660,7 @@ final class Repeater {
 	}
 
 	/**
-	 * Build one tk/field-value block array, mirroring the editor's
+	 * Build one tkfi/field-value block array, mirroring the editor's
 	 * attribute canonicalization (Flexible_Content::serialize_rows()).
 	 *
 	 * @param string               $name  Sub-field name.
@@ -682,7 +682,7 @@ final class Repeater {
 		}
 
 		return array(
-			'blockName'    => 'tk/field-value',
+			'blockName'    => 'tkfi/field-value',
 			'attrs'        => $attrs,
 			'innerBlocks'  => array(),
 			'innerHTML'    => '',
@@ -694,18 +694,18 @@ final class Repeater {
 /**
  * Static-stack template engine for the repeater loop idiom.
  *
- * while ( tk_have_rows( 'team' ) ) {
- *     tk_the_row();
- *     echo tk_get_sub_field( 'name' );
+ * while ( tkfi_have_rows( 'team' ) ) {
+ *     tkfi_the_row();
+ *     echo tkfi_get_sub_field( 'name' );
  * }
  *
  * Nested repeaters loop through the ACTIVE ROW's nested wrapper:
  *
- * while ( tk_have_rows( 'modules' ) ) {
- *     tk_the_row();
- *     while ( tk_have_rows( 'lessons' ) ) {
- *         tk_the_row();
- *         echo tk_get_sub_field( 'title' );
+ * while ( tkfi_have_rows( 'modules' ) ) {
+ *     tkfi_the_row();
+ *     while ( tkfi_have_rows( 'lessons' ) ) {
+ *         tkfi_the_row();
+ *         echo tkfi_get_sub_field( 'title' );
  *     }
  * }
  *
@@ -804,7 +804,7 @@ final class Repeater_Loop {
 			}
 			$rows = array();
 			foreach ( $wrapper['innerBlocks'] ?? array() as $inner ) {
-				if ( 'tk/repeater-row' === ( $inner['blockName'] ?? '' ) ) {
+				if ( 'tkfi/repeater-row' === ( $inner['blockName'] ?? '' ) ) {
 					$rows[] = new Repeater_Row( $inner );
 				}
 			}
@@ -824,8 +824,8 @@ final class Repeater_Loop {
 		}
 
 		// Top-level: the field must be a registered repeater; parse the
-		// first matching wrapper in post_content (new tk/field-repeater
-		// first, legacy tk/repeater for BC).
+		// first matching wrapper in post_content (new tkfi/field-repeater
+		// first, legacy tkfi/repeater for BC).
 		$field = Field_Registry::instance()->get( $selector );
 		if ( ! is_array( $field ) || 'repeater' !== ( $field['type'] ?? '' ) ) {
 			return false;
@@ -954,7 +954,7 @@ add_filter( 'block_categories_all', __NAMESPACE__ . '\\register_block_category' 
  */
 function inject_repeater_editor_defaults(): void {
 	$defaults = (array) apply_filters(
-		'tk_fields_repeater_allowed_blocks',
+		'tkfi_repeater_allowed_blocks',
 		array(
 			'core/paragraph',
 			'core/heading',
@@ -962,13 +962,13 @@ function inject_repeater_editor_defaults(): void {
 			'core/list',
 			'core/buttons',
 			'core/quote',
-			'tk/field-value',
+			'tkfi/field-value',
 		)
 	);
 
 	wp_add_inline_script(
 		'tkf-repeater-row-editor',
-		'window.tkFieldsRepeaterDefaults = ' . wp_json_encode(
+		'window.tkfiFieldsRepeaterDefaults = ' . wp_json_encode(
 			array( 'allowedBlocks' => array_values( $defaults ) )
 		) . ';',
 		'before'

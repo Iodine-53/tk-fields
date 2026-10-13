@@ -10,18 +10,18 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/flexible-layout.
+ * Server render for tkfi/flexible-layout.
  *
- * Wraps the already-rendered tk/field-value sub-fields in the row markup.
+ * Wraps the already-rendered tkfi/field-value sub-fields in the row markup.
  * The layout label comes from the field definition when resolvable (via
  * the parent context's fieldName); otherwise the layout key is used.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

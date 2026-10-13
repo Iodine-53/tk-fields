@@ -40,12 +40,12 @@
  *   namespaced sub-field keys use the same underscore convention), but the
  *   importer does NOT copy values: the new groups start empty. Documented.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -128,7 +128,7 @@ class ACF_Importer {
 
 	public function register_routes(): void {
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/import-acf',
 			array(
 				'methods'             => 'POST',
@@ -142,7 +142,7 @@ class ACF_Importer {
 		// an ACF JSON export file with an AI assistant when ACF itself is
 		// not installed. Read-only; same manage_options bar as the import.
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/import-acf/ai-prompt',
 			array(
 				'methods'             => \WP_REST_Server::READABLE,
@@ -155,7 +155,7 @@ class ACF_Importer {
 	}
 
 	/**
-	 * GET /tk/v1/import-acf/ai-prompt — the copy-paste transformer prompt.
+	 * GET /tkfi/v1/import-acf/ai-prompt — the copy-paste transformer prompt.
 	 *
 	 * Served when ACF is not installed: the admin pastes this into an AI
 	 * assistant together with their ACF JSON export, and the AI acts as the
@@ -193,8 +193,8 @@ class ACF_Importer {
 		$lines[] = '- Every field needs: "key" (unique, like "f_a1b2c3" — f_ followed by letters/digits; INVENT new keys, never reuse ACF\'s field_xxx keys), "name" (lowercase letters/digits/underscores only, unique within the group), "label" (human label), "type" (one of the valid types below — never invent a type).';
 		$lines[] = '';
 		$lines[] = 'ACF → TK FIELD TYPE MAP (convert exactly; if an ACF type is not in this map, do not guess — list the field under UNMAPPED):';
-		foreach ( self::TYPE_MAP as $acf_type => $tk_type ) {
-			$lines[] = '  ' . $acf_type . ' → ' . $tk_type;
+		foreach ( self::TYPE_MAP as $acf_type => $tkfi_type ) {
+			$lines[] = '  ' . $acf_type . ' → ' . $tkfi_type;
 		}
 		$lines[] = '  Notes: ACF "checkbox" maps to TK "checkbox" — carry its choices across. ACF "accordion" becomes a TK "message" field holding the accordion\'s label text.';
 		$lines[] = '';
@@ -238,7 +238,7 @@ class ACF_Importer {
 	}
 
 	/**
-	 * POST /tk/v1/import-acf — detect ACF field groups and import them.
+	 * POST /tkfi/v1/import-acf — detect ACF field groups and import them.
 	 *
 	 * @return \WP_REST_Response
 	 */
@@ -288,7 +288,7 @@ class ACF_Importer {
 		// resolve to exactly one imported group, the field is skipped.
 		$key_to_group = array(); // acf field key => index into $pending
 		foreach ( $pending as $pi => $conv ) {
-			foreach ( $conv['acf_field_keys'] as $acf_key => $tk_name ) {
+			foreach ( $conv['acf_field_keys'] as $acf_key => $tkfi_name ) {
 				$key_to_group[ $acf_key ] = $pi;
 			}
 		}
@@ -338,7 +338,7 @@ class ACF_Importer {
 				$report['skipped_groups'][] = $conv['title'] . ': ' . $created->get_error_message();
 				continue;
 			}
-			$pending[ $pi ]['tk_id'] = (int) $created['id'];
+			$pending[ $pi ]['tkfi_id'] = (int) $created['id'];
 			$report['imported'][]    = array(
 				'id'     => (int) $created['id'],
 				'title'  => $conv['title'],
@@ -348,8 +348,8 @@ class ACF_Importer {
 
 		// Second pass: append clone fields now that target group ids exist.
 		foreach ( $clone_fixups as $fixup ) {
-			$group_id  = $pending[ $fixup['pending'] ]['tk_id'] ?? 0;
-			$target_id = $pending[ $fixup['target_pending'] ]['tk_id'] ?? 0;
+			$group_id  = $pending[ $fixup['pending'] ]['tkfi_id'] ?? 0;
+			$target_id = $pending[ $fixup['target_pending'] ]['tkfi_id'] ?? 0;
 			if ( $group_id <= 0 || $target_id <= 0 ) {
 				$report['notes'][] = sprintf(
 					/* translators: %s: field name */
@@ -550,8 +550,8 @@ class ACF_Importer {
 		}
 
 		$acf_type = (string) ( $meta['type'] ?? 'text' );
-		$tk_type  = self::TYPE_MAP[ $acf_type ] ?? null;
-		if ( null === $tk_type ) {
+		$tkfi_type  = self::TYPE_MAP[ $acf_type ] ?? null;
+		if ( null === $tkfi_type ) {
 			$report['notes'][] = sprintf(
 				/* translators: %1$s: group title, %2$s: field label, %3$s: ACF type */
 				__( 'Group "%1$s": field "%2$s" skipped — ACF type "%3$s" has no TK equivalent.', 'tk-fields' ),
@@ -565,7 +565,7 @@ class ACF_Importer {
 		// Repeater depth cap (contract Q2): two levels import; a third
 		// nested repeater is skipped with a note — never silently dropped,
 		// and never allowed to fail the whole group at create() time.
-		if ( 'repeater' === $tk_type && $rep_depth >= 2 ) {
+		if ( 'repeater' === $tkfi_type && $rep_depth >= 2 ) {
 			$report['notes'][] = sprintf(
 				/* translators: %1$s: group title, %2$s: field label */
 				__( 'Group "%1$s": repeater "%2$s" skipped — repeaters nest at most 2 levels deep.', 'tk-fields' ),
@@ -601,7 +601,7 @@ class ACF_Importer {
 			'key'          => $this->new_field_key(),
 			'name'         => $name,
 			'label'        => $label,
-			'type'         => $tk_type,
+			'type'         => $tkfi_type,
 			'instructions' => '' !== $fpost->post_excerpt ? $fpost->post_excerpt : (string) ( $meta['instructions'] ?? '' ),
 			'required'     => ! empty( $meta['required'] ),
 			'_acf_key'     => (string) ( $meta['key'] ?? $fpost->post_name ),
@@ -625,11 +625,11 @@ class ACF_Importer {
 			$field['button_label'] = (string) $meta['button_label'];
 		}
 
-		if ( in_array( $tk_type, array( 'select', 'radio', 'button_group', 'checkbox' ), true ) ) {
+		if ( in_array( $tkfi_type, array( 'select', 'radio', 'button_group', 'checkbox' ), true ) ) {
 			$choices = $this->parse_acf_choices( $meta['choices'] ?? array() );
 			if ( $choices ) {
 				$field['choices'] = $choices;
-			} elseif ( in_array( $tk_type, array( 'select', 'radio', 'button_group' ), true ) ) {
+			} elseif ( in_array( $tkfi_type, array( 'select', 'radio', 'button_group' ), true ) ) {
 				// Choice-based types require ≥1 choice; skip rather than fail.
 				$report['notes'][] = sprintf(
 					/* translators: %1$s: group title, %2$s: field name */
@@ -641,16 +641,16 @@ class ACF_Importer {
 			}
 		}
 
-		if ( in_array( $tk_type, array( 'post_object', 'relationship' ), true ) && isset( $meta['post_type'] ) ) {
+		if ( in_array( $tkfi_type, array( 'post_object', 'relationship' ), true ) && isset( $meta['post_type'] ) ) {
 			$pts = array_values( array_filter( array_map( 'sanitize_key', (array) $meta['post_type'] ) ) );
 			if ( $pts ) {
 				$field['post_types'] = $pts;
 			}
 		}
-		if ( 'taxonomy' === $tk_type && isset( $meta['taxonomy'] ) ) {
+		if ( 'taxonomy' === $tkfi_type && isset( $meta['taxonomy'] ) ) {
 			$field['taxonomy'] = sanitize_key( (string) $meta['taxonomy'] );
 		}
-		if ( 'map' === $tk_type && isset( $meta['center_lat'] ) ) {
+		if ( 'map' === $tkfi_type && isset( $meta['center_lat'] ) ) {
 			$field['default_lat'] = (float) $meta['center_lat'];
 			$field['default_lng'] = (float) ( $meta['center_lng'] ?? 0 );
 		}
@@ -674,12 +674,12 @@ class ACF_Importer {
 		}
 
 		// Sub-fields: child acf-field posts (group / repeater).
-		if ( in_array( $tk_type, array( 'group', 'repeater' ), true ) ) {
+		if ( in_array( $tkfi_type, array( 'group', 'repeater' ), true ) ) {
 			$sub_fields      = array();
 			$sub_names       = array();
 			$sub_key_to_name = array(); // ACF field key → TK sub-field name.
 			foreach ( $this->child_fields( $fpost->ID ) as $cpost ) {
-				$sub = $this->convert_field( $cpost, $group_title, $report, $sub_names, 'repeater' === $tk_type ? $rep_depth + 1 : $rep_depth );
+				$sub = $this->convert_field( $cpost, $group_title, $report, $sub_names, 'repeater' === $tkfi_type ? $rep_depth + 1 : $rep_depth );
 				if ( null === $sub ) {
 					continue;
 				}
@@ -692,7 +692,7 @@ class ACF_Importer {
 			}
 			$field['sub_fields'] = $sub_fields;
 
-			if ( 'repeater' === $tk_type ) {
+			if ( 'repeater' === $tkfi_type ) {
 				// Collapsed: ACF stores the collapsed sub-field's ACF key —
 				// resolve it to the TK sub-field name, never drop it.
 				$collapsed_key = (string) ( $meta['collapsed'] ?? '' );
@@ -713,7 +713,7 @@ class ACF_Importer {
 
 		// Flexible content layouts: inline 'layouts' meta (each with
 		// sub_fields arrays) and/or child posts.
-		if ( 'flexible_content' === $tk_type ) {
+		if ( 'flexible_content' === $tkfi_type ) {
 			$layouts = array();
 			$raw     = $meta['layouts'] ?? array();
 			if ( is_array( $raw ) ) {
@@ -764,7 +764,7 @@ class ACF_Importer {
 
 		// Clone: ACF lists field keys; resolution to a TK source group id
 		// happens in the second pass (see import_acf()).
-		if ( 'clone' === $tk_type ) {
+		if ( 'clone' === $tkfi_type ) {
 			$ckeys = isset( $meta['clone'] ) ? array_values( array_filter( array_map( 'strval', (array) $meta['clone'] ) ) ) : array();
 			if ( ! $ckeys ) {
 				$report['notes'][] = sprintf(
@@ -810,8 +810,8 @@ class ACF_Importer {
 			return null;
 		}
 		$acf_type = (string) ( $sub['type'] ?? 'text' );
-		$tk_type  = self::TYPE_MAP[ $acf_type ] ?? null;
-		if ( null === $tk_type || in_array( $tk_type, array( 'group', 'flexible_content', 'clone' ), true ) ) {
+		$tkfi_type  = self::TYPE_MAP[ $acf_type ] ?? null;
+		if ( null === $tkfi_type || in_array( $tkfi_type, array( 'group', 'flexible_content', 'clone' ), true ) ) {
 			return null; // Nested composites are rejected by the sanitizer anyway.
 		}
 		$name = sanitize_key( (string) ( $sub['name'] ?? '' ) );
@@ -828,14 +828,14 @@ class ACF_Importer {
 			'key'      => $this->new_field_key(),
 			'name'     => $name,
 			'label'    => (string) ( $sub['label'] ?? $name ),
-			'type'     => $tk_type,
+			'type'     => $tkfi_type,
 			'required' => ! empty( $sub['required'] ),
 		);
-		if ( in_array( $tk_type, array( 'select', 'radio', 'button_group', 'checkbox' ), true ) ) {
+		if ( in_array( $tkfi_type, array( 'select', 'radio', 'button_group', 'checkbox' ), true ) ) {
 			$choices = $this->parse_acf_choices( $sub['choices'] ?? array() );
 			if ( $choices ) {
 				$field['choices'] = $choices;
-			} elseif ( in_array( $tk_type, array( 'select', 'radio', 'button_group' ), true ) ) {
+			} elseif ( in_array( $tkfi_type, array( 'select', 'radio', 'button_group' ), true ) ) {
 				return null;
 			}
 		}

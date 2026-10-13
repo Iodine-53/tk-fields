@@ -4,7 +4,7 @@
  */
 
 /**
- * tk/countdown editor UI — classic script, wp.* globals only.
+ * tkfi/countdown editor UI — classic script, wp.* globals only.
  */
 ( function( wp ) {
 	'use strict';
@@ -32,7 +32,7 @@
 		);
 	}
 
-	registerBlockType( 'tk/countdown', {
+	registerBlockType( 'tkfi/countdown', {
 		edit: function( props ) {
 			var attributes = props.attributes;
 			var setAttributes = props.setAttributes;

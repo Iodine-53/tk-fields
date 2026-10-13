@@ -35,7 +35,7 @@
  * eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -104,7 +104,7 @@ $check( ! $is_err( $created ), 'create() accepts a valid definition' );
 $id = $is_err( $created ) ? 0 : (int) $created['id'];
 
 $check( post_type_exists( 'movie' ), 'created type registers in the current request' );
-$snapshot = get_option( 'tk_fields_content_types', array() );
+$snapshot = get_option( 'tkfi_content_types', array() );
 $check( is_array( $snapshot ) && isset( $snapshot['movie'] ), 'snapshot option includes the new type' );
 
 $labels = get_post_type_object( 'movie' )->labels ?? null;
@@ -181,7 +181,7 @@ $created2 = $store->create( array( 'slug' => 'event', 'singular' => 'Event', 'pl
 $event_id = $is_err( $created2 ) ? 0 : (int) $created2['id'];
 
 $doc = $store->export();
-$check( is_array( $doc ) && 'tk-content-types' === ( $doc['format'] ?? '' ), 'export() returns a tk-content-types document' );
+$check( is_array( $doc ) && 'tkfi-content-types' === ( $doc['format'] ?? '' ), 'export() returns a tkfi-content-types document' );
 $slugs = array_column( $doc['content_types'] ?? array(), 'slug' );
 $check( in_array( 'event', $slugs, true ), 'export includes the event type' );
 
@@ -203,7 +203,7 @@ $check( 0 === count( $report2['created'] ) && count( $report2['skipped'] ) > 0, 
 $bad = $store->import( array( 'format' => 'nope' ) );
 $check( $is_err( $bad ), 'import() rejects a foreign document' );
 
-$bad2 = $store->import( array( 'format' => 'tk-content-types', 'version' => 1, 'content_types' => array( array( 'slug' => 'post', 'singular' => 'P', 'plural' => 'Ps' ) ) ) );
+$bad2 = $store->import( array( 'format' => 'tkfi-content-types', 'version' => 1, 'content_types' => array( array( 'slug' => 'post', 'singular' => 'P', 'plural' => 'Ps' ) ) ) );
 $check( ! $is_err( $bad2 ) && 0 === count( $bad2['created'] ), 'import skips invalid entries and keeps going' );
 
 // --- cleanup -----------------------------------------------------------------
@@ -277,7 +277,7 @@ foreach ( $store->all() as $type ) {
 delete_option( Content_Type_Store::FLUSH_FLAG );
 
 $check( array() === $store->all(), 'all test definitions removed' );
-$check( array() === get_option( 'tk_fields_content_types', array() ), 'snapshot empty after cleanup' );
+$check( array() === get_option( 'tkfi_content_types', array() ), 'snapshot empty after cleanup' );
 
 echo $failures > 0 ? "\n{$failures} FAILURE(S)\n" : "\nALL CONTENT-TYPE TESTS PASSED\n";
 exit( $failures > 0 ? 1 : 0 );

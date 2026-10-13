@@ -13,15 +13,15 @@
  * Flexible content rows and rendering — Round 3 Hard tier.
  *
  * A flexible_content field stores ordered layout rows. On posts the rows
- * live as native block markup in post_content (tk/flexible-content parent
- * with tk/flexible-layout children, each holding tk/field-value sub-field
+ * live as native block markup in post_content (tkfi/flexible-content parent
+ * with tkfi/flexible-layout children, each holding tkfi/field-value sub-field
  * blocks) — the block editor owns those writes, exactly like the repeater.
  * On non-post objects (terms, users, options) the same markup is kept as a
  * serialized string in a single meta/option row.
  *
  * This file owns:
  *
- * - Flexible_Row: a typed wrapper around one parsed tk/flexible-layout block.
+ * - Flexible_Row: a typed wrapper around one parsed tkfi/flexible-layout block.
  * - flexible_rows(): row objects for a field, post-only (block traversal).
  * - rows_raw(): canonical row arrays (layout/id/fields) for a field.
  * - rows_from_markup(): parse serialized markup into canonical row arrays.
@@ -29,19 +29,19 @@
  * - render_rows_html(): formatted rows -> escaped layout HTML (Elementor
  *   text tag, field-value block render).
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 /**
- * One flexible layout row: a parsed tk/flexible-layout block and its
+ * One flexible layout row: a parsed tkfi/flexible-layout block and its
  * sub-fields.
  */
 class Flexible_Row {
@@ -78,7 +78,7 @@ class Flexible_Row {
 	}
 
 	/**
-	 * The value of one sub-field (tk/field-value with matching fieldName).
+	 * The value of one sub-field (tkfi/field-value with matching fieldName).
 	 * Scans inner blocks depth-first in document order; first match wins.
 	 * Returns the canonicalized value attribute, or null when absent.
 	 *
@@ -87,7 +87,7 @@ class Flexible_Row {
 	 */
 	public function get_field( string $name ) {
 		foreach ( self::walk_inner_blocks( $this->block['innerBlocks'] ?? array() ) as $inner ) {
-			if ( 'tk/field-value' !== ( $inner['blockName'] ?? '' ) ) {
+			if ( 'tkfi/field-value' !== ( $inner['blockName'] ?? '' ) ) {
 				continue;
 			}
 			if ( ( $inner['attrs']['fieldName'] ?? '' ) === $name ) {
@@ -107,7 +107,7 @@ class Flexible_Row {
 		$fields = array();
 
 		foreach ( self::walk_inner_blocks( $this->block['innerBlocks'] ?? array() ) as $inner ) {
-			if ( 'tk/field-value' !== ( $inner['blockName'] ?? '' ) ) {
+			if ( 'tkfi/field-value' !== ( $inner['blockName'] ?? '' ) ) {
 				continue;
 			}
 			$name = (string) ( $inner['attrs']['fieldName'] ?? '' );
@@ -153,7 +153,7 @@ final class Flexible_Content {
 	/**
 	 * Row objects for a flexible field on a post, in document order.
 	 *
-	 * First top-level tk/flexible-content block whose fieldName matches wins
+	 * First top-level tkfi/flexible-content block whose fieldName matches wins
 	 * (repeater parity); nested flexible blocks are not traversed.
 	 *
 	 * @param string $selector Field name.
@@ -212,7 +212,7 @@ final class Flexible_Content {
 	}
 
 	/**
-	 * Walk parsed top-level blocks for the first matching tk/flexible-content
+	 * Walk parsed top-level blocks for the first matching tkfi/flexible-content
 	 * block and return its layout rows as canonical arrays.
 	 *
 	 * @param string                         $selector Field name.
@@ -235,8 +235,8 @@ final class Flexible_Content {
 	}
 
 	/**
-	 * Walk parsed top-level blocks and yield the raw tk/flexible-layout
-	 * block arrays of the first tk/flexible-content block whose fieldName
+	 * Walk parsed top-level blocks and yield the raw tkfi/flexible-layout
+	 * block arrays of the first tkfi/flexible-content block whose fieldName
 	 * matches. First matching top-level block wins (repeater parity);
 	 * nested flexible blocks are not traversed.
 	 *
@@ -246,7 +246,7 @@ final class Flexible_Content {
 	 */
 	private static function layout_blocks_from_blocks( string $selector, array $blocks ): \Generator {
 		foreach ( $blocks as $block ) {
-			if ( 'tk/flexible-content' !== ( $block['blockName'] ?? '' ) ) {
+			if ( 'tkfi/flexible-content' !== ( $block['blockName'] ?? '' ) ) {
 				continue;
 			}
 			if ( ( $block['attrs']['fieldName'] ?? '' ) !== $selector ) {
@@ -254,7 +254,7 @@ final class Flexible_Content {
 			}
 
 			foreach ( $block['innerBlocks'] ?? array() as $inner ) {
-				if ( 'tk/flexible-layout' !== ( $inner['blockName'] ?? '' ) ) {
+				if ( 'tkfi/flexible-layout' !== ( $inner['blockName'] ?? '' ) ) {
 					continue;
 				}
 				yield $inner;
@@ -270,7 +270,7 @@ final class Flexible_Content {
 	 * (term meta, user meta, options). The markup round-trips through
 	 * rows_from_markup() losslessly.
 	 *
-	 * Sub-field values are written through tk/field-value blocks with the
+	 * Sub-field values are written through tkfi/field-value blocks with the
 	 * value attribute canonicalized exactly as the editor writes it.
 	 *
 	 * @param array<string, mixed>            $field Field definition (needs name, key, layouts).
@@ -305,7 +305,7 @@ final class Flexible_Content {
 					$attrs['taxonomy'] = $sub_def['taxonomy'];
 				}
 				$subs[] = array(
-					'blockName'    => 'tk/field-value',
+					'blockName'    => 'tkfi/field-value',
 					'attrs'        => $attrs,
 					'innerBlocks'  => array(),
 					'innerHTML'    => '',
@@ -314,7 +314,7 @@ final class Flexible_Content {
 			}
 
 			$inner[] = array(
-				'blockName'    => 'tk/flexible-layout',
+				'blockName'    => 'tkfi/flexible-layout',
 				'attrs'        => array(
 					'layout'   => $layout_key,
 					'layoutId' => (string) ( $row['id'] ?? '' ),
@@ -331,7 +331,7 @@ final class Flexible_Content {
 		return serialize_blocks(
 			array(
 				array(
-					'blockName'    => 'tk/flexible-content',
+					'blockName'    => 'tkfi/flexible-content',
 					'attrs'        => array(
 						'fieldName' => (string) ( $field['name'] ?? '' ),
 						'fieldKey'  => isset( $field['key'] ) ? (string) $field['key'] : '',
@@ -346,7 +346,7 @@ final class Flexible_Content {
 
 	/**
 	 * Render formatted rows (Field_Registry::format() output) as escaped
-	 * layout HTML. Used by the Elementor text tag and the tk/field-value
+	 * layout HTML. Used by the Elementor text tag and the tkfi/field-value
 	 * render path. Every dynamic string is escaped inside; the return is
 	 * safe to echo.
 	 *

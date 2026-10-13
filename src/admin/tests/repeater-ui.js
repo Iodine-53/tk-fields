@@ -65,8 +65,8 @@ dom.window.wp = {
 dom.window.ReactJSXRuntime = req( 'react/jsx-runtime' );
 
 // ---- localized config ----
-dom.window.TK_FIELDS_ADMIN = {
-	root: 'http://localhost/wp-json/tk/v1',
+dom.window.TKFI_ADMIN = {
+	root: 'http://localhost/wp-json/tkfi/v1',
 	nonce: 'test-nonce',
 	adminUrl: 'http://localhost/wp-admin/',
 };
@@ -153,10 +153,10 @@ global.fetch = async ( url, opts = {} ) => {
 		ok: status >= 200 && status < 300, status,
 		json: async () => data,
 	} );
-	if ( url.endsWith( '/wp-json/tk/v1/groups' ) && ( opts.method || 'GET' ) === 'GET' ) {
+	if ( url.endsWith( '/wp-json/tkfi/v1/groups' ) && ( opts.method || 'GET' ) === 'GET' ) {
 		return json( { groups: [] } );
 	}
-	if ( url.endsWith( '/wp-json/tk/v1/field-types' ) ) {
+	if ( url.endsWith( '/wp-json/tkfi/v1/field-types' ) ) {
 		return json( { types: fieldTypes } );
 	}
 	if ( url.includes( '/wp/v2/types' ) ) {

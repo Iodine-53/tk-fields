@@ -16,10 +16,10 @@
  * fixture markup tree and renders it — creates nothing, leaves no trace.
  *
  * Covers the block workstream (contract 5) of the repeater synthesis:
- * - tk/field-repeater is registered via the auto-discovery registrar
+ * - tkfi/field-repeater is registered via the auto-discovery registrar
  *   (no class-blocks.php edit needed) with the expected attributes,
  *   inserter disabled, and providesContext keys.
- * - tk/repeater-row accepts tk/field-repeater as a parent (containment).
+ * - tkfi/repeater-row accepts tkfi/field-repeater as a parent (containment).
  * - A nested (depth-2) fixture parses into the unambiguous tree shape the
  *   Fields-service read path resolves: wrapper > row[rowId] > wrapper >
  *   row[rowId], short sub-field names, stable rowIds.
@@ -30,7 +30,7 @@
  * in eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -54,8 +54,8 @@ $check = function ( bool $cond, string $label ) use ( &$failures ): void {
 $registry = \WP_Block_Type_Registry::get_instance();
 
 // ------------------------------------------------- registration --------
-$bt = $registry->get_registered( 'tk/field-repeater' );
-$check( $bt instanceof \WP_Block_Type, 'tk/field-repeater is registered' );
+$bt = $registry->get_registered( 'tkfi/field-repeater' );
+$check( $bt instanceof \WP_Block_Type, 'tkfi/field-repeater is registered' );
 
 if ( $bt instanceof \WP_Block_Type ) {
 	$attrs = $bt->attributes;
@@ -66,44 +66,44 @@ if ( $bt instanceof \WP_Block_Type ) {
 	$check( false === ( $bt->supports['inserter'] ?? true ), 'inserter is disabled (renderer-only insertion)' );
 	$check( false === ( $bt->supports['reusable'] ?? true ), 'reusable is disabled (field-owned identity)' );
 	$provides = $bt->provides_context ?? array();
-	$check( isset( $provides['tk/field-repeater-field-key'] ), 'provides tk/field-repeater-field-key context' );
-	$check( isset( $provides['tk/field-repeater-field-name'] ), 'provides tk/field-repeater-field-name context' );
-	$check( isset( $provides['tk/field-repeater-scope'] ), 'provides tk/field-repeater-scope (path stack) context' );
+	$check( isset( $provides['tkfi/field-repeater-field-key'] ), 'provides tkfi/field-repeater-field-key context' );
+	$check( isset( $provides['tkfi/field-repeater-field-name'] ), 'provides tkfi/field-repeater-field-name context' );
+	$check( isset( $provides['tkfi/field-repeater-scope'] ), 'provides tkfi/field-repeater-scope (path stack) context' );
 	$check( is_callable( $bt->render_callback ), 'has a render callback (render.php)' );
 }
 
-$row_bt = $registry->get_registered( 'tk/repeater-row' );
-$check( $row_bt instanceof \WP_Block_Type, 'tk/repeater-row is registered' );
+$row_bt = $registry->get_registered( 'tkfi/repeater-row' );
+$check( $row_bt instanceof \WP_Block_Type, 'tkfi/repeater-row is registered' );
 if ( $row_bt instanceof \WP_Block_Type ) {
 	$parent = $row_bt->parent ?? array();
-	$check( in_array( 'tk/repeater', (array) $parent, true ), 'tk/repeater-row still allows tk/repeater parent' );
-	$check( in_array( 'tk/field-repeater', (array) $parent, true ), 'tk/repeater-row allows tk/field-repeater parent (containment)' );
+	$check( in_array( 'tkfi/repeater', (array) $parent, true ), 'tkfi/repeater-row still allows tkfi/repeater parent' );
+	$check( in_array( 'tkfi/field-repeater', (array) $parent, true ), 'tkfi/repeater-row allows tkfi/field-repeater parent (containment)' );
 }
 
 // ------------------------------------------------- fixture parse -------
-$fixture = '<!-- wp:tk/field-repeater {"fieldKey":"fr-course_modules","fieldName":"course_modules","fieldLabel":"Modules","layout":"list","buttonLabel":"Add Module","min":1,"max":10,"collapsed":"title","scopeStack":["course_modules"],"originPostId":123} -->'
-	. '<!-- wp:tk/repeater-row {"rowId":"row-aaa111"} -->'
-	. '<!-- wp:tk/field-value {"fieldName":"title","fieldType":"text","value":"Module 1"} /-->'
-	. '<!-- wp:tk/field-value {"fieldName":"hours","fieldType":"number","value":6} /-->'
-	. '<!-- wp:tk/field-repeater {"fieldKey":"fr-course_modules__lessons","fieldName":"lessons","fieldLabel":"Lessons","layout":"list","subFields":[],"scopeStack":["course_modules","lessons"]} -->'
-	. '<!-- wp:tk/repeater-row {"rowId":"row-bbb222"} -->'
-	. '<!-- wp:tk/field-value {"fieldName":"title","fieldType":"text","value":"Lesson 1"} /-->'
-	. '<!-- /wp:tk/repeater-row -->'
-	. '<!-- wp:tk/repeater-row {"rowId":"row-bbb333"} -->'
-	. '<!-- wp:tk/field-value {"fieldName":"title","fieldType":"text","value":"Lesson 2"} /-->'
-	. '<!-- /wp:tk/repeater-row -->'
-	. '<!-- /wp:tk/field-repeater -->'
-	. '<!-- /wp:tk/repeater-row -->'
-	. '<!-- wp:tk/repeater-row {"rowId":"row-aaa444"} -->'
-	. '<!-- wp:tk/field-value {"fieldName":"title","fieldType":"text","value":"Module 2"} /-->'
-	. '<!-- /wp:tk/repeater-row -->'
-	. '<!-- /wp:tk/field-repeater -->';
+$fixture = '<!-- wp:tkfi/field-repeater {"fieldKey":"fr-course_modules","fieldName":"course_modules","fieldLabel":"Modules","layout":"list","buttonLabel":"Add Module","min":1,"max":10,"collapsed":"title","scopeStack":["course_modules"],"originPostId":123} -->'
+	. '<!-- wp:tkfi/repeater-row {"rowId":"row-aaa111"} -->'
+	. '<!-- wp:tkfi/field-value {"fieldName":"title","fieldType":"text","value":"Module 1"} /-->'
+	. '<!-- wp:tkfi/field-value {"fieldName":"hours","fieldType":"number","value":6} /-->'
+	. '<!-- wp:tkfi/field-repeater {"fieldKey":"fr-course_modules__lessons","fieldName":"lessons","fieldLabel":"Lessons","layout":"list","subFields":[],"scopeStack":["course_modules","lessons"]} -->'
+	. '<!-- wp:tkfi/repeater-row {"rowId":"row-bbb222"} -->'
+	. '<!-- wp:tkfi/field-value {"fieldName":"title","fieldType":"text","value":"Lesson 1"} /-->'
+	. '<!-- /wp:tkfi/repeater-row -->'
+	. '<!-- wp:tkfi/repeater-row {"rowId":"row-bbb333"} -->'
+	. '<!-- wp:tkfi/field-value {"fieldName":"title","fieldType":"text","value":"Lesson 2"} /-->'
+	. '<!-- /wp:tkfi/repeater-row -->'
+	. '<!-- /wp:tkfi/field-repeater -->'
+	. '<!-- /wp:tkfi/repeater-row -->'
+	. '<!-- wp:tkfi/repeater-row {"rowId":"row-aaa444"} -->'
+	. '<!-- wp:tkfi/field-value {"fieldName":"title","fieldType":"text","value":"Module 2"} /-->'
+	. '<!-- /wp:tkfi/repeater-row -->'
+	. '<!-- /wp:tkfi/field-repeater -->';
 
 $parsed = parse_blocks( $fixture );
 $check( 1 === count( $parsed ), 'fixture parses to one top-level block' );
 
 $wrapper = $parsed[0] ?? array();
-$check( 'tk/field-repeater' === ( $wrapper['blockName'] ?? '' ), 'top-level block is tk/field-repeater' );
+$check( 'tkfi/field-repeater' === ( $wrapper['blockName'] ?? '' ), 'top-level block is tkfi/field-repeater' );
 $check( 'course_modules' === ( $wrapper['attrs']['fieldName'] ?? '' ), 'wrapper carries fieldName' );
 $check( 'fr-course_modules' === ( $wrapper['attrs']['fieldKey'] ?? '' ), 'wrapper carries fieldKey' );
 $check( 1 === ( $wrapper['attrs']['min'] ?? null ), 'min survives parse' );
@@ -112,7 +112,7 @@ $check( 'title' === ( $wrapper['attrs']['collapsed'] ?? '' ), 'collapsed survive
 
 $rows = $wrapper['innerBlocks'] ?? array();
 $check( 2 === count( $rows ), 'wrapper has two direct rows (document order = presentation order)' );
-$check( 'tk/repeater-row' === ( $rows[0]['blockName'] ?? '' ), 'children are tk/repeater-row blocks' );
+$check( 'tkfi/repeater-row' === ( $rows[0]['blockName'] ?? '' ), 'children are tkfi/repeater-row blocks' );
 $check( 'row-aaa111' === ( $rows[0]['attrs']['rowId'] ?? '' ), 'row 1 keeps its stable rowId (not the index)' );
 $check( 'row-aaa444' === ( $rows[1]['attrs']['rowId'] ?? '' ), 'row 2 keeps its stable rowId' );
 
@@ -122,7 +122,7 @@ $field_values = array_values(
 	array_filter(
 		$row1_kids,
 		function ( $b ) {
-			return 'tk/field-value' === ( $b['blockName'] ?? '' );
+			return 'tkfi/field-value' === ( $b['blockName'] ?? '' );
 		}
 	)
 );
@@ -133,12 +133,12 @@ $check( 'Module 1' === ( $field_values[0]['attrs']['value'] ?? '' ), 'sub-field 
 // Nested repeater: the path stack is the tree, not a flat key.
 $nested = null;
 foreach ( $row1_kids as $kid ) {
-	if ( 'tk/field-repeater' === ( $kid['blockName'] ?? '' ) ) {
+	if ( 'tkfi/field-repeater' === ( $kid['blockName'] ?? '' ) ) {
 		$nested = $kid;
 		break;
 	}
 }
-$check( null !== $nested, 'nested tk/field-repeater found inside row 1 (depth 2)' );
+$check( null !== $nested, 'nested tkfi/field-repeater found inside row 1 (depth 2)' );
 if ( null !== $nested ) {
 	$check( 'lessons' === ( $nested['attrs']['fieldName'] ?? '' ), 'nested wrapper carries its own fieldName' );
 	$check( 'fr-course_modules__lessons' === ( $nested['attrs']['fieldKey'] ?? '' ), 'nested fieldKey extends the parent key (path stack)' );
@@ -150,7 +150,7 @@ if ( null !== $nested ) {
 	$nested_titles = array();
 	foreach ( $nested_rows as $nr ) {
 		foreach ( $nr['innerBlocks'] ?? array() as $fv ) {
-			if ( 'tk/field-value' === ( $fv['blockName'] ?? '' ) && 'title' === ( $fv['attrs']['fieldName'] ?? '' ) ) {
+			if ( 'tkfi/field-value' === ( $fv['blockName'] ?? '' ) && 'title' === ( $fv['attrs']['fieldName'] ?? '' ) ) {
 				$nested_titles[] = $fv['attrs']['value'] ?? '';
 			}
 		}

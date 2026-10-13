@@ -96,7 +96,7 @@ function makeStubs() {
 		createFromFieldDef: function (def, opts) {
 			const clean = String((def && def.name) || '').replace(/[^a-zA-Z0-9_-]/g, '');
 			return {
-				name: 'tk/field-repeater',
+				name: 'tkfi/field-repeater',
 				attributes: { fieldKey: 'fr-' + clean.slice(0, 48), fieldName: def.name },
 				innerBlocks: [],
 				_createdWith: { def: def, opts: opts },
@@ -134,12 +134,12 @@ async function main() {
 	const F = t.renderer.findWrapper;
 	assert.strictEqual(F([], 'fr-a'), null, 'empty tree misses');
 	assert.strictEqual(
-		F([{ name: 'tk/field-repeater', attributes: { fieldKey: 'fr-a' }, innerBlocks: [] }], 'fr-a').name,
-		'tk/field-repeater',
+		F([{ name: 'tkfi/field-repeater', attributes: { fieldKey: 'fr-a' }, innerBlocks: [] }], 'fr-a').name,
+		'tkfi/field-repeater',
 		'top-level match found'
 	);
 	assert.strictEqual(
-		F([{ name: 'tk/field-repeater', attributes: { fieldKey: 'fr-b' }, innerBlocks: [] }], 'fr-a'),
+		F([{ name: 'tkfi/field-repeater', attributes: { fieldKey: 'fr-b' }, innerBlocks: [] }], 'fr-a'),
 		null,
 		'wrong fieldKey misses'
 	);
@@ -153,7 +153,7 @@ async function main() {
 			[{
 				name: 'core/group',
 				attributes: {},
-				innerBlocks: [{ name: 'tk/field-repeater', attributes: { fieldKey: 'fr-a' }, innerBlocks: [] }],
+				innerBlocks: [{ name: 'tkfi/field-repeater', attributes: { fieldKey: 'fr-a' }, innerBlocks: [] }],
 			}],
 			'fr-a'
 		).attributes.fieldKey,
@@ -185,9 +185,9 @@ async function main() {
 	};
 	t.renderer._maybeRun();
 	await tick(5);
-	assert.deepStrictEqual(t.state.apiCalls, ['/tk/v1/post-repeaters/12'], 'fetches repeater defs for the post');
+	assert.deepStrictEqual(t.state.apiCalls, ['/tkfi/v1/post-repeaters/12'], 'fetches repeater defs for the post');
 	assert.strictEqual(t.state.insertCalls.length, 1, 'one wrapper inserted');
-	assert.strictEqual(t.state.insertCalls[0].block.name, 'tk/field-repeater', 'inserted block is the wrapper');
+	assert.strictEqual(t.state.insertCalls[0].block.name, 'tkfi/field-repeater', 'inserted block is the wrapper');
 	assert.strictEqual(t.state.insertCalls[0].block.attributes.fieldKey, 'fr-modules', 'fieldKey matches the scheme');
 	assert.strictEqual(t.state.insertCalls[0].index, 0, 'appended at the end of (empty) content');
 	assert.strictEqual(t.state.insertCalls[0].block._createdWith.def.name, 'modules', 'def passed through to createFromFieldDef');
@@ -199,7 +199,7 @@ async function main() {
 	t.state.apiResponse = {
 		fields: [{ name: 'modules', label: 'Modules', sub_fields: [] }],
 	};
-	t.state.blocks = [{ name: 'tk/field-repeater', attributes: { fieldKey: 'fr-modules' }, innerBlocks: [] }];
+	t.state.blocks = [{ name: 'tkfi/field-repeater', attributes: { fieldKey: 'fr-modules' }, innerBlocks: [] }];
 	t.renderer._maybeRun();
 	await tick(5);
 	assert.strictEqual(t.state.insertCalls.length, 0, 'matching wrapper present: no insert');
@@ -213,7 +213,7 @@ async function main() {
 			{ name: 'faq', label: 'FAQ', sub_fields: [] },
 		],
 	};
-	t.state.blocks = [{ name: 'tk/field-repeater', attributes: { fieldKey: 'fr-modules' }, innerBlocks: [] }];
+	t.state.blocks = [{ name: 'tkfi/field-repeater', attributes: { fieldKey: 'fr-modules' }, innerBlocks: [] }];
 	t.renderer._maybeRun();
 	await tick(5);
 	assert.strictEqual(t.state.insertCalls.length, 1, 'only the missing field gets a wrapper');

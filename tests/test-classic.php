@@ -36,7 +36,7 @@
  * in eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -145,43 +145,43 @@ ob_start();
 $renderer->render_meta_box( $post, $box );
 $html = (string) ob_get_clean();
 
-$check( false !== strpos( $html, 'tk_fields[tkc_wysiwyg]' ), 'wysiwyg renders wp_editor textarea name' );
+$check( false !== strpos( $html, 'tkfi[tkc_wysiwyg]' ), 'wysiwyg renders wp_editor textarea name' );
 $check( false !== strpos( $html, 'tkw_tkc_wysiwyg' ), 'wysiwyg editor id is unique per field' );
-$check( false !== strpos( $html, 'name="tk_fields[tkc_postobj]"' ), 'post_object renders a select' );
+$check( false !== strpos( $html, 'name="tkfi[tkc_postobj]"' ), 'post_object renders a select' );
 $check( false !== strpos( $html, 'value="' . $target_post . '"' ), 'post_object select lists the target post' );
 $check( false !== strpos( $html, 'data-tkf-pagelink-kind' ), 'page_link renders the kind select' );
-$check( false !== strpos( $html, 'tk_fields[tkc_pagelink][kind]' ), 'page_link kind input named' );
-$check( false !== strpos( $html, 'tk_fields[tkc_taxcat][]' ), 'taxonomy renders checkbox inputs' );
+$check( false !== strpos( $html, 'tkfi[tkc_pagelink][kind]' ), 'page_link kind input named' );
+$check( false !== strpos( $html, 'tkfi[tkc_taxcat][]' ), 'taxonomy renders checkbox inputs' );
 $check( false !== strpos( $html, 'Classic Cat A' ), 'taxonomy checklist shows the test category' );
-$check( false !== strpos( $html, 'tk_fields[tkc_taxflat][]' ), 'flat taxonomy renders checkboxes too' );
-$check( false !== strpos( $html, 'name="tk_fields[tkc_user1]"' ), 'user single renders a select' );
-$check( false !== strpos( $html, 'name="tk_fields[tkc_users][]"' ), 'user multiple renders a multi-select' );
+$check( false !== strpos( $html, 'tkfi[tkc_taxflat][]' ), 'flat taxonomy renders checkboxes too' );
+$check( false !== strpos( $html, 'name="tkfi[tkc_user1]"' ), 'user single renders a select' );
+$check( false !== strpos( $html, 'name="tkfi[tkc_users][]"' ), 'user multiple renders a multi-select' );
 $check( false !== strpos( $html, 'data-tkf-gallery-inputs' ), 'gallery renders the hidden ID inputs' );
 $check( false !== strpos( $html, 'data-tkf-gallery-select' ), 'gallery renders the wp.media button' );
-$check( false !== strpos( $html, 'tk_fields[tkc_map][lat]' ), 'map reduced renders lat input' );
-$check( false !== strpos( $html, 'tk_fields[tkc_map][address]' ), 'map reduced renders address input' );
-$check( false !== strpos( $html, 'tk_fields_classic_nonce' ), 'meta box prints the save nonce' );
+$check( false !== strpos( $html, 'tkfi[tkc_map][lat]' ), 'map reduced renders lat input' );
+$check( false !== strpos( $html, 'tkfi[tkc_map][address]' ), 'map reduced renders address input' );
+$check( false !== strpos( $html, 'tkfi_classic_nonce' ), 'meta box prints the save nonce' );
 $check(
 	false !== strpos( $html, 'can only be edited in the block editor' ),
 	'deferred relationship type shows the block-editor-only note'
 );
 $check(
-	false === strpos( $html, 'name="tk_fields[tkc_rel]"' ),
+	false === strpos( $html, 'name="tkfi[tkc_rel]"' ),
 	'deferred relationship type renders no input'
 );
 // URL kind hidden when allow_external is off.
 $check(
-	false === strpos( $html, 'tk_fields[tkc_pagelink_int][value]' ),
+	false === strpos( $html, 'tkfi[tkc_pagelink_int][value]' ),
 	'page_link without allow_external renders no URL input'
 );
 
 // ------------------------------------------------------------ save: setup ---
-$do_save = function ( array $tk_fields ) use ( $renderer, $post, $post_id ): void {
-	$_POST['tk_fields_classic_nonce'] = wp_create_nonce( 'tk_fields_classic_save' );
-	$_POST['tk_fields']               = $tk_fields;
+$do_save = function ( array $tkfi ) use ( $renderer, $post, $post_id ): void {
+	$_POST['tkfi_classic_nonce'] = wp_create_nonce( 'tkfi_classic_save' );
+	$_POST['tkfi']               = $tkfi;
 	$renderer->save_post( $post_id, $post );
 	Fields::flush();
-	unset( $_POST['tk_fields_classic_nonce'], $_POST['tk_fields'] );
+	unset( $_POST['tkfi_classic_nonce'], $_POST['tkfi'] );
 };
 
 // ------------------------------------------------------------ save: values ---
@@ -270,32 +270,32 @@ $check( 0 === $poc || Unset_Value::is_unset( $poc ), 'post_object: selecting emp
 
 // -------------------------------------------------------------- security ---
 $before = Fields::get( 'tkc_user1', $post_id, false );
-$_POST['tk_fields_classic_nonce'] = 'bad-nonce';
-$_POST['tk_fields']               = array( 'tkc_user1' => '1' );
+$_POST['tkfi_classic_nonce'] = 'bad-nonce';
+$_POST['tkfi']               = array( 'tkc_user1' => '1' );
 $renderer->save_post( $post_id, $post );
 Fields::flush();
-unset( $_POST['tk_fields_classic_nonce'], $_POST['tk_fields'] );
+unset( $_POST['tkfi_classic_nonce'], $_POST['tkfi'] );
 $after = Fields::get( 'tkc_user1', $post_id, false );
 $check( $before === $after, 'bad nonce: save rejected' );
 
-$_POST['tk_fields_classic_nonce'] = wp_create_nonce( 'tk_fields_classic_save' );
-$_POST['tk_fields']               = array(
+$_POST['tkfi_classic_nonce'] = wp_create_nonce( 'tkfi_classic_save' );
+$_POST['tkfi']               = array(
 	'not_a_field'      => 'x',
 	'../evil'          => 'x',
 	'tkc_user1'        => '1',
 );
 $renderer->save_post( $post_id, $post );
 Fields::flush();
-unset( $_POST['tk_fields_classic_nonce'], $_POST['tk_fields'] );
+unset( $_POST['tkfi_classic_nonce'], $_POST['tkfi'] );
 $check( 1 === Fields::get( 'tkc_user1', $post_id, false ), 'unknown/malformed POST keys ignored, valid keys still save' );
 
 // Unknown types can't sneak in via forged field names: forged name fails
 // the registry lookup and is skipped.
-$_POST['tk_fields_classic_nonce'] = wp_create_nonce( 'tk_fields_classic_save' );
-$_POST['tk_fields']               = array( 'tkc_rel' => '123' );
+$_POST['tkfi_classic_nonce'] = wp_create_nonce( 'tkfi_classic_save' );
+$_POST['tkfi']               = array( 'tkc_rel' => '123' );
 $renderer->save_post( $post_id, $post );
 Fields::flush();
-unset( $_POST['tk_fields_classic_nonce'], $_POST['tk_fields'] );
+unset( $_POST['tkfi_classic_nonce'], $_POST['tkfi'] );
 $check( Unset_Value::is_unset( Fields::get( 'tkc_rel', $post_id, false ) ), 'deferred relationship type not writable from the classic path' );
 
 // ---------------------------------------------------------------- cleanup ---

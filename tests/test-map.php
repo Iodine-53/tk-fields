@@ -30,7 +30,7 @@
  *  - REST field-types descriptor: enable_search toggle with Photon tooltip.
  *  - AI context export: JSON-Schema object {lat,lng,zoom,address} with
  *    settings enumerated.
- *  - Geocoder stays swappable behind the tk_fields_geocoder_url filter.
+ *  - Geocoder stays swappable behind the tkfi_geocoder_url filter.
  *  - Elementor: map renders through the existing text tag (address, with
  *    "lat,lng" fallback).
  *  - Classic: reduced input (lat/lng/address, no Leaflet canvas).
@@ -42,7 +42,7 @@
  * template for the one URL-building assertion.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -145,7 +145,7 @@ $check( 0 === $http_calls, 'format() makes zero HTTP calls' );
 // render.php: address output, escaped, no HTTP.
 $attributes = array( 'fieldName' => 'tkmap_x', 'fieldType' => 'map', 'value' => $stored );
 ob_start();
-include TK_FIELDS_DIR . 'blocks/field-value/render.php';
+include TKFI_DIR . 'blocks/field-value/render.php';
 $out = (string) ob_get_clean();
 $check( false !== strpos( $out, 'London, UK' ), 'render.php outputs the stored address' );
 $check( 0 === $http_calls, 'render.php makes zero HTTP calls' );
@@ -153,14 +153,14 @@ $check( 0 === $http_calls, 'render.php makes zero HTTP calls' );
 // render.php: lat,lng fallback when no address.
 $attributes = array( 'fieldName' => 'tkmap_x', 'fieldType' => 'map', 'value' => array( 'lat' => 51.5, 'lng' => -0.1, 'zoom' => 13, 'address' => '' ) );
 ob_start();
-include TK_FIELDS_DIR . 'blocks/field-value/render.php';
+include TKFI_DIR . 'blocks/field-value/render.php';
 $out = (string) ob_get_clean();
 $check( false !== strpos( $out, '51.5,-0.1' ), 'render.php falls back to "lat,lng" when address empty' );
 
 // render.php: stored markup is escaped, not executed.
 $attributes = array( 'fieldName' => 'tkmap_x', 'fieldType' => 'map', 'value' => array( 'lat' => 1.0, 'lng' => 2.0, 'zoom' => 1, 'address' => '<img src=x onerror=alert(1)>' ) );
 ob_start();
-include TK_FIELDS_DIR . 'blocks/field-value/render.php';
+include TKFI_DIR . 'blocks/field-value/render.php';
 $out = (string) ob_get_clean();
 $check( false === strpos( $out, '<img src=x' ), 'render.php escapes stored address markup' );
 $check( 0 === $http_calls, 'still zero HTTP calls after all renders' );
@@ -199,15 +199,15 @@ $check( 48.8566 === ( $persisted['default_lat'] ?? null ), 'persisted default_la
 $check( 2.3522 === ( $persisted['default_lng'] ?? null ), 'persisted default_lng carried as float' );
 $check( 12 === ( $persisted['default_zoom'] ?? null ), 'persisted default_zoom carried as int' );
 
-$ok = tk_update_field( 'tkmap_location', array( 'lat' => '48.8566', 'lng' => '2.3522', 'zoom' => '12', 'address' => 'Paris, France' ), $post_id );
+$ok = tkfi_update_field( 'tkmap_location', array( 'lat' => '48.8566', 'lng' => '2.3522', 'zoom' => '12', 'address' => 'Paris, France' ), $post_id );
 Fields::flush();
-$check( true === $ok, 'tk_update_field accepts the map array' );
+$check( true === $ok, 'tkfi_update_field accepts the map array' );
 
-$typed = tk_get_field( 'tkmap_location', $post_id, false );
+$typed = tkfi_get_field( 'tkmap_location', $post_id, false );
 $check( is_array( $typed ) && 'Paris, France' === ( $typed['address'] ?? null ), 'typed read round-trips the denormalized address' );
 $check( 48.8566 === ( $typed['lat'] ?? null ), 'typed read round-trips lat' );
 
-$formatted = tk_get_field( 'tkmap_location', $post_id, true );
+$formatted = tkfi_get_field( 'tkmap_location', $post_id, true );
 $check( $typed === $formatted, 'formatted read equals the stored array (no external resolution)' );
 $check( 0 === $http_calls, 'end-to-end reads make zero HTTP calls' );
 
@@ -270,7 +270,7 @@ $url = Map::geocoder_search_url( 'Berlin Mitte' );
 $check( 'https://photon.komoot.io/api/?q=Berlin%20Mitte&limit=8' === $url, 'default Photon URL built with encoded query' );
 
 add_filter(
-	'tk_fields_geocoder_url',
+	'tkfi_geocoder_url',
 	function ( $template, $query ) {
 		return 'https://geocoder.example/search?q={query}&query=' . rawurlencode( $query );
 	},
@@ -278,36 +278,36 @@ add_filter(
 	2
 );
 $swapped = Map::geocoder_search_url( 'Paris' );
-$check( 'https://geocoder.example/search?q=Paris&query=Paris' === $swapped, 'tk_fields_geocoder_url filter swaps the geocoder' );
-remove_all_filters( 'tk_fields_geocoder_url' );
+$check( 'https://geocoder.example/search?q=Paris&query=Paris' === $swapped, 'tkfi_geocoder_url filter swaps the geocoder' );
+remove_all_filters( 'tkfi_geocoder_url' );
 
 // A filter returning a template without {query} falls back to Photon.
-add_filter( 'tk_fields_geocoder_url', function () { return 'https://broken.example/'; } );
+add_filter( 'tkfi_geocoder_url', function () { return 'https://broken.example/'; } );
 $check( 'https://photon.komoot.io/api/?q=x&limit=8' === Map::geocoder_search_url( 'x' ), 'template without {query} falls back to Photon default' );
-remove_all_filters( 'tk_fields_geocoder_url' );
+remove_all_filters( 'tkfi_geocoder_url' );
 
 // --------------------------------------------------------------- Elementor ---
-$check( class_exists( 'TK\\Fields\\Integrations\\Elementor\\Tags\\Text_Tag' ), 'Elementor Text_Tag class is loaded' );
-$ref    = new \ReflectionClass( 'TK\\Fields\\Integrations\\Elementor\\Tags\\Text_Tag' );
+$check( class_exists( 'TKFields\\Integrations\\Elementor\\Tags\\Text_Tag' ), 'Elementor Text_Tag class is loaded' );
+$ref    = new \ReflectionClass( 'TKFields\\Integrations\\Elementor\\Tags\\Text_Tag' );
 $method = $ref->getMethod( 'supported_types' );
 $method->setAccessible( true );
 $supported = $method->invoke( null );
 $check( in_array( 'map', $supported, true ), 'Text_Tag supports the map type (CQ1: no new tag)' );
 
 // -------------------------------------------------- classic reduced input ---
-$check( method_exists( 'TK\\Fields\\Classic_Renderer', 'render_field_map' ), 'Classic_Renderer has render_field_map' );
-$classic_html = Map::classic_input_html( $field, $stored, 'tk_fields[tkmap_x]' );
-$check( false !== strpos( $classic_html, 'tk_fields[tkmap_x][lat]' ), 'classic input has a lat input' );
-$check( false !== strpos( $classic_html, 'tk_fields[tkmap_x][lng]' ), 'classic input has an lng input' );
-$check( false !== strpos( $classic_html, 'tk_fields[tkmap_x][address]' ), 'classic input has an address input' );
+$check( method_exists( 'TKFields\\Classic_Renderer', 'render_field_map' ), 'Classic_Renderer has render_field_map' );
+$classic_html = Map::classic_input_html( $field, $stored, 'tkfi[tkmap_x]' );
+$check( false !== strpos( $classic_html, 'tkfi[tkmap_x][lat]' ), 'classic input has a lat input' );
+$check( false !== strpos( $classic_html, 'tkfi[tkmap_x][lng]' ), 'classic input has an lng input' );
+$check( false !== strpos( $classic_html, 'tkfi[tkmap_x][address]' ), 'classic input has an address input' );
 $check( false === stripos( $classic_html, 'leaflet' ), 'classic input has NO Leaflet canvas (reduced UI)' );
 $check( false !== strpos( $classic_html, 'London, UK' ), 'classic input pre-fills the stored address' );
 
 // Classic save path accepts the map array (save_post's scalar gate).
-$check( method_exists( 'TK\\Fields\\Classic_Renderer', 'save_post' ), 'Classic_Renderer::save_post exists' );
+$check( method_exists( 'TKFields\\Classic_Renderer', 'save_post' ), 'Classic_Renderer::save_post exists' );
 
 // --------------------------------------------------------------- cleanup ---
-tk_delete_field( 'tkmap_location', $post_id );
+tkfi_delete_field( 'tkmap_location', $post_id );
 Fields::flush();
 if ( ! is_wp_error( $group ) && ! empty( $group['id'] ) ) {
 	wp_delete_post( (int) $group['id'], true );

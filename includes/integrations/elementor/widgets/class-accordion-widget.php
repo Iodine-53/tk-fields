@@ -24,12 +24,12 @@
  * handle `tk-widgets`) plus this widget's own stylesheet
  * (assets/elementor/css/tk-accordion.css).
  *
- * @package TK\Fields\Integrations\Elementor\Widgets
+ * @package TKFields\Integrations\Elementor\Widgets
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Widgets;
+namespace TKFields\Integrations\Elementor\Widgets;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -54,16 +54,16 @@ final class Accordion_Widget extends \Elementor\Widget_Base {
 
 		wp_register_style(
 			'tk-widget-accordion',
-			plugins_url( 'assets/elementor/css/tk-accordion.css', TK_FIELDS_FILE ),
+			plugins_url( 'assets/elementor/css/tk-accordion.css', TKFI_FILE ),
 			array(),
-			TK_FIELDS_VERSION
+			TKFI_VERSION
 		);
 
 		wp_register_script(
 			'tk-widget-accordion',
-			plugins_url( 'assets/elementor/js/tk-accordion.js', TK_FIELDS_FILE ),
+			plugins_url( 'assets/elementor/js/tk-accordion.js', TKFI_FILE ),
 			array(),
-			TK_FIELDS_VERSION,
+			TKFI_VERSION,
 			true
 		);
 	}
@@ -72,7 +72,7 @@ final class Accordion_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_name(): string {
-		return 'tk-accordion';
+		return 'tkfi-accordion';
 	}
 
 	/**
@@ -130,7 +130,7 @@ final class Accordion_Widget extends \Elementor\Widget_Base {
 	 */
 	private function register_content_controls(): void {
 		$this->start_controls_section(
-			'tk_accordion_content',
+			'tkfi_accordion_content',
 			array(
 				'label' => __( 'Content', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_CONTENT,
@@ -255,7 +255,7 @@ final class Accordion_Widget extends \Elementor\Widget_Base {
 	 */
 	private function register_style_controls(): void {
 		$this->start_controls_section(
-			'tk_accordion_style_items',
+			'tkfi_accordion_style_items',
 			array(
 				'label' => __( 'Items', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
@@ -342,7 +342,7 @@ final class Accordion_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_accordion_style_trigger',
+			'tkfi_accordion_style_trigger',
 			array(
 				'label' => __( 'Trigger', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
@@ -447,7 +447,7 @@ final class Accordion_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_accordion_style_panel',
+			'tkfi_accordion_style_panel',
 			array(
 				'label' => __( 'Panel', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,
@@ -491,7 +491,7 @@ final class Accordion_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_accordion_style_motion',
+			'tkfi_accordion_style_motion',
 			array(
 				'label' => __( 'Motion', 'tk-fields' ),
 				'tab'   => \Elementor\Controls_Manager::TAB_STYLE,

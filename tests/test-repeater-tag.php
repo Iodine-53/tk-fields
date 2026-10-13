@@ -19,7 +19,7 @@
  * then deletes it — leaves no trace. Registers a mock repeater field
  * programmatically (the same shape the group store persists) and seeds
  * rows through the canonical block path: Repeater::serialize_rows() into
- * post_content (locked Q4 — posts store repeater rows as tk/field-repeater
+ * post_content (locked Q4 — posts store repeater rows as tkfi/field-repeater
  * blocks, never postmeta, exactly like get_flexible()), then asserts the
  * tag's get_value() shape for several sub-field paths.
  *
@@ -38,10 +38,10 @@
  * eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
-use TK\Fields\Integrations\Elementor\Module;
-use TK\Fields\Integrations\Elementor\Tags\Repeater_Tag;
+use TKFields\Integrations\Elementor\Module;
+use TKFields\Integrations\Elementor\Tags\Repeater_Tag;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -123,7 +123,7 @@ $rows = array(
 );
 
 // --- Seed rows through the canonical block path (locked Q4): posts
-// store repeater rows as tk/field-repeater blocks in post_content, never
+// store repeater rows as tkfi/field-repeater blocks in post_content, never
 // postmeta. Bare CQ1 rows go through sanitize() (canonical {id, fields}
 // with generated row IDs) then serialize_rows() into post_content.
 $seed_rows = function ( int $post_id, array $field, array $bare_rows ) use ( $reg ): void {

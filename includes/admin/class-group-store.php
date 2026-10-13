@@ -12,20 +12,20 @@
 /**
  * Field-group persistence.
  *
- * Field groups are stored as a custom post type (`tk-field-group`, non-public,
+ * Field groups are stored as a custom post type (`tkfi-field-group`, non-public,
  * no core UI — we render our own). The group definition lives as JSON in a
- * single post meta key (`_tk_fields_group`); the post title is the group
+ * single post meta key (`_tkfi_group`); the post title is the group
  * title and the post status is the group status.
  *
  * Every payload is fully sanitized and validated on the way in. Fail closed:
  * an invalid payload returns a WP_Error and nothing is written.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -33,8 +33,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 final class Group_Store {
 
-	public const CPT      = 'tk-field-group';
-	public const META_KEY = '_tk_fields_group';
+	public const CPT      = 'tkfi-field-group';
+	public const META_KEY = '_tkfi_group';
 
 	/**
 	 * @var self|null
@@ -97,7 +97,7 @@ final class Group_Store {
 	/**
 	 * Register the field-group post type. Non-public, no core UI.
 	 *
-	 * v0.15.0: every capability maps to the custom `manage_tk_fields` primitive
+	 * v0.15.0: every capability maps to the custom `manage_tkfi` primitive
  * (granted to administrators on init). The default `post`
 	 * caps would let any Author+ inject group definitions via XML-RPC
 	 * wp.newPost custom fields; read paths (get_post/get_posts) perform no
@@ -125,14 +125,14 @@ final class Group_Store {
 				'capability_type'     => 'post',
 				'map_meta_cap'        => true,
 				'capabilities'        => array(
-					'edit_post'          => 'manage_tk_fields',
-					'read_post'          => 'manage_tk_fields',
-					'delete_post'        => 'manage_tk_fields',
-					'edit_posts'         => 'manage_tk_fields',
-					'edit_others_posts'  => 'manage_tk_fields',
-					'publish_posts'      => 'manage_tk_fields',
-					'read_private_posts' => 'manage_tk_fields',
-					'create_posts'       => 'manage_tk_fields',
+					'edit_post'          => 'manage_tkfi',
+					'read_post'          => 'manage_tkfi',
+					'delete_post'        => 'manage_tkfi',
+					'edit_posts'         => 'manage_tkfi',
+					'edit_others_posts'  => 'manage_tkfi',
+					'publish_posts'      => 'manage_tkfi',
+					'read_private_posts' => 'manage_tkfi',
+					'create_posts'       => 'manage_tkfi',
 				),
 			)
 		);
@@ -165,12 +165,12 @@ final class Group_Store {
 	public function sanitize_group( array $payload ): array|\WP_Error {
 		$title = isset( $payload['title'] ) ? sanitize_text_field( (string) $payload['title'] ) : '';
 		if ( '' === $title ) {
-			return new \WP_Error( 'tk_fields_group_invalid_title', __( 'Group title is required.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_group_invalid_title', __( 'Group title is required.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$location = $payload['location'] ?? array();
 		if ( ! is_array( $location ) ) {
-			return new \WP_Error( 'tk_fields_group_invalid_location', __( 'Location must be an array of rules.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_group_invalid_location', __( 'Location must be an array of rules.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 		$rules = array();
 		foreach ( $location as $i => $rule ) {
@@ -180,7 +180,7 @@ final class Group_Store {
 			if ( is_array( $rule ) && isset( $rule['rules'] ) ) {
 				if ( ! is_array( $rule['rules'] ) ) {
 					return new \WP_Error(
-						'tk_fields_group_invalid_location_rule',
+						'tkfi_group_invalid_location_rule',
 						sprintf(
 							/* translators: %d: rule index */
 							__( 'Location rule %1$d is invalid: a rule group must have a "rules" array.', 'tk-fields' ),
@@ -194,7 +194,7 @@ final class Group_Store {
 					$clean_sub = $this->sanitize_location_rule( $sub );
 					if ( is_wp_error( $clean_sub ) ) {
 						return new \WP_Error(
-							'tk_fields_group_invalid_location_rule',
+							'tkfi_group_invalid_location_rule',
 							sprintf(
 								/* translators: %1$d: rule index, %2$d: sub-rule index, %3$s: reason */
 								__( 'Location rule %1$d, sub-rule %2$d is invalid: %3$s', 'tk-fields' ),
@@ -213,7 +213,7 @@ final class Group_Store {
 			$clean = $this->sanitize_location_rule( $rule );
 			if ( is_wp_error( $clean ) ) {
 				return new \WP_Error(
-					'tk_fields_group_invalid_location_rule',
+					'tkfi_group_invalid_location_rule',
 					sprintf(
 						/* translators: %d: rule index, %s: reason */
 						__( 'Location rule %1$d is invalid: %2$s', 'tk-fields' ),
@@ -228,12 +228,12 @@ final class Group_Store {
 
 		$location_match = $payload['location_match'] ?? 'all';
 		if ( ! in_array( $location_match, array( 'all', 'any' ), true ) ) {
-			return new \WP_Error( 'tk_fields_group_invalid_location_match', __( 'location_match must be "all" or "any".', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_group_invalid_location_match', __( 'location_match must be "all" or "any".', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$fields = $payload['fields'] ?? array();
 		if ( ! is_array( $fields ) ) {
-			return new \WP_Error( 'tk_fields_group_invalid_fields', __( 'Fields must be an array.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_group_invalid_fields', __( 'Fields must be an array.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 		$clean_fields = array();
 		$seen_names   = array();
@@ -242,7 +242,7 @@ final class Group_Store {
 			$clean = $this->sanitize_field( $field );
 			if ( is_wp_error( $clean ) ) {
 				return new \WP_Error(
-					'tk_fields_group_invalid_field',
+					'tkfi_group_invalid_field',
 					sprintf(
 						/* translators: %d: field index, %s: reason */
 						__( 'Field %1$d is invalid: %2$s', 'tk-fields' ),
@@ -254,11 +254,11 @@ final class Group_Store {
 			}
 			if ( isset( $seen_names[ $clean['name'] ] ) ) {
 				/* translators: %s: field name */
-				return new \WP_Error( 'tk_fields_group_duplicate_name', sprintf( __( 'Duplicate field name "%1$s".', 'tk-fields' ), $clean['name'] ), array( 'status' => 400 ) );
+				return new \WP_Error( 'tkfi_group_duplicate_name', sprintf( __( 'Duplicate field name "%1$s".', 'tk-fields' ), $clean['name'] ), array( 'status' => 400 ) );
 			}
 			if ( isset( $seen_keys[ $clean['key'] ] ) ) {
 				/* translators: %s: field key */
-				return new \WP_Error( 'tk_fields_group_duplicate_key', sprintf( __( 'Duplicate field key "%1$s".', 'tk-fields' ), $clean['key'] ), array( 'status' => 400 ) );
+				return new \WP_Error( 'tkfi_group_duplicate_key', sprintf( __( 'Duplicate field key "%1$s".', 'tk-fields' ), $clean['key'] ), array( 'status' => 400 ) );
 			}
 			$seen_names[ $clean['name'] ] = true;
 			$seen_keys[ $clean['key'] ]   = true;
@@ -270,7 +270,7 @@ final class Group_Store {
 			foreach ( $field['conditional_logic'] as $cond ) {
 				if ( ! isset( $seen_keys[ $cond['field'] ] ) ) {
 					return new \WP_Error(
-						'tk_fields_group_bad_conditional',
+						'tkfi_group_bad_conditional',
 						/* translators: 1: field name, 2: field key referenced by the condition */
 						sprintf( __( 'Field "%1$s" has conditional logic referencing unknown field key "%2$s".', 'tk-fields' ), $field['name'], $cond['field'] ),
 						array( 'status' => 400 )
@@ -659,7 +659,7 @@ final class Group_Store {
 	 *   they get the same strict validation as top-level fields; their
 	 *   conditional_logic is stripped (v1: no conditional logic inside
 	 *   layouts) and missing keys are filled with a deterministic
-	 *   layout-scoped key ('f_' . md5('tk_layout:'.$layout_key.':'.$name)).
+	 *   layout-scoped key ('f_' . md5('tkfi_layout:'.$layout_key.':'.$name)).
 	 *
 	 * @param mixed  $layouts    Raw layouts value.
 	 * @param string $field_name Parent field name (for error messages).
@@ -733,7 +733,7 @@ final class Group_Store {
 				// Deterministic layout-scoped key when none is supplied, so
 				// keys are stable across group saves.
 				if ( empty( $sub['key'] ) || ! is_string( $sub['key'] ) || ! preg_match( '/^f_[A-Za-z0-9_]{1,64}$/', $sub['key'] ) ) {
-					$sub['key'] = 'f_' . substr( md5( 'tk_layout:' . $key . ':' . $sub_name ), 0, 20 );
+					$sub['key'] = 'f_' . substr( md5( 'tkfi_layout:' . $key . ':' . $sub_name ), 0, 20 );
 				}
 				// v1: no conditional logic inside layouts.
 				$sub['conditional_logic'] = array();
@@ -773,7 +773,7 @@ final class Group_Store {
 	 * be valid and unique; each sub-field is strict-sanitized via
 	 * sanitize_field() so per-type settings are validated exactly as for
 	 * top-level fields; keys are deterministic
-	 * (md5('tk_repeater:' . repeater . ':' . sub)) so re-saves are stable;
+	 * (md5('tkfi_repeater:' . repeater . ':' . sub)) so re-saves are stable;
 	 * conditional logic is forced off inside repeaters in v1.
 	 *
 	 * v1 container rules (hard errors, never silent):
@@ -834,7 +834,7 @@ final class Group_Store {
 			// Deterministic sub-field key when none is supplied, so keys
 			// are stable across group saves.
 			if ( empty( $sub['key'] ) || ! is_string( $sub['key'] ) || ! preg_match( '/^f_[A-Za-z0-9_]{1,64}$/', $sub['key'] ) ) {
-				$sub['key'] = 'f_' . substr( md5( 'tk_repeater:' . $field_name . ':' . $sub_name ), 0, 20 );
+				$sub['key'] = 'f_' . substr( md5( 'tkfi_repeater:' . $field_name . ':' . $sub_name ), 0, 20 );
 			}
 			// v1: no conditional logic inside repeaters.
 			$sub['conditional_logic'] = array();
@@ -869,7 +869,7 @@ final class Group_Store {
 	 * sub-field is strict-sanitized via sanitize_field() so per-type
 	 * settings (choices, min/max, post_types, ...) are validated exactly as
 	 * for top-level fields. Keys are deterministic
-	 * (md5('tk_group:' . group . ':' . sub)) so re-saves are stable.
+	 * (md5('tkfi_group:' . group . ':' . sub)) so re-saves are stable.
 	 * Conditional logic is forced off inside groups in v1.
 	 *
 	 * @param mixed  $sub_fields     Raw sub_fields value.
@@ -925,7 +925,7 @@ final class Group_Store {
 			// Deterministic sub-field key when none is supplied, so keys
 			// are stable across group saves.
 			if ( empty( $sub['key'] ) || ! is_string( $sub['key'] ) || ! preg_match( '/^f_[A-Za-z0-9_]{1,64}$/', $sub['key'] ) ) {
-				$sub['key'] = 'f_' . substr( md5( 'tk_group:' . $field_name . ':' . $sub_name ), 0, 20 );
+				$sub['key'] = 'f_' . substr( md5( 'tkfi_group:' . $field_name . ':' . $sub_name ), 0, 20 );
 			}
 			// v1: no conditional logic inside groups.
 			$sub['conditional_logic'] = array();
@@ -961,22 +961,22 @@ final class Group_Store {
 
 		$position = $presentation['position'] ?? 'normal';
 		if ( ! in_array( $position, array( 'normal', 'side', 'high' ), true ) ) {
-			return new \WP_Error( 'tk_fields_group_invalid_presentation', __( 'presentation.position must be "normal", "side" or "high".', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_group_invalid_presentation', __( 'presentation.position must be "normal", "side" or "high".', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$style = $presentation['style'] ?? 'default';
 		if ( ! in_array( $style, array( 'default', 'seamless' ), true ) ) {
-			return new \WP_Error( 'tk_fields_group_invalid_presentation', __( 'presentation.style must be "default" or "seamless".', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_group_invalid_presentation', __( 'presentation.style must be "default" or "seamless".', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$label_placement = $presentation['label_placement'] ?? 'top';
 		if ( ! in_array( $label_placement, array( 'top', 'left' ), true ) ) {
-			return new \WP_Error( 'tk_fields_group_invalid_presentation', __( 'presentation.label_placement must be "top" or "left".', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_group_invalid_presentation', __( 'presentation.label_placement must be "top" or "left".', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$instruction_placement = $presentation['instruction_placement'] ?? 'label';
 		if ( ! in_array( $instruction_placement, array( 'label', 'field' ), true ) ) {
-			return new \WP_Error( 'tk_fields_group_invalid_presentation', __( 'presentation.instruction_placement must be "label" or "field".', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_group_invalid_presentation', __( 'presentation.instruction_placement must be "label" or "field".', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		return array(
@@ -1017,7 +1017,7 @@ final class Group_Store {
 		$json = wp_json_encode( $clean );
 		if ( false === $json ) {
 			wp_delete_post( $post_id, true );
-			return new \WP_Error( 'tk_fields_group_encode_failed', __( 'Could not encode the group definition.', 'tk-fields' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'tkfi_group_encode_failed', __( 'Could not encode the group definition.', 'tk-fields' ), array( 'status' => 500 ) );
 		}
 		update_post_meta( $post_id, self::META_KEY, $json );
 
@@ -1034,7 +1034,7 @@ final class Group_Store {
 	public function update( int $id, array $payload ): array|\WP_Error {
 		$post = get_post( $id );
 		if ( ! $post instanceof \WP_Post || self::CPT !== $post->post_type ) {
-			return new \WP_Error( 'tk_fields_group_not_found', __( 'Field group not found.', 'tk-fields' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'tkfi_group_not_found', __( 'Field group not found.', 'tk-fields' ), array( 'status' => 404 ) );
 		}
 
 		$clean = $this->sanitize_group( $payload );
@@ -1058,7 +1058,7 @@ final class Group_Store {
 
 		$json = wp_json_encode( $clean );
 		if ( false === $json ) {
-			return new \WP_Error( 'tk_fields_group_encode_failed', __( 'Could not encode the group definition.', 'tk-fields' ), array( 'status' => 500 ) );
+			return new \WP_Error( 'tkfi_group_encode_failed', __( 'Could not encode the group definition.', 'tk-fields' ), array( 'status' => 500 ) );
 		}
 		update_post_meta( $id, self::META_KEY, $json );
 
@@ -1074,13 +1074,13 @@ final class Group_Store {
 	public function trash( int $id ): bool|\WP_Error {
 		$post = get_post( $id );
 		if ( ! $post instanceof \WP_Post || self::CPT !== $post->post_type ) {
-			return new \WP_Error( 'tk_fields_group_not_found', __( 'Field group not found.', 'tk-fields' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'tkfi_group_not_found', __( 'Field group not found.', 'tk-fields' ), array( 'status' => 404 ) );
 		}
 
 		if ( 'trash' !== $post->post_status ) {
 			$trashed = wp_trash_post( $id );
 			if ( ! $trashed ) {
-				return new \WP_Error( 'tk_fields_group_trash_failed', __( 'Could not trash the field group.', 'tk-fields' ), array( 'status' => 500 ) );
+				return new \WP_Error( 'tkfi_group_trash_failed', __( 'Could not trash the field group.', 'tk-fields' ), array( 'status' => 500 ) );
 			}
 		}
 

@@ -4,10 +4,10 @@
  */
 
 /**
- * Editor UI for tk/flexible-content.
+ * Editor UI for tkfi/flexible-content.
  *
  * The parent block owns the field name. On fieldName entry it fetches the
- * resolved field definition from GET /tk/v1/field-def/<name> and embeds the
+ * resolved field definition from GET /tkfi/v1/field-def/<name> and embeds the
  * layouts in its own attributes — the block is self-contained (copy/paste
  * keeps working, including across fields) at the cost of going stale if
  * the group definition changes (the editor re-fetches on fieldName
@@ -15,8 +15,8 @@
  *
  * Containment adjudication (Round 3): templateLock="all" on the PARENT
  * would also lock the programmatic Add-layout inserts, so containment is
- * instead: allowedBlocks=['tk/flexible-layout'], no appender, custom
- * Add-layout buttons, the "parent" restriction on tk/flexible-layout
+ * instead: allowedBlocks=['tkfi/flexible-layout'], no appender, custom
+ * Add-layout buttons, the "parent" restriction on tkfi/flexible-layout
  * (blocks core drag-out), and a fieldKey adoption effect that re-owns
  * moved/pasted layouts. templateLock="all" IS used on the layout block's
  * own InnerBlocks, where no programmatic inserts are needed.
@@ -50,7 +50,7 @@
 		if (defCache[fieldName]) {
 			return defCache[fieldName];
 		}
-		defCache[fieldName] = apiFetch({ path: '/tk/v1/field-def/' + encodeURIComponent(fieldName) })
+		defCache[fieldName] = apiFetch({ path: '/tkfi/v1/field-def/' + encodeURIComponent(fieldName) })
 			.then(function (res) {
 				return res && res.field ? res.field : null;
 			})
@@ -71,7 +71,7 @@
 			.join('\n');
 	}
 
-	// One tk/field-value block per layout sub-field — the canonical
+	// One tkfi/field-value block per layout sub-field — the canonical
 	// sub-field input, so layout rows edit exactly like repeater rows.
 	function fieldValueBlock(sub) {
 		var attrs = {
@@ -87,7 +87,7 @@
 		if (sub.type === 'taxonomy' && sub.taxonomy) {
 			attrs.taxonomy = sub.taxonomy;
 		}
-		return blocks.createBlock('tk/field-value', attrs);
+		return blocks.createBlock('tkfi/field-value', attrs);
 	}
 
 	function Edit(props) {
@@ -195,7 +195,7 @@
 		function addLayout(layout) {
 			var inner = (layout.fields || []).map(fieldValueBlock);
 			var layoutBlock = blocks.createBlock(
-				'tk/flexible-layout',
+				'tkfi/flexible-layout',
 				{
 					layout: layout.key,
 					layoutId: 'layout-' + Math.random().toString(36).slice(2, 10),
@@ -294,7 +294,7 @@
 						)
 					: null,
 				el(InnerBlocks, {
-					allowedBlocks: ['tk/flexible-layout'],
+					allowedBlocks: ['tkfi/flexible-layout'],
 					renderAppender: false,
 					templateLock: false,
 				}),
@@ -305,7 +305,7 @@
 		);
 	}
 
-	blocks.registerBlockType('tk/flexible-content', {
+	blocks.registerBlockType('tkfi/flexible-content', {
 		edit: Edit,
 		save: function () {
 			// Dynamic block: the frontend markup is produced by render.php.

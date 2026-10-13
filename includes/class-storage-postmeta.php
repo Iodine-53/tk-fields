@@ -19,12 +19,12 @@
  * Phase 1 supports the 'post' object type. Terms, users and options pages
  * get their own adapters in a later phase.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -4,7 +4,7 @@
  */
 
 /**
- * tk/scroll-reveal editor UI — classic script, wp.* globals only.
+ * tkfi/scroll-reveal editor UI — classic script, wp.* globals only.
  */
 ( function( wp ) {
 	'use strict';
@@ -33,7 +33,7 @@
 		);
 	}
 
-	registerBlockType( 'tk/scroll-reveal', {
+	registerBlockType( 'tkfi/scroll-reveal', {
 		edit: function( props ) {
 			var attributes = props.attributes;
 			var setAttributes = props.setAttributes;

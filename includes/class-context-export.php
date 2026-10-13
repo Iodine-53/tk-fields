@@ -19,16 +19,16 @@
  *
  * SCHEMA ONLY — this class NEVER reads field values. It consults
  * Field_Registry / Group_Store (definitions) and get_bloginfo() only. No
- * call to Fields::get(), tk_get_field(), get_post_meta() for field data, or
+ * call to Fields::get(), tkfi_get_field(), get_post_meta() for field data, or
  * any storage adapter exists in this file, by design: the export must be
  * safe to hand to a third-party AI without leaking secrets, PII, or content.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -39,7 +39,7 @@ final class Context_Export {
 	/**
 	 * Filter for the capability required to export the AI context.
 	 */
-	public const CAPABILITY_FILTER = 'tk_fields_context_export_capability';
+	public const CAPABILITY_FILTER = 'tkfi_context_export_capability';
 
 	/**
 	 * Default capability required to export the AI context.
@@ -147,7 +147,7 @@ final class Context_Export {
 		// Declared from day one per the standing rule: every feature ships
 		// its AI-export schema with its first release.
 		$content_types = array();
-		if ( class_exists( 'TK\Fields\Content_Type_Store' ) ) {
+		if ( class_exists( 'TKFields\Content_Type_Store' ) ) {
 			foreach ( Content_Type_Store::instance()->all() as $type ) {
 				$content_types[] = array(
 					'slug'               => $type['slug'],
@@ -174,7 +174,7 @@ final class Context_Export {
 			'title'          => get_bloginfo( 'name' ) . ' Custom Fields Schema',
 			'generated_at'   => gmdate( 'c' ),
 			'plugin'         => 'tk-fields',
-			'plugin_version' => defined( 'TK_FIELDS_VERSION' ) ? TK_FIELDS_VERSION : 'unknown',
+			'plugin_version' => defined( 'TKFI_VERSION' ) ? TKFI_VERSION : 'unknown',
 			'entities'       => $entities,
 			'content_types'  => $content_types,
 		);
@@ -471,7 +471,7 @@ final class Context_Export {
 	}
 
 	/**
-	 * Human-readable description of what tk_get_field() returns (formatted)
+	 * Human-readable description of what tkfi_get_field() returns (formatted)
 	 * for a field type. Derived from the Fields service's format() behavior —
 	 * SCHEMA knowledge, no value access.
 	 *
@@ -827,12 +827,12 @@ final class Context_Export {
 	}
 
 	/**
-	 * PHP access snippet for a field, e.g. tk_get_field('price', $post_id).
+	 * PHP access snippet for a field, e.g. tkfi_get_field('price', $post_id).
 	 *
 	 * @param string $name Field name.
 	 */
 	private static function php_access_snippet( string $name ): string {
-		return sprintf( 'tk_get_field(\'%s\', $post_id)', $name );
+		return sprintf( 'tkfi_get_field(\'%s\', $post_id)', $name );
 	}
 
 	/**
@@ -851,7 +851,7 @@ final class Context_Export {
 	 *   resolves scalar values (non-scalars fall back to the block's
 	 *   original content), so emitting a naive paragraph binding for an
 	 *   array field would silently render nothing. The note tells the AI
-	 *   which sub-properties are available via tk_get_field() instead.
+	 *   which sub-properties are available via tkfi_get_field() instead.
 	 *
 	 * @param string $name Field name.
 	 * @param string $type Field type slug.
@@ -870,55 +870,55 @@ final class Context_Export {
 				);
 			case 'user':
 				return sprintf(
-					'<!-- tk-fields: "%s" is a user field (object: id, display_name, avatar_url, profile_url). Block bindings only resolve scalars — render with tk_get_field("%s", $post_id) and pick a sub-property, e.g. ["display_name"]. -->',
+					'<!-- tk-fields: "%s" is a user field (object: id, display_name, avatar_url, profile_url). Block bindings only resolve scalars — render with tkfi_get_field("%s", $post_id) and pick a sub-property, e.g. ["display_name"]. -->',
 					$name,
 					$name
 				);
 			case 'post_object':
 				return sprintf(
-					'<!-- tk-fields: "%s" is a post_object field (object: id, title, url, post_type). Block bindings only resolve scalars — render with tk_get_field("%s", $post_id) and pick a sub-property, e.g. ["title"]. -->',
+					'<!-- tk-fields: "%s" is a post_object field (object: id, title, url, post_type). Block bindings only resolve scalars — render with tkfi_get_field("%s", $post_id) and pick a sub-property, e.g. ["title"]. -->',
 					$name,
 					$name
 				);
 			case 'taxonomy':
 				return sprintf(
-					'<!-- tk-fields: "%s" is a taxonomy field (array of term objects: id, name, slug, taxonomy, url). Block bindings only resolve scalars — render with tk_get_field("%s", $post_id) and loop the terms. -->',
+					'<!-- tk-fields: "%s" is a taxonomy field (array of term objects: id, name, slug, taxonomy, url). Block bindings only resolve scalars — render with tkfi_get_field("%s", $post_id) and loop the terms. -->',
 					$name,
 					$name
 				);
 			case 'relationship':
 				return sprintf(
-					'<!-- tk-fields: "%s" is a relationship field (array of post objects: id, title, url, post_type). Block bindings only resolve scalars — render with tk_get_field("%s", $post_id) and loop the posts. -->',
+					'<!-- tk-fields: "%s" is a relationship field (array of post objects: id, title, url, post_type). Block bindings only resolve scalars — render with tkfi_get_field("%s", $post_id) and loop the posts. -->',
 					$name,
 					$name
 				);
 			case 'gallery':
 				return sprintf(
-					'<!-- tk-fields: "%s" is a gallery field (array of image objects: id, url, alt). Block bindings only resolve scalars — render with tk_get_field("%s", $post_id) and loop the images. -->',
+					'<!-- tk-fields: "%s" is a gallery field (array of image objects: id, url, alt). Block bindings only resolve scalars — render with tkfi_get_field("%s", $post_id) and loop the images. -->',
 					$name,
 					$name
 				);
 			case 'map':
 				return sprintf(
-					'<!-- tk-fields: "%s" is a map field (object: lat, lng, zoom, address). Block bindings only resolve scalars — render with tk_get_field("%s", $post_id) and pick a sub-property. -->',
+					'<!-- tk-fields: "%s" is a map field (object: lat, lng, zoom, address). Block bindings only resolve scalars — render with tkfi_get_field("%s", $post_id) and pick a sub-property. -->',
 					$name,
 					$name
 				);
 			case 'flexible_content':
 				return sprintf(
-					'<!-- tk-fields: "%s" is a flexible_content field (array of layout rows). Block bindings only resolve scalars — render with tk_get_field("%s", $post_id) and loop the rows. -->',
+					'<!-- tk-fields: "%s" is a flexible_content field (array of layout rows). Block bindings only resolve scalars — render with tkfi_get_field("%s", $post_id) and loop the rows. -->',
 					$name,
 					$name
 				);
 			case 'group':
 				return sprintf(
-					'<!-- tk-fields: "%s" is a group field (object keyed by sub-field name). Block bindings only resolve scalars — render with tk_get_field("%s", $post_id) and read sub-keys. -->',
+					'<!-- tk-fields: "%s" is a group field (object keyed by sub-field name). Block bindings only resolve scalars — render with tkfi_get_field("%s", $post_id) and read sub-keys. -->',
 					$name,
 					$name
 				);
 			case 'repeater':
 				return sprintf(
-					'<!-- tk-fields: "%s" is a repeater field (array of row objects keyed by sub-field name). Block bindings only resolve scalars — render with tk_get_field("%s", $post_id) and loop the rows. -->',
+					'<!-- tk-fields: "%s" is a repeater field (array of row objects keyed by sub-field name). Block bindings only resolve scalars — render with tkfi_get_field("%s", $post_id) and loop the rows. -->',
 					$name,
 					$name
 				);
@@ -953,7 +953,7 @@ final class Context_Export {
 	 * A realistic sample value for a field type (v0.17.0).
 	 *
 	 * Gives AI consumers a concrete example of the FORMATTED value shape
-	 * (what tk_get_field() returns), which dramatically improves few-shot
+	 * (what tkfi_get_field() returns), which dramatically improves few-shot
 	 * code generation versus a bare type name. Schema knowledge only — no
 	 * field values are read.
 	 *

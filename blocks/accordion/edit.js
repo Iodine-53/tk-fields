@@ -15,8 +15,8 @@
 	var __ = wp.i18n.__;
 
 	var ITEM_TEMPLATE = [
-		[ 'tk/accordion-item', { title: __( 'Item 1', 'tk-fields' ) } ],
-		[ 'tk/accordion-item', { title: __( 'Item 2', 'tk-fields' ) } ]
+		[ 'tkfi/accordion-item', { title: __( 'Item 1', 'tk-fields' ) } ],
+		[ 'tkfi/accordion-item', { title: __( 'Item 2', 'tk-fields' ) } ]
 	];
 
 	// Every inspector control gets a <Tooltip> (non-negotiable). The control
@@ -30,7 +30,7 @@
 		);
 	}
 
-	registerBlockType( 'tk/accordion', {
+	registerBlockType( 'tkfi/accordion', {
 		edit: function ( props ) {
 			var attributes = props.attributes;
 			var setAttributes = props.setAttributes;
@@ -104,7 +104,7 @@
 						className: 'tk-accordion-block tk-accordion--style-' + ( attributes.variant || 'card' )
 					},
 					el( InnerBlocks, {
-						allowedBlocks: [ 'tk/accordion-item' ],
+						allowedBlocks: [ 'tkfi/accordion-item' ],
 						template: ITEM_TEMPLATE
 					} )
 				)

@@ -26,7 +26,7 @@
  * eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -83,10 +83,10 @@ $post = get_posts( array( 'post_type' => 'post', 'posts_per_page' => 1, 'post_st
 $post_id = $post ? $post[0]->ID : 0;
 $check( $post_id > 0, 'test post exists' );
 
-tk_update_field( 'stripe_secret_key', $marker, $post_id );
-tk_update_field( 'tkce_price', 4242, $post_id );
+tkfi_update_field( 'stripe_secret_key', $marker, $post_id );
+tkfi_update_field( 'tkce_price', 4242, $post_id );
 Fields::flush(); // Commit the batched writes before asserting.
-$check( $marker === tk_get_field( 'stripe_secret_key', $post_id, false ), 'marker value actually stored' );
+$check( $marker === tkfi_get_field( 'stripe_secret_key', $post_id, false ), 'marker value actually stored' );
 
 // ------------------------------------------------------------ assertions ---
 $context = Context_Export::generate();
@@ -96,7 +96,7 @@ $check( is_array( $context ), 'generate() returns an array' );
 $check( is_string( $json ) && null !== json_decode( $json, true ), 'output is valid JSON' );
 $check( 'https://json-schema.org/draft/2020-12/schema' === ( $context['$schema'] ?? '' ), '$schema is draft 2020-12' );
 $check( 'tk-fields' === ( $context['plugin'] ?? '' ), 'plugin slug present' );
-$check( TK_FIELDS_VERSION === ( $context['plugin_version'] ?? '' ), 'plugin version matches' );
+$check( TKFI_VERSION === ( $context['plugin_version'] ?? '' ), 'plugin version matches' );
 $check( false !== strpos( $context['title'] ?? '', 'Custom Fields Schema' ), 'title mentions Custom Fields Schema' );
 $check( false !== strtotime( $context['generated_at'] ?? '' ), 'generated_at is a parseable date' );
 
@@ -124,7 +124,7 @@ $check( 'Price' === ( $price['label'] ?? '' ), 'label exported' );
 $check( 'number' === ( $price['type'] ?? '' ), 'type exported' );
 $check( true === ( $price['required'] ?? false ), 'required exported' );
 $check( 'int|float' === ( $price['return_format'] ?? '' ), 'return_format exported' );
-$check( "tk_get_field('tkce_price', \$post_id)" === ( $price['php_access'] ?? '' ), 'php_access snippet exact' );
+$check( "tkfi_get_field('tkce_price', \$post_id)" === ( $price['php_access'] ?? '' ), 'php_access snippet exact' );
 $check(
 	'<!-- wp:paragraph {"metadata":{"bindings":{"content":{"source":"tk-fields/field","args":{"field":"tkce_price"}}}}} -->' === ( $price['block_binding'] ?? '' ),
 	'block_binding markup exact'
@@ -221,8 +221,8 @@ if ( ! is_wp_error( $pwgroup ) ) {
 Field_Registry::instance()->reset_group_cache();
 
 // ------------------------------------------------------------ cleanup ----
-tk_delete_field( 'stripe_secret_key', $post_id );
-tk_delete_field( 'tkce_price', $post_id );
+tkfi_delete_field( 'stripe_secret_key', $post_id );
+tkfi_delete_field( 'tkce_price', $post_id );
 Fields::flush();
 if ( ! is_wp_error( $product ) ) {
 	wp_delete_post( $product['id'], true );

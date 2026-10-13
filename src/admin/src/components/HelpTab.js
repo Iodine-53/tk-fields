@@ -13,30 +13,30 @@ import { CodeBlock } from './ui';
 
 const READ_SNIPPET = `<?php
 // Read a single field (formatted value).
-$price = tk_get_field( 'hero_price' );
+$price = tkfi_get_field( 'hero_price' );
 
 // Echo a field, escaped for display.
-tk_the_field( 'site_tagline' );
+tkfi_the_field( 'site_tagline' );
 
 // Read with an explicit post ID (defaults to the current post).
-$email = tk_get_field( 'contact_email', $post_id );
+$email = tkfi_get_field( 'contact_email', $post_id );
 
 // Write / delete programmatically.
-tk_update_field( 'hero_price', 49.99 );
-tk_delete_field( 'old_field' );
+tkfi_update_field( 'hero_price', 49.99 );
+tkfi_delete_field( 'old_field' );
 `;
 
 const REPEATER_SNIPPET = `<?php
 // Native TK repeater loop.
-foreach ( tk_get_field( 'team_members' ) as $row ) {
+foreach ( tkfi_get_field( 'team_members' ) as $row ) {
     echo esc_html( $row['member_name'] );
     echo esc_url( $row['member_photo'] );
 }
 
 // Block-traversal style (mirrors the ACF have_rows pattern).
-if ( tk_have_rows( 'team_members' ) ) :
-    while ( tk_have_rows( 'team_members' ) ) : tk_the_row();
-        tk_the_sub_field( 'member_name' );
+if ( tkfi_have_rows( 'team_members' ) ) :
+    while ( tkfi_have_rows( 'team_members' ) ) : tkfi_the_row();
+        tkfi_the_sub_field( 'member_name' );
     endwhile;
 endif;
 `;
@@ -44,7 +44,7 @@ endif;
 const MIGRATION_SNIPPET = `<?php
 // wp-config.php — or a must-use plugin. Opt-in only:
 // never enable while ACF / Secure Custom Fields is active.
-define( 'TK_FIELDS_ACF_COMPAT', true );
+define( 'TKFI_ACF_COMPAT', true );
 
 // With Migration Mode on, these just work:
 $value  = get_field( 'hero_price' );
@@ -57,16 +57,16 @@ endif;
 `;
 
 const MIGRATION_ROWS = [
-	[ 'get_field()', 'tk_get_field()' ],
-	[ 'the_field()', 'tk_the_field()' ],
-	[ 'have_rows()', 'tk_have_rows()' ],
-	[ 'the_row()', 'tk_the_row()' ],
-	[ 'get_sub_field()', 'tk_get_sub_field()' ],
-	[ 'the_sub_field()', 'tk_the_sub_field()' ],
-	[ 'update_field()', 'tk_update_field()' ],
-	[ 'delete_field()', 'tk_delete_field()' ],
-	[ 'get_fields()', 'tk_get_fields()' ],
-	[ 'get_field_object()', 'tk_get_field_object()' ],
+	[ 'get_field()', 'tkfi_get_field()' ],
+	[ 'the_field()', 'tkfi_the_field()' ],
+	[ 'have_rows()', 'tkfi_have_rows()' ],
+	[ 'the_row()', 'tkfi_the_row()' ],
+	[ 'get_sub_field()', 'tkfi_get_sub_field()' ],
+	[ 'the_sub_field()', 'tkfi_the_sub_field()' ],
+	[ 'update_field()', 'tkfi_update_field()' ],
+	[ 'delete_field()', 'tkfi_delete_field()' ],
+	[ 'get_fields()', 'tkfi_get_fields()' ],
+	[ 'get_field_object()', 'tkfi_get_field_object()' ],
 ];
 
 export default function HelpTab( { fieldTypes } ) {
@@ -193,7 +193,7 @@ export default function HelpTab( { fieldTypes } ) {
 				<h3>{ __( 'Reading rows in templates', 'tk-fields' ) }</h3>
 				<p>
 					{ __(
-						'Use the template loop: tk_have_rows() opens the loop over the field’s rows, tk_the_row() advances to the next row, and tk_get_sub_field() (or tk_the_sub_field() to echo) reads a sub-field from the current row. See “Repeater loops” above for the full snippet.',
+						'Use the template loop: tkfi_have_rows() opens the loop over the field’s rows, tkfi_the_row() advances to the next row, and tkfi_get_sub_field() (or tkfi_the_sub_field() to echo) reads a sub-field from the current row. See “Repeater loops” above for the full snippet.',
 						'tk-fields'
 					) }
 				</p>

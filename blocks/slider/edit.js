@@ -16,9 +16,9 @@
 	var __ = wp.i18n.__;
 
 	var SLIDE_TEMPLATE = [
-		[ 'tk/slide', {}, [ [ 'core/heading', { level: 3, content: __( 'Slide 1', 'tk-fields' ) } ] ] ],
-		[ 'tk/slide', {}, [ [ 'core/heading', { level: 3, content: __( 'Slide 2', 'tk-fields' ) } ] ] ],
-		[ 'tk/slide', {}, [ [ 'core/heading', { level: 3, content: __( 'Slide 3', 'tk-fields' ) } ] ] ]
+		[ 'tkfi/slide', {}, [ [ 'core/heading', { level: 3, content: __( 'Slide 1', 'tk-fields' ) } ] ] ],
+		[ 'tkfi/slide', {}, [ [ 'core/heading', { level: 3, content: __( 'Slide 2', 'tk-fields' ) } ] ] ],
+		[ 'tkfi/slide', {}, [ [ 'core/heading', { level: 3, content: __( 'Slide 3', 'tk-fields' ) } ] ] ]
 	];
 
 	// Every inspector control gets a <Tooltip> (non-negotiable). The control
@@ -32,7 +32,7 @@
 		);
 	}
 
-	registerBlockType( 'tk/slider', {
+	registerBlockType( 'tkfi/slider', {
 		edit: function ( props ) {
 			var attributes = props.attributes;
 			var setAttributes = props.setAttributes;
@@ -148,7 +148,7 @@
 					'div',
 					{ key: 'tk-slider-canvas', className: 'tk-slider-block' },
 					el( InnerBlocks, {
-						allowedBlocks: [ 'tk/slide' ],
+						allowedBlocks: [ 'tkfi/slide' ],
 						template: SLIDE_TEMPLATE,
 						orientation: 'horizontal'
 					} )

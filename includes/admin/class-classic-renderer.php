@@ -34,12 +34,12 @@
  * scalar inputs of their own. Both fall through to the "block editor
  * only" note until the v1.1 classic adapter lands.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -86,16 +86,16 @@ final class Classic_Renderer {
 		wp_enqueue_media();
 		wp_enqueue_script(
 			'tk-fields-classic',
-			TK_FIELDS_URL . 'assets/classic/classic.js',
+			TKFI_URL . 'assets/classic/classic.js',
 			array(),
-			TK_FIELDS_VERSION,
+			TKFI_VERSION,
 			true
 		);
 		wp_enqueue_style(
 			'tk-fields-classic',
-			TK_FIELDS_URL . 'assets/classic/classic.css',
+			TKFI_URL . 'assets/classic/classic.css',
 			array(),
-			TK_FIELDS_VERSION
+			TKFI_VERSION
 		);
 	}
 
@@ -144,7 +144,7 @@ final class Classic_Renderer {
 			return;
 		}
 
-		wp_nonce_field( 'tk_fields_classic_save', 'tk_fields_classic_nonce' );
+		wp_nonce_field( 'tkfi_classic_save', 'tkfi_classic_nonce' );
 
 		echo '<div class="tk-fields-classic">';
 		// v0.12.0: block-editor-only types are collected into ONE collapsed
@@ -264,7 +264,7 @@ final class Classic_Renderer {
 		$editor_id = 'tkw_' . $field['name'];
 
 		$settings = Field_Registry::wysiwyg_editor_settings( $field );
-		$settings['textarea_name'] = 'tk_fields[' . $field['name'] . ']';
+		$settings['textarea_name'] = 'tkfi[' . $field['name'] . ']';
 		$settings['editor_height'] = 200;
 
 		wp_editor( $value, $editor_id, $settings );
@@ -368,7 +368,7 @@ final class Classic_Renderer {
 	 */
 	private function render_group_scalar( array $child, int $post_id ): void {
 		$type  = (string) ( $child['type'] ?? 'text' );
-		$name  = 'tk_fields[' . $child['name'] . ']';
+		$name  = 'tkfi[' . $child['name'] . ']';
 		$value = Fields::get( $child['name'], $post_id, false );
 		$value = Unset_Value::is_unset( $value ) ? '' : $value;
 
@@ -428,7 +428,7 @@ final class Classic_Renderer {
 		$value = Unset_Value::is_unset( $value ) ? '' : $value;
 
 		// phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Map::classic_input_html() escapes everything it prints.
-		echo Map::classic_input_html( $field, $value, 'tk_fields[' . $field['name'] . ']' );
+		echo Map::classic_input_html( $field, $value, 'tkfi[' . $field['name'] . ']' );
 	}
 
 	/**
@@ -478,7 +478,7 @@ final class Classic_Renderer {
 			}
 		}
 
-		$name = 'tk_fields[' . $field['name'] . ']';
+		$name = 'tkfi[' . $field['name'] . ']';
 		$req  = ! empty( $field['required'] ) ? ' required aria-required="true"' : '';
 		echo '<select name="' . esc_attr( $name ) . '" class="regular-text"' . esc_attr( $req ) . '>';
 		echo '<option value="0">' . esc_html__( '— Select —', 'tk-fields' ) . '</option>';
@@ -504,7 +504,7 @@ final class Classic_Renderer {
 	 *
 	 * Three panes (post / term / url) toggled by the kind select; hidden
 	 * panes are disabled by the vanilla JS so they never submit. The value
-	 * posts as tk_fields[name][kind|id|taxonomy|value] and sanitize() keeps
+	 * posts as tkfi[name][kind|id|taxonomy|value] and sanitize() keeps
 	 * the explicit discriminant — never stringly-typed guessing.
 	 *
 	 * @param array $field   Field definition.
@@ -519,7 +519,7 @@ final class Classic_Renderer {
 		$current_tax    = isset( $value['taxonomy'] ) ? sanitize_key( (string) $value['taxonomy'] ) : '';
 		$current_url    = (string) ( $value['value'] ?? '' );
 		$allow_external = ! empty( $field['allow_external'] );
-		$base           = 'tk_fields[' . $field['name'] . ']';
+		$base           = 'tkfi[' . $field['name'] . ']';
 		$wrap_id        = 'tkf-pagelink-' . sanitize_key( $field['name'] );
 
 		$posts = get_posts(
@@ -608,7 +608,7 @@ final class Classic_Renderer {
 	 *
 	 * Flat taxonomies get a flat list; hierarchical ones a nested tree —
 	 * the same picker split as the block editor. Capped for sanity; IDs
-	 * post as tk_fields[name][] (plus a hidden empty marker so clearing
+	 * post as tkfi[name][] (plus a hidden empty marker so clearing
 	 * every box actually clears the value). save_terms/load_terms are
 	 * honoured centrally by Fields::update()/Fields::get().
 	 *
@@ -625,7 +625,7 @@ final class Classic_Renderer {
 		$value    = Fields::get( $field['name'], $post_id, false );
 		$selected = Unset_Value::is_unset( $value ) ? array() : array_map( 'absint', (array) $value );
 
-		$name = 'tk_fields[' . $field['name'] . '][]';
+		$name = 'tkfi[' . $field['name'] . '][]';
 		echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="" />';
 		echo '<ul class="tkf-taxonomy-checklist">';
 		$rendered = $this->taxonomy_checklist_items( $taxonomy, 0, $selected, $name, 0, 0 );
@@ -735,7 +735,7 @@ final class Classic_Renderer {
 			}
 		}
 
-		$name = 'tk_fields[' . $field['name'] . ']' . ( $multiple ? '[]' : '' );
+		$name = 'tkfi[' . $field['name'] . ']' . ( $multiple ? '[]' : '' );
 		if ( $multiple ) {
 			echo '<input type="hidden" name="' . esc_attr( $name ) . '" value="" />';
 			echo '<select multiple size="8" name="' . esc_attr( $name ) . '" class="regular-text">';
@@ -786,7 +786,7 @@ final class Classic_Renderer {
 		}
 
 		$wrap_id = 'tkf-gallery-' . sanitize_key( $field['name'] );
-		$input_name = 'tk_fields[' . $field['name'] . '][]';
+		$input_name = 'tkfi[' . $field['name'] . '][]';
 		echo '<div class="tkf-gallery" id="' . esc_attr( $wrap_id ) . '"'
 			. ' data-tkf-gallery'
 			. ' data-mime="' . esc_attr( $mime ) . '"'
@@ -900,21 +900,21 @@ final class Classic_Renderer {
 		if ( wp_is_post_revision( $post_id ) || wp_is_post_autosave( $post_id ) ) {
 			return;
 		}
-		if ( ! isset( $_POST['tk_fields_classic_nonce'] )
-			|| ! wp_verify_nonce( sanitize_key( wp_unslash( (string) $_POST['tk_fields_classic_nonce'] ) ), 'tk_fields_classic_save' )
+		if ( ! isset( $_POST['tkfi_classic_nonce'] )
+			|| ! wp_verify_nonce( sanitize_key( wp_unslash( (string) $_POST['tkfi_classic_nonce'] ) ), 'tkfi_classic_save' )
 		) {
 			return;
 		}
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
-		if ( empty( $_POST['tk_fields'] ) || ! is_array( $_POST['tk_fields'] ) ) {
+		if ( empty( $_POST['tkfi'] ) || ! is_array( $_POST['tkfi'] ) ) {
 			return;
 		}
 
 		$registry = Field_Registry::instance();
 		// phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized -- Values are unslashed here and sanitized per field type inside Fields::update() (Field_Registry::sanitize), which also rejects unknown field names and non-renderable types above.
-		$data     = wp_unslash( $_POST['tk_fields'] );
+		$data     = wp_unslash( $_POST['tkfi'] );
 
 		// Types whose classic inputs submit arrays (sub-inputs or ID lists).
 		$array_types = array( 'map', 'page_link', 'taxonomy', 'gallery', 'user' );
@@ -929,7 +929,7 @@ final class Classic_Renderer {
 			}
 			$ftype = (string) ( $field['type'] ?? 'text' );
 			$renderable = method_exists( $this, 'render_field_' . $ftype )
-				|| ( ! empty( $field['_tk_group_child'] ) && in_array( $ftype, self::GROUP_SCALAR_TYPES, true ) );
+				|| ( ! empty( $field['_tkfi_group_child'] ) && in_array( $ftype, self::GROUP_SCALAR_TYPES, true ) );
 			if ( ! $renderable ) {
 				continue;
 			}

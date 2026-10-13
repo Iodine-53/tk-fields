@@ -9,7 +9,7 @@
 	var InnerBlocks = wp.blockEditor.InnerBlocks;
 	var __ = wp.i18n.__;
 
-	registerBlockType( 'tk/slide', {
+	registerBlockType( 'tkfi/slide', {
 		edit: function () {
 			return el(
 				'div',

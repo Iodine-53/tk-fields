@@ -6,13 +6,13 @@
 /**
  * REST client for the TK Fields admin app.
  *
- * The PHP worker implements the tk/v1 namespace. Config arrives via
- * `window.TK_FIELDS_ADMIN` (wp_add_inline_script, 'before' the bundle):
- *   { root: "<rest_url>/tk/v1", wpRoot: "<rest_url>/wp/v2", nonce: "<wp_rest nonce>", adminUrl: "<admin_url>" }
+ * The PHP worker implements the tkfi/v1 namespace. Config arrives via
+ * `window.TKFI_ADMIN` (wp_add_inline_script, 'before' the bundle):
+ *   { root: "<rest_url>/tkfi/v1", wpRoot: "<rest_url>/wp/v2", nonce: "<wp_rest nonce>", adminUrl: "<admin_url>" }
  */
 
-const config = ( typeof window !== 'undefined' && window.TK_FIELDS_ADMIN ) || {};
-export const API_ROOT = config.root || '/wp-json/tk/v1';
+const config = ( typeof window !== 'undefined' && window.TKFI_ADMIN ) || {};
+export const API_ROOT = config.root || '/wp-json/tkfi/v1';
 export const WP_API_ROOT = config.wpRoot || '/wp-json/wp/v2';
 export const API_NONCE = config.nonce || '';
 

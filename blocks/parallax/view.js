@@ -4,7 +4,7 @@
  */
 
 /**
- * tk/parallax frontend — vanilla JS, no imports, no WP runtime.
+ * tkfi/parallax frontend — vanilla JS, no imports, no WP runtime.
  *
  * rAF-throttled scroll/resize handler. For each .tk-parallax the background
  * layer (.tk-parallax-bg) is translated by `rect.top * speed` px, so the

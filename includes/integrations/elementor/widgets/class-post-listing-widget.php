@@ -18,28 +18,28 @@
  * title, micro-type meta row, configurable excerpt line-clamp, read-more
  * link — with hover lift + image zoom. Card heights can be equalized with
  * the Read More link pinned to the bottom (v0.16.1). Custom TK field values can be shown per card through
- * the fields repeater; every value resolves through \TK\Fields\Fields —
+ * the fields repeater; every value resolves through \TKFields\Fields —
  * no postmeta reads anywhere.
  *
  * Pagination is plain numbered prev/next (no AJAX — deferred, see docs).
  *
- * @package TK\Fields\Integrations\Elementor\Widgets
+ * @package TKFields\Integrations\Elementor\Widgets
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor\Widgets;
+namespace TKFields\Integrations\Elementor\Widgets;
 
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Background;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Typography;
-use TK\Fields\Field_Registry;
-use TK\Fields\Fields;
-use TK\Fields\Integrations\Elementor\Context as Elementor_Context;
-use TK\Fields\Post_Listing_Renderer;
-use TK\Fields\Unset_Value;
-use TK\Fields\Widget_Assets;
+use TKFields\Field_Registry;
+use TKFields\Fields;
+use TKFields\Integrations\Elementor\Context as Elementor_Context;
+use TKFields\Post_Listing_Renderer;
+use TKFields\Unset_Value;
+use TKFields\Widget_Assets;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -61,10 +61,10 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 		parent::__construct( $data, $args );
 
 		wp_register_style(
-			'tk-post-listing',
-			plugins_url( 'assets/elementor/css/tk-post-listing.css', TK_FIELDS_FILE ),
+			'tkfi-post-listing',
+			plugins_url( 'assets/elementor/css/tk-post-listing.css', TKFI_FILE ),
 			array( Widget_Assets::HANDLE ),
-			TK_FIELDS_VERSION
+			TKFI_VERSION
 		);
 	}
 
@@ -72,7 +72,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 	 * @return string
 	 */
 	public function get_name(): string {
-		return 'tk-post-listing';
+		return 'tkfi-post-listing';
 	}
 
 	/**
@@ -107,7 +107,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 	 * @return array<int, string>
 	 */
 	public function get_style_depends(): array {
-		return array( Widget_Assets::HANDLE, 'tk-post-listing' );
+		return array( Widget_Assets::HANDLE, 'tkfi-post-listing' );
 	}
 
 	/**
@@ -127,7 +127,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function register_query_controls(): void {
 		$this->start_controls_section(
-			'tk_post_listing_query',
+			'tkfi_post_listing_query',
 			array(
 				'label' => __( 'Query', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,
@@ -224,7 +224,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function register_card_controls(): void {
 		$this->start_controls_section(
-			'tk_post_listing_card',
+			'tkfi_post_listing_card',
 			array(
 				'label' => __( 'Card', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,
@@ -406,7 +406,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function register_fields_controls(): void {
 		$this->start_controls_section(
-			'tk_post_listing_fields',
+			'tkfi_post_listing_fields',
 			array(
 				'label' => __( 'TK Fields', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,
@@ -453,7 +453,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function register_pagination_controls(): void {
 		$this->start_controls_section(
-			'tk_post_listing_pagination',
+			'tkfi_post_listing_pagination',
 			array(
 				'label' => __( 'Pagination & Empty State', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_CONTENT,
@@ -491,7 +491,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 	 */
 	protected function register_style_controls(): void {
 		$this->start_controls_section(
-			'tk_post_listing_style_card',
+			'tkfi_post_listing_style_card',
 			array(
 				'label' => __( 'Card', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
@@ -562,7 +562,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_post_listing_style_title',
+			'tkfi_post_listing_style_title',
 			array(
 				'label' => __( 'Title', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
@@ -594,7 +594,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_post_listing_style_meta',
+			'tkfi_post_listing_style_meta',
 			array(
 				'label' => __( 'Meta', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
@@ -626,7 +626,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_post_listing_style_excerpt',
+			'tkfi_post_listing_style_excerpt',
 			array(
 				'label' => __( 'Excerpt & Fields', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
@@ -670,7 +670,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 		$this->end_controls_section();
 
 		$this->start_controls_section(
-			'tk_post_listing_style_more',
+			'tkfi_post_listing_style_more',
 			array(
 				'label' => __( 'Read More', 'tk-fields' ),
 				'tab'   => Controls_Manager::TAB_STYLE,
@@ -716,7 +716,7 @@ class Post_Listing_Widget extends \Elementor\Widget_Base {
 
 	/**
 	 * Render the listing — delegates to the shared renderer (v0.16.2),
-	 * the same engine the Gutenberg tk/post-listing block uses.
+	 * the same engine the Gutenberg tkfi/post-listing block uses.
 	 */
 	protected function render(): void {
 		$settings = $this->get_settings_for_display();

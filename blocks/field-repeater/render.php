@@ -7,26 +7,26 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/field-repeater.
+ * Server render for tkfi/field-repeater.
  *
  * Dynamic block: rows arrive already rendered in $content (each
- * tk/repeater-row through its own render.php, carrying its stable
+ * tkfi/repeater-row through its own render.php, carrying its stable
  * data-row-id). This template only adds the field wrapper, the layout
  * class, and the field identity attributes the read path matches on.
  *
  * Read-path contract (Fields service): the wrapper is located by its
- * fieldName attribute; rows are its direct tk/repeater-row children in
+ * fieldName attribute; rows are its direct tkfi/repeater-row children in
  * document order; row identity is the rowId attribute (never the index);
- * scalar sub-fields are tk/field-value children keyed by short sub-field
- * name; a nested repeater is a tk/field-repeater child of a row, resolved
+ * scalar sub-fields are tkfi/field-value children keyed by short sub-field
+ * name; a nested repeater is a tkfi/field-repeater child of a row, resolved
  * recursively — the tree is the path stack, nothing is flattened.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

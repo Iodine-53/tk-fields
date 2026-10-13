@@ -4,7 +4,7 @@
  */
 
 /**
- * tk/scroll-reveal frontend — vanilla JS, no imports, no WP runtime.
+ * tkfi/scroll-reveal frontend — vanilla JS, no imports, no WP runtime.
  *
  * IntersectionObserver with a per-element threshold (from data-threshold).
  * On intersect the element gets .is-visible and is unobserved (one-shot).

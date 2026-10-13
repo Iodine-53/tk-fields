@@ -19,12 +19,12 @@
  * Phase 1 ships a filterable seed registry. The visual field-group builder
  * (phase 4) will persist real field groups and replace the seed data.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -56,8 +56,8 @@ final class Field_Registry {
 	 * namespaced key {group}_{sub}.
 	 *
 	 * The repeater type adds ordered, repeatable row sets with inline
-	 * sub-fields (nestable to 2 levels). Rows live as tk/repeater-row child
-	 * blocks of the field's tk/field-repeater wrapper in post_content (posts)
+	 * sub-fields (nestable to 2 levels). Rows live as tkfi/repeater-row child
+	 * blocks of the field's tkfi/field-repeater wrapper in post_content (posts)
 	 * or as serialized block markup in one meta/option row (terms, users,
 	 * options) — see Fields::get_repeater()/update_repeater(). The repeater
 	 * key itself stores nothing directly; unlike group it is NOT a
@@ -244,7 +244,7 @@ final class Field_Registry {
 		 * @param array $fields Seed field definitions.
 		 */
 		$seed = apply_filters(
-			'tk_fields_seed_registry',
+			'tkfi_seed_registry',
 			array(
 				array(
 					'name'  => 'site_tagline',
@@ -429,7 +429,7 @@ final class Field_Registry {
 	 *
 	 *   enable_search (bool, default OFF — opt-in Photon address search
 	 *       in the editor; the geocoder must stay swappable, never
-	 *       hardcoded — see TK\Fields\Map::geocoder_search_url()).
+	 *       hardcoded — see TKFields\Map::geocoder_search_url()).
 	 *   default_lat / default_lng (float|null) — the block-editor map
 	 *       canvas centers here when the field has no value yet.
 	 *   default_zoom (int|null) — initial zoom for the editor canvas.
@@ -898,7 +898,7 @@ final class Field_Registry {
 			// stay exactly as the admin set them on the sub-field.
 			$child                    = $sub;
 			$child['name']            = $group_name . '_' . $sname;
-			$child['_tk_group_child'] = true; // Expansion marker (see below).
+			$child['_tkfi_group_child'] = true; // Expansion marker (see below).
 
 			$children[ $sname ] = $child;
 		}
@@ -1097,7 +1097,7 @@ final class Field_Registry {
 	 * group field gains one entry per resolved child, keyed by the
 	 * namespaced child name ("{group}_{sub}"), in both the persisted-group
 	 * map and the seed map. Fields::get()/update() then address children
-	 * like any other field. Expanded children carry the `_tk_group_child`
+	 * like any other field. Expanded children carry the `_tkfi_group_child`
 	 * marker so they are never re-expanded themselves.
 	 */
 	private function expand_group_fields(): void {
@@ -1106,7 +1106,7 @@ final class Field_Registry {
 				if ( 'group' !== ( $def['type'] ?? '' ) ) {
 					continue;
 				}
-				if ( ! empty( $def['_tk_group_child'] ) ) {
+				if ( ! empty( $def['_tkfi_group_child'] ) ) {
 					continue; // Already an expanded child.
 				}
 				if ( isset( $this->expanded_groups[ $map ][ $name ] ) ) {

@@ -4,11 +4,11 @@
  */
 
 /**
- * Editor UI for tk/flexible-layout.
+ * Editor UI for tkfi/flexible-layout.
  *
  * One layout row. The parent's embedded layouts (via block context) resolve
  * the layout definition: label, sub-fields. Inner blocks are the fixed
- * tk/field-value sub-field template (templateLock="all" — containment
+ * tkfi/field-value sub-field template (templateLock="all" — containment
  * without blocking the parent's programmatic Add-layout inserts, which
  * only the PARENT needs to perform).
  *
@@ -56,7 +56,7 @@
 		var clientId = props.clientId;
 		var context = props.context || {};
 
-		var layouts = context['tk/flexible-layouts'] || [];
+		var layouts = context['tkfi/flexible-layouts'] || [];
 		var layoutKey = attributes.layout || '';
 		var layoutDef = null;
 		for (var i = 0; i < layouts.length; i++) {
@@ -97,7 +97,7 @@
 		function subValue(name) {
 			for (var j = 0; j < (innerBlocks || []).length; j++) {
 				var b = innerBlocks[j];
-				if (b.name === 'tk/field-value' && b.attributes && b.attributes.fieldName === name) {
+				if (b.name === 'tkfi/field-value' && b.attributes && b.attributes.fieldName === name) {
 					return b.attributes.value;
 				}
 			}
@@ -152,14 +152,14 @@
 			collapsed
 				? el('div', { className: 'tk-flexible-layout-editor__summary' }, summaryParts.join(' · ') || '—')
 				: el(InnerBlocks, {
-						allowedBlocks: ['tk/field-value'],
+						allowedBlocks: ['tkfi/field-value'],
 						templateLock: 'all',
 						renderAppender: false,
 					})
 		);
 	}
 
-	blocks.registerBlockType('tk/flexible-layout', {
+	blocks.registerBlockType('tkfi/flexible-layout', {
 		edit: Edit,
 		save: function () {
 			// Dynamic block: the frontend markup is produced by render.php.

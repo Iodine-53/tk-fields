@@ -10,12 +10,12 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/field-value.
+ * Server render for tkfi/field-value.
  *
  * Displays the sub-field value with type-appropriate markup. Everything is
- * escaped; the raw value stays in the block attribute for tk_get_sub_field().
+ * escaped; the raw value stays in the block attribute for tkfi_get_sub_field().
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
@@ -32,13 +32,13 @@ if ( null === $value || '' === $value || array() === $value ) {
 	return;
 }
 
-if ( ! function_exists( 'tk_field_value_render_relational' ) ) {
+if ( ! function_exists( 'tkfi_field_value_render_relational' ) ) {
 	/**
 	 * Render the Batch A relational types. Everything is escaped.
 	 *
 	 * @return string|null Markup, or null when there is nothing to show.
 	 */
-	function tk_field_value_render_relational( $field_type, $value ) {
+	function tkfi_field_value_render_relational( $field_type, $value ) {
 		switch ( $field_type ) {
 			case 'post_object': {
 				$post = get_post( (int) $value );
@@ -164,7 +164,7 @@ if ( ! function_exists( 'tk_field_value_render_relational' ) ) {
 // Batch A relational types render before the generic array branch below,
 // which would otherwise JSON-dump their values.
 if ( in_array( $field_type, array( 'post_object', 'page_link', 'taxonomy', 'user', 'relationship', 'gallery' ), true ) ) {
-	$inner = tk_field_value_render_relational( $field_type, $value );
+	$inner = tkfi_field_value_render_relational( $field_type, $value );
 	if ( null === $inner ) {
 		return;
 	}
@@ -177,13 +177,13 @@ if ( in_array( $field_type, array( 'post_object', 'page_link', 'taxonomy', 'user
 	// sanitizer — which switches on the registry type, so a type
 	// mismatch in the attributes (e.g. claiming wysiwyg for a
 	// select field) still gets the right sanitizer.
-	$wysiwyg_field = \TK\Fields\Field_Registry::instance()->get( $field_name );
+	$wysiwyg_field = \TKFields\Field_Registry::instance()->get( $field_name );
 	if ( null === $wysiwyg_field || 'wysiwyg' !== ( $wysiwyg_field['type'] ?? '' ) ) {
 		// Unknown field or type mismatch: refuse to render rather than
 		// risk raw HTML on the frontend.
 		return;
 	}
-	$inner = (string) \TK\Fields\Field_Registry::instance()->sanitize( $wysiwyg_field, $value );
+	$inner = (string) \TKFields\Field_Registry::instance()->sanitize( $wysiwyg_field, $value );
 } elseif ( 'link' === $field_type ) {
 	$url    = is_array( $value ) ? (string) ( $value['url'] ?? '' ) : (string) $value;
 	$title  = is_array( $value ) && '' !== (string) ( $value['title'] ?? '' ) ? (string) $value['title'] : $url;
@@ -212,7 +212,7 @@ if ( in_array( $field_type, array( 'post_object', 'page_link', 'taxonomy', 'user
 			'fields' => isset( $row['fields'] ) && is_array( $row['fields'] ) ? $row['fields'] : array(),
 		);
 	}
-	$inner = \TK\Fields\Flexible_Content::render_rows_html( $flex_rows );
+	$inner = \TKFields\Flexible_Content::render_rows_html( $flex_rows );
 } elseif ( 'clone' === $field_type ) {
 	// The value is the fan-in keyed array (short child name => value).
 	// Render a plain definition list; both names and values escaped.
@@ -284,7 +284,7 @@ if ( in_array( $field_type, array( 'post_object', 'page_link', 'taxonomy', 'user
 		// Field_Registry::oembed_html()); falls back to a plain link
 		// when no provider matches.
 		$post_id = isset( $block->context['postId'] ) ? (int) $block->context['postId'] : null;
-		$inner   = \TK\Fields\Field_Registry::oembed_html( (string) $value, $post_id );
+		$inner   = \TKFields\Field_Registry::oembed_html( (string) $value, $post_id );
 		break;
 	}
 
@@ -333,7 +333,7 @@ if ( in_array( $field_type, array( 'post_object', 'page_link', 'taxonomy', 'user
 	case 'select':
 	case 'radio':
 	case 'button_group':
-		$inner = esc_html( \TK\Fields\Repeater_Row::select_label( (string) ( $attributes['options'] ?? '' ), (string) $value ) );
+		$inner = esc_html( \TKFields\Repeater_Row::select_label( (string) ( $attributes['options'] ?? '' ), (string) $value ) );
 		break;
 
 	case 'image':

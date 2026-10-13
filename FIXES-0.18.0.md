@@ -3,13 +3,13 @@
 **Scope:** the MUST + mechanical SHOULD items from the compliance audit
 (`~/workspace/tk-fields/audit/wporg-readiness-0.17.1.md`). No feature work.
 
-## M1 — Stored XSS in `tk/field-value` wysiwyg render (BLOCKER)
+## M1 — Stored XSS in `tkfi/field-value` wysiwyg render (BLOCKER)
 
 **File:** `blocks/field-value/render.php` (~line 171).
 
 The wysiwyg branch echoed `$attributes['value']` raw, justified by a comment
 claiming the HTML "was sanitized at save time". That is false for this input
-path: block-comment JSON (`<!-- wp:tk/field-value {"fieldType":"wysiwyg",
+path: block-comment JSON (`<!-- wp:tkfi/field-value {"fieldType":"wysiwyg",
 "value":"<script>…</script>"} /-->`) is attacker-controllable post content —
 contributors and authors can hand-craft it in the code editor, and
 `post_content` KSES does not sanitize inside block JSON. This re-granted
@@ -67,9 +67,9 @@ New `~/workspace/tk-fields/build-release.sh`:
 
 ## S1 — uninstall.php
 
-- Now deletes `tk_fields_group` definition posts (plugin configuration;
+- Now deletes `tkfi_group` definition posts (plugin configuration;
   postmeta cascades on force-delete) and removes the custom
-  `manage_tk_fields` capability from every role that carries it.
+  `manage_tkfi` capability from every role that carries it.
 - Two real bugs found while verifying the first version (fixed):
   1. `wp plugin uninstall` runs with no current user, so
      `wp_delete_post()`'s `delete_post` capability check silently refused
@@ -78,13 +78,13 @@ New `~/workspace/tk-fields/build-release.sh`:
      duration.
   2. `'post_status' => 'any'` excludes trash — trashed definition posts
      survived. Statuses are now listed explicitly (incl. trash).
-- The pre-existing `tk-content-type` cleanup had both flaws too and now
+- The pre-existing `tkfi-content-type` cleanup had both flaws too and now
   shares the same hardened helper.
 - Docblock extended: states exactly what is removed vs. kept (field values
   on posts/terms/users and user content in TK content types stay).
 
-**Verified:** deactivate → uninstall → 0 `tk-field-group` posts, 0
-`_tk_fields_group` meta rows, 0 `tk-content-type` posts, cap gone from
+**Verified:** deactivate → uninstall → 0 `tkfi-field-group` posts, 0
+`_tkfi_group` meta rows, 0 `tkfi-content-type` posts, cap gone from
 administrator, unrelated posts untouched.
 
 ## S2 — Privacy disclosures

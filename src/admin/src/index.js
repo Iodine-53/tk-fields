@@ -28,9 +28,9 @@ function boot() {
 	if ( ! root ) {
 		return;
 	}
-	if ( ! window.TK_FIELDS_ADMIN || ! window.TK_FIELDS_ADMIN.root ) {
+	if ( ! window.TKFI_ADMIN || ! window.TKFI_ADMIN.root ) {
 		root.innerHTML =
-			'<div class="notice notice-error inline"><p>TK Fields: missing admin configuration (TK_FIELDS_ADMIN).</p></div>';
+			'<div class="notice notice-error inline"><p>TK Fields: missing admin configuration (TKFI_ADMIN).</p></div>';
 		return;
 	}
 	// v0.15.0: the Content Types screen mounts the CPT app; every other

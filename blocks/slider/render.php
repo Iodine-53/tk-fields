@@ -10,23 +10,23 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/slider.
+ * Server render for tkfi/slider.
  *
- * Counts top-level tk/slide inner blocks, stamps each rendered slide with its
+ * Counts top-level tkfi/slide inner blocks, stamps each rendered slide with its
  * index via WP_HTML_Tag_Processor, and emits arrows/dots wired to the
- * tk/slider Interactivity store.
+ * tkfi/slider Interactivity store.
  *
  * Look (TK Studio v1): pill dots with a stretching active dot, circular
  * blurred arrows that reveal on hover (always on on touch), an optional thin
  * autoplay progress bar, and an aspect-ratio-driven track instead of fixed
  * heights. Slides get a subtle bottom scrim for caption legibility.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -49,10 +49,10 @@ if ( ! in_array( $aspect_ratio, array( '16/9', '4/3', '1/1', '3/2', '21/9' ), tr
 	$aspect_ratio = '16/9';
 }
 
-// Count top-level tk/slide inner blocks.
+// Count top-level tkfi/slide inner blocks.
 $total = 0;
 foreach ( $block->inner_blocks as $inner ) {
-	if ( 'tk/slide' === $inner->name ) {
+	if ( 'tkfi/slide' === $inner->name ) {
 		++$total;
 	}
 }
@@ -103,7 +103,7 @@ $context = wp_json_encode(
 	)
 );
 ?>
-<div class="tk-slider" data-wp-interactive="tk/slider" data-wp-context='<?php echo $context; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>' data-wp-init="callbacks.init" data-transition="<?php echo esc_attr( $transition ); ?>" data-aspect-ratio="<?php echo esc_attr( $aspect_ratio ); ?>">
+<div class="tk-slider" data-wp-interactive="tkfi/slider" data-wp-context='<?php echo $context; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>' data-wp-init="callbacks.init" data-transition="<?php echo esc_attr( $transition ); ?>" data-aspect-ratio="<?php echo esc_attr( $aspect_ratio ); ?>">
 	<div class="tk-slides-track"><?php echo $slides; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?><?php echo $progress; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></div>
 	<?php echo $arrows; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	<?php echo $dots; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>

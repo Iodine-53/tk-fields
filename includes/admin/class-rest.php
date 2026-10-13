@@ -10,7 +10,7 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * REST API for the field-group builder (namespace `tk/v1`).
+ * REST API for the field-group builder (namespace `tkfi/v1`).
  *
  * Standard WP cookie auth + X-WP-Nonce; every route requires
  * `manage_options`. No custom authentication.
@@ -28,12 +28,12 @@
  * The two *-search routes use edit_posts (not manage_options): the block
  * editor needs them while editing a post.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -83,7 +83,7 @@ final class Rest {
 
 	public function register_routes(): void {
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/groups',
 			array(
 				array(
@@ -100,7 +100,7 @@ final class Rest {
 		);
 
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/groups/(?P<id>\d+)',
 			array(
 				'args' => array(
@@ -130,7 +130,7 @@ final class Rest {
 
 		// v0.15.0: Content Types (custom post type builder).
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/content-types',
 			array(
 				array(
@@ -147,7 +147,7 @@ final class Rest {
 		);
 
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/content-types/(?P<id>\d+)',
 			array(
 				'args' => array(
@@ -176,7 +176,7 @@ final class Rest {
 		);
 
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/content-types/validate-slug',
 			array(
 				array(
@@ -188,7 +188,7 @@ final class Rest {
 		);
 
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/content-types/(?P<id>\d+)/migrate-slug',
 			array(
 				array(
@@ -200,7 +200,7 @@ final class Rest {
 		);
 
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/content-types/export',
 			array(
 				array(
@@ -212,7 +212,7 @@ final class Rest {
 		);
 
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/content-types/import',
 			array(
 				array(
@@ -224,7 +224,7 @@ final class Rest {
 		);
 
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/content-types/taxonomies',
 			array(
 				array(
@@ -236,7 +236,7 @@ final class Rest {
 		);
 
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/field-types',
 			array(
 				array(
@@ -248,7 +248,7 @@ final class Rest {
 		);
 
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/relationship-search',
 			array(
 				array(
@@ -260,7 +260,7 @@ final class Rest {
 		);
 
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/user-search',
 			array(
 				array(
@@ -275,7 +275,7 @@ final class Rest {
 		// source labels) by field name while editing — authors need this,
 		// so it uses the lighter edit_posts cap like the picker searches.
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/field-def/(?P<name>[a-z0-9_]+)',
 			array(
 				array(
@@ -316,7 +316,7 @@ final class Rest {
 	public function create_group( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		$payload = $this->request_payload( $request );
 		if ( ! is_array( $payload ) ) {
-			return new \WP_Error( 'tk_fields_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$group = Group_Store::instance()->create( $payload );
@@ -326,7 +326,7 @@ final class Rest {
 
 		$response = rest_ensure_response( array( 'group' => $group ) );
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( 'tk/v1/groups/%d', $group['id'] ) ) );
+		$response->header( 'Location', rest_url( sprintf( 'tkfi/v1/groups/%d', $group['id'] ) ) );
 
 		return $response;
 	}
@@ -339,7 +339,7 @@ final class Rest {
 	public function get_group( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		$group = Group_Store::instance()->get( (int) $request['id'] );
 		if ( null === $group ) {
-			return new \WP_Error( 'tk_fields_group_not_found', __( 'Field group not found.', 'tk-fields' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'tkfi_group_not_found', __( 'Field group not found.', 'tk-fields' ), array( 'status' => 404 ) );
 		}
 
 		return rest_ensure_response( array( 'group' => $group ) );
@@ -353,7 +353,7 @@ final class Rest {
 	public function update_group( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		$payload = $this->request_payload( $request );
 		if ( ! is_array( $payload ) ) {
-			return new \WP_Error( 'tk_fields_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$group = Group_Store::instance()->update( (int) $request['id'], $payload );
@@ -404,7 +404,7 @@ final class Rest {
 	public function create_content_type( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		$payload = $this->request_payload( $request );
 		if ( ! is_array( $payload ) ) {
-			return new \WP_Error( 'tk_fields_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$type = Content_Type_Store::instance()->create( $payload );
@@ -414,7 +414,7 @@ final class Rest {
 
 		$response = rest_ensure_response( array( 'content_type' => $type ) );
 		$response->set_status( 201 );
-		$response->header( 'Location', rest_url( sprintf( 'tk/v1/content-types/%d', $type['id'] ) ) );
+		$response->header( 'Location', rest_url( sprintf( 'tkfi/v1/content-types/%d', $type['id'] ) ) );
 
 		return $response;
 	}
@@ -427,7 +427,7 @@ final class Rest {
 	public function get_content_type( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		$type = Content_Type_Store::instance()->get( (int) $request['id'] );
 		if ( null === $type ) {
-			return new \WP_Error( 'tk_fields_ct_not_found', __( 'Content type not found.', 'tk-fields' ), array( 'status' => 404 ) );
+			return new \WP_Error( 'tkfi_ct_not_found', __( 'Content type not found.', 'tk-fields' ), array( 'status' => 404 ) );
 		}
 
 		return rest_ensure_response( array( 'content_type' => $type ) );
@@ -441,7 +441,7 @@ final class Rest {
 	public function update_content_type( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		$payload = $this->request_payload( $request );
 		if ( ! is_array( $payload ) ) {
-			return new \WP_Error( 'tk_fields_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$type = Content_Type_Store::instance()->update( (int) $request['id'], $payload );
@@ -476,7 +476,7 @@ final class Rest {
 	public function validate_content_type_slug( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		$payload = $this->request_payload( $request );
 		if ( ! is_array( $payload ) ) {
-			return new \WP_Error( 'tk_fields_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$slug = isset( $payload['slug'] ) ? sanitize_key( (string) $payload['slug'] ) : '';
@@ -495,7 +495,7 @@ final class Rest {
 	public function migrate_content_type_slug( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		$payload = $this->request_payload( $request );
 		if ( ! is_array( $payload ) || ! isset( $payload['slug'] ) ) {
-			return new \WP_Error( 'tk_fields_bad_json', __( 'Request body must be a JSON object with a "slug".', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_bad_json', __( 'Request body must be a JSON object with a "slug".', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$type = Content_Type_Store::instance()->migrate_slug( (int) $request['id'], (string) $payload['slug'] );
@@ -529,7 +529,7 @@ final class Rest {
 	public function import_content_types( \WP_REST_Request $request ): \WP_REST_Response|\WP_Error {
 		$payload = $this->request_payload( $request );
 		if ( ! is_array( $payload ) ) {
-			return new \WP_Error( 'tk_fields_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
+			return new \WP_Error( 'tkfi_bad_json', __( 'Request body must be a JSON object.', 'tk-fields' ), array( 'status' => 400 ) );
 		}
 
 		$result = Content_Type_Store::instance()->import( $payload );
@@ -731,7 +731,7 @@ final class Rest {
 	 * GET /field-def/<name> — the resolved field definition for one field.
 	 *
 	 * The block editor calls this when an author types a field name into a
-	 * tk/flexible-content block: the response carries the layouts (with
+	 * tkfi/flexible-content block: the response carries the layouts (with
 	 * sub-field definitions) the editor needs to offer Add-layout buttons
 	 * and build the layout template blocks. edit_posts cap, like the
 	 * picker search routes.
@@ -742,7 +742,7 @@ final class Rest {
 		$field = Field_Registry::instance()->get( (string) $request['name'] );
 		if ( null === $field ) {
 			return new \WP_Error(
-				'tk_fields_unknown_field',
+				'tkfi_unknown_field',
 				__( 'Unknown field.', 'tk-fields' ),
 				array( 'status' => 404 )
 			);
@@ -1337,7 +1337,7 @@ final class Rest {
 							$this->setting( 'instructions', __( 'Instructions', 'tk-fields' ), __( 'Helper text shown under the label.', 'tk-fields' ), 'text' ),
 							$this->setting( 'placeholder', __( 'Placeholder', 'tk-fields' ), __( 'Dimmed hint inside an empty address input.', 'tk-fields' ), 'text' ),
 							$this->setting( 'required', __( 'Required', 'tk-fields' ), __( 'A location must be entered.', 'tk-fields' ), 'toggle' ),
-							$this->setting( 'enable_search', __( 'Enable address search', 'tk-fields' ), __( 'OPT-IN: shows an address search box that queries the Photon geocoder (photon.komoot.io) from the admin’s browser, debounced. Off by default — with it off the field still offers click-to-set on the map plus latitude/longitude/address inputs. Photon is swappable via the tk_fields_geocoder_url filter.', 'tk-fields' ), 'toggle' ),
+							$this->setting( 'enable_search', __( 'Enable address search', 'tk-fields' ), __( 'OPT-IN: shows an address search box that queries the Photon geocoder (photon.komoot.io) from the admin’s browser, debounced. Off by default — with it off the field still offers click-to-set on the map plus latitude/longitude/address inputs. Photon is swappable via the tkfi_geocoder_url filter.', 'tk-fields' ), 'toggle' ),
 							$this->setting( 'default_lat', __( 'Default latitude', 'tk-fields' ), __( 'Where the editor map centers when the field has no value yet.', 'tk-fields' ), 'number' ),
 							$this->setting( 'default_lng', __( 'Default longitude', 'tk-fields' ), __( 'Where the editor map centers when the field has no value yet.', 'tk-fields' ), 'number' ),
 							$this->setting( 'default_zoom', __( 'Default zoom', 'tk-fields' ), __( 'Initial map zoom level for the editor canvas (0–18).', 'tk-fields' ), 'number' ),

@@ -16,12 +16,12 @@
  * enqueues it on the frontend. Gutenberg blocks and Elementor widgets declare
  * it as a style dependency so both builders render sibling output.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -35,7 +35,7 @@ final class Widget_Assets {
 	/**
 	 * Stylesheet handle for the shared tokens.
 	 */
-	public const HANDLE = 'tk-widgets';
+	public const HANDLE = 'tkfi-widgets';
 
 	/**
 	 * Wire up registration + frontend enqueue.
@@ -53,9 +53,9 @@ final class Widget_Assets {
 	public static function register(): void {
 		wp_register_style(
 			self::HANDLE,
-			plugins_url( 'assets/shared/tk-widgets.css', TK_FIELDS_FILE ),
+			plugins_url( 'assets/shared/tk-widgets.css', TKFI_FILE ),
 			array(),
-			TK_FIELDS_VERSION
+			TKFI_VERSION
 		);
 	}
 

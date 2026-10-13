@@ -4,7 +4,7 @@
  */
 
 /**
- * Editor UI for tk/field-value.
+ * Editor UI for tkfi/field-value.
  *
  * One editable sub-field inside a repeater row. The inspector defines the
  * field (name, type, select options); the main area shows the value control
@@ -172,7 +172,7 @@
 	// ------------------------------------------------------------------
 	// Batch A relational controls.
 	//
-	// The tk/v1 search endpoints (relationship-search, user-search) return
+	// The tkfi/v1 search endpoints (relationship-search, user-search) return
 	// a paginated envelope shaped like {items: [...], total, total_pages},
 	// where each item is a DTO like {id, title, display_name, post_type, url}.
 	// ------------------------------------------------------------------
@@ -534,7 +534,7 @@
 			),
 			mode === 'post'
 				? el(EntityPicker, {
-						endpoint: '/tk/v1/relationship-search',
+						endpoint: '/tkfi/v1/relationship-search',
 						value: postId,
 						onChange: function (nextId) {
 							setValue({ kind: 'post', id: nextId });
@@ -703,15 +703,15 @@
 			!isMulti && typeof value === 'number' && value > 0 ? value : null;
 
 		// Unconditional: hooks cannot be conditional; only one list is live.
-		var multiHydrated = useHydratedItems('/tk/v1/user-search', isMulti ? ids : []);
+		var multiHydrated = useHydratedItems('/tkfi/v1/user-search', isMulti ? ids : []);
 		var singleHydrated = useHydratedItems(
-			'/tk/v1/user-search',
+			'/tkfi/v1/user-search',
 			singleId ? [singleId] : []
 		);
 
 		if (!isMulti) {
 			return el(EntityPicker, {
-				endpoint: '/tk/v1/user-search',
+				endpoint: '/tkfi/v1/user-search',
 				value: singleId,
 				onChange: function (nextId) {
 					setValue(nextId);
@@ -780,7 +780,7 @@
 					)
 				: null,
 			el(SearchInput, {
-				endpoint: '/tk/v1/user-search',
+				endpoint: '/tkfi/v1/user-search',
 				label: __('Add user', 'tk-fields'),
 				hint: __('Search users to add to the list.', 'tk-fields'),
 				placeholder: __('Search users…', 'tk-fields'),
@@ -821,7 +821,7 @@
 					})
 			: [];
 
-		var hydrated = useHydratedItems('/tk/v1/relationship-search', selectedIds);
+		var hydrated = useHydratedItems('/tkfi/v1/relationship-search', selectedIds);
 
 		var move = function (index, dir) {
 			var j = index + dir;
@@ -853,7 +853,7 @@
 			'div',
 			{ className: 'tk-field-value-relationship' },
 			el(SearchInput, {
-				endpoint: '/tk/v1/relationship-search',
+				endpoint: '/tkfi/v1/relationship-search',
 				label: __('Search posts', 'tk-fields'),
 				hint: __(
 					'Search posts to add. Ordered post IDs are stored; search results are never the selection.',
@@ -1212,7 +1212,7 @@
 		useEffect(
 			function () {
 				var q = search.trim();
-				var cfg = window.TK_FIELDS_MAP || {};
+				var cfg = window.TKFI_MAP || {};
 				var template = cfg.geocoderTemplate || '';
 				if (!q || !template) {
 					setResults(null);
@@ -1644,7 +1644,7 @@
 		useEffect(
 			function () {
 				var q = search.trim();
-				var cfg = window.TK_FIELDS_MAP || {};
+				var cfg = window.TKFI_MAP || {};
 				var template = cfg.geocoderTemplate || '';
 				if (!q || !template) {
 					setResults(null);
@@ -2376,7 +2376,7 @@
 			case 'post_object': {
 				var poId = typeof value === 'number' && value > 0 ? value : null;
 				return el(EntityPicker, {
-					endpoint: '/tk/v1/relationship-search',
+					endpoint: '/tkfi/v1/relationship-search',
 					value: poId,
 					onChange: function (nextId) {
 						setValue(nextId);
@@ -2451,7 +2451,7 @@
 			case 'flexible_content':
 			case 'clone':
 				// Composite types: their values are managed by their own
-				// blocks (tk/flexible-content rows, clone fan-out), not by a
+				// blocks (tkfi/flexible-content rows, clone fan-out), not by a
 				// scalar input here.
 				return el(
 					Notice,
@@ -2501,11 +2501,11 @@
 			});
 			fieldGroupsCache.waiters = [];
 		};
-		apiFetch({ path: '/tk/v1/groups' }).then(
+		apiFetch({ path: '/tkfi/v1/groups' }).then(
 			function (res) {
 				var list = (res && res.groups) || [];
 				var fetches = list.map(function (g) {
-					return apiFetch({ path: '/tk/v1/groups/' + g.id }).then(
+					return apiFetch({ path: '/tkfi/v1/groups/' + g.id }).then(
 						function (full) {
 							return (full && full.group) || null;
 						},
@@ -2631,7 +2631,7 @@
 					Tooltip,
 					{
 						text: __(
-							"The sub-field key, read with tk_get_sub_field('name') inside a row loop. Must be unique within its row.",
+							"The sub-field key, read with tkfi_get_sub_field('name') inside a row loop. Must be unique within its row.",
 							'tk-fields'
 						),
 					},
@@ -2852,7 +2852,7 @@
 		return el('div', null);
 	}
 
-	registerBlockType('tk/field-value', {
+	registerBlockType('tkfi/field-value', {
 		edit: Edit,
 		save: Save,
 		deprecated: [

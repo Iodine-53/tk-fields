@@ -16,12 +16,12 @@
  * registration is guarded by defined('WP_CLI') so normal web/admin/CRON
  * requests never touch the WP_CLI class.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

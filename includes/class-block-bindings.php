@@ -29,22 +29,22 @@
  * editor shows the authored fallback while/after loading).
  *
  * The same file owns the tiny read/write REST surface the editor needs
- * (namespace `tk/v1`):
+ * (namespace `tkfi/v1`):
  *
- *   GET  /tk/v1/values/<post_id>?fields=a,b   -> { "values": { "a": "…"|"null" } }
- *   POST /tk/v1/values/<post_id>               -> { "values": { "a": raw } }
+ *   GET  /tkfi/v1/values/<post_id>?fields=a,b   -> { "values": { "a": "…"|"null" } }
+ *   POST /tkfi/v1/values/<post_id>               -> { "values": { "a": raw } }
  *                                                 { "updated": { "a": "…"|null }, "failed": { "a": "reason" } }
  *
  * Both routes require `edit_post` on the target post. Writes go through
  * Fields::update() (sanitize + validate per field type) and are committed
  * immediately via Fields::flush().
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -154,9 +154,9 @@ final class Block_Bindings {
 	public static function enqueue_editor_assets(): void {
 		wp_register_script(
 			self::EDITOR_SCRIPT_HANDLE,
-			TK_FIELDS_URL . 'assets/bindings/bindings.js',
+			TKFI_URL . 'assets/bindings/bindings.js',
 			array( 'wp-blocks', 'wp-data', 'wp-api-fetch', 'wp-i18n', 'wp-block-editor' ),
-			TK_FIELDS_VERSION,
+			TKFI_VERSION,
 			array( 'in_footer' => true )
 		);
 		wp_set_script_translations( self::EDITOR_SCRIPT_HANDLE, 'tk-fields' );
@@ -172,7 +172,7 @@ final class Block_Bindings {
 	 */
 	public static function register_routes(): void {
 		register_rest_route(
-			'tk/v1',
+			'tkfi/v1',
 			'/values/(?P<post_id>\d+)',
 			array(
 				array(
@@ -223,7 +223,7 @@ final class Block_Bindings {
 	}
 
 	/**
-	 * GET /tk/v1/values/<post_id>?fields=a,b
+	 * GET /tkfi/v1/values/<post_id>?fields=a,b
 	 *
 	 * @param \WP_REST_Request $request
 	 */
@@ -233,7 +233,7 @@ final class Block_Bindings {
 
 		if ( array() === $fields ) {
 			return new \WP_Error(
-				'tk_fields_no_fields',
+				'tkfi_no_fields',
 				__( 'Provide at least one valid field name via the "fields" parameter.', 'tk-fields' ),
 				array( 'status' => 400 )
 			);
@@ -248,7 +248,7 @@ final class Block_Bindings {
 	}
 
 	/**
-	 * POST /tk/v1/values/<post_id>  { "values": { "field": raw_value } }
+	 * POST /tkfi/v1/values/<post_id>  { "values": { "field": raw_value } }
 	 *
 	 * Writes go through Fields::update() (sanitize + validate per field
 	 * type) and are committed immediately. Per-field results are reported so
@@ -263,7 +263,7 @@ final class Block_Bindings {
 
 		if ( ! is_array( $values ) || array() === $values ) {
 			return new \WP_Error(
-				'tk_fields_no_values',
+				'tkfi_no_values',
 				__( 'Request body must be a JSON object with a "values" map.', 'tk-fields' ),
 				array( 'status' => 400 )
 			);
@@ -271,7 +271,7 @@ final class Block_Bindings {
 
 		if ( count( $values ) > self::MAX_FIELDS_PER_REQUEST ) {
 			return new \WP_Error(
-				'tk_fields_too_many',
+				'tkfi_too_many',
 				sprintf(
 					/* translators: %d: maximum number of fields per request. */
 					__( 'Too many fields: at most %d per request.', 'tk-fields' ),

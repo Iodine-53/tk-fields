@@ -10,7 +10,7 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/post-listing — the Gutenberg twin of the Elementor
+ * Server render for tkfi/post-listing — the Gutenberg twin of the Elementor
  * TK Post Listing widget. Block attributes are mapped onto the shared
  * renderer settings (Post_Listing_Renderer), so both builders emit the
  * same card markup and design language.
@@ -18,12 +18,12 @@
  * Pagination always shows page 1 inside the editor (ServerSideRender hits
  * the block-renderer REST endpoint); the frontend reads the real page.
  *
- * @package TK\\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

@@ -17,12 +17,12 @@
  * correct inside Loop Grids, archive templates, and other custom queries
  * where the global post is not the item being rendered.
  *
- * @package TK\Fields\Integrations\Elementor
+ * @package TKFields\Integrations\Elementor
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields\Integrations\Elementor;
+namespace TKFields\Integrations\Elementor;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

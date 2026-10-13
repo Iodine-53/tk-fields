@@ -33,7 +33,7 @@
  * eval(), where a declare is not the first statement and fatals.
  */
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -89,7 +89,7 @@ $check(
 
 $child_def = $reg->get( 'contact_details_city' );
 $check( null !== $child_def, 'child is a first-class registry field' );
-$check( ! empty( $child_def['_tk_group_child'] ), 'child carries the _tk_group_child marker' );
+$check( ! empty( $child_def['_tkfi_group_child'] ), 'child carries the _tkfi_group_child marker' );
 
 // Read-time fail-closed guards: nested group sub-field is skipped.
 $reg->register(
@@ -145,7 +145,7 @@ $check( 'Lekki' === Fields::get( 'contact_details_city', $post_id, true ), 'dire
 // the storage layer directly after forcing the flush.
 do_action( 'shutdown' );
 $meta = get_post_meta( $post_id );
-$check( ! array_key_exists( 'tk_contact_details', $meta ) && ! array_key_exists( 'contact_details', $meta ), 'parent key has zero meta rows' );
+$check( ! array_key_exists( 'tkfi_contact_details', $meta ) && ! array_key_exists( 'contact_details', $meta ), 'parent key has zero meta rows' );
 $check( array_key_exists( 'contact_details_street', $meta ), 'child stored under namespaced key' );
 
 // Two-pass: required child empty -> whole write refused, nothing half-written.

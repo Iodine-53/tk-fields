@@ -10,12 +10,12 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/repeater-row.
+ * Server render for tkfi/repeater-row.
  *
  * Wraps the row's rendered inner blocks with the stable row ID
  * (data-row-id). Never relies on array position.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
@@ -24,7 +24,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$row_id = \TK\Fields\Repeater_Row::row_id( $attributes ?? array(), $block ?? null );
+$row_id = \TKFields\Repeater_Row::row_id( $attributes ?? array(), $block ?? null );
 ?>
 <div class="tk-repeater-row" data-row-id="<?php echo esc_attr( $row_id ); ?>">
 <?php

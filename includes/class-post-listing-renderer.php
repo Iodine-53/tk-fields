@@ -14,20 +14,20 @@
  *
  * One source of truth for the listing markup, extracted from the
  * Elementor Post Listing widget (v0.16.0/0.16.1) so the new Gutenberg
- * tk/post-listing block renders byte-identical cards. Both consumers
+ * tkfi/post-listing block renders byte-identical cards. Both consumers
  * pass a plain settings array (same key names as the Elementor widget
  * controls); block attributes are mapped to those keys in
  * blocks/post-listing/render.php.
  *
- * Every card value resolves through \TK\Fields\Fields — never postmeta.
+ * Every card value resolves through \TKFields\Fields — never postmeta.
  * Pagination is plain numbered prev/next (no AJAX — deferred, see docs).
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -221,7 +221,7 @@ final class Post_Listing_Renderer {
 	public static function render_open( array $settings ): void {
 		$settings = self::sanitize( $settings );
 
-		$classes = array( 'tk-post-listing', 'tk-post-listing--' . $settings['layout'] );
+		$classes = array( 'tkfi-post-listing', 'tk-post-listing--' . $settings['layout'] );
 		if ( $settings['equalize_heights'] ) {
 			$classes[] = 'tk-post-listing--equal';
 		}

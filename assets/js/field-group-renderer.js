@@ -12,7 +12,7 @@
 /**
  * Field-group renderer (v0.20.1).
  *
- * The missing UI half of the repeater field type: `tk/field-repeater` is
+ * The missing UI half of the repeater field type: `tkfi/field-repeater` is
  * deliberately hidden from the inserter (`supports.inserter: false`) and has
  * no editable field-name UI, so nothing the author does can orphan stored
  * rows (see the repeater synthesis, Q1). This script is the sanctioned
@@ -20,7 +20,7 @@
  *
  * On editor init it asks the server which repeater fields the current post's
  * assigned field groups contain (location rules are evaluated server-side,
- * via `tk/v1/post-repeaters/<post_id>`), then for each top-level repeater
+ * via `tkfi/v1/post-repeaters/<post_id>`), then for each top-level repeater
  * field with no matching wrapper in the block tree it appends one wrapper
  * built by `window.tkFieldRepeater.createFromFieldDef()` — the same entry
  * point the console call uses. Block creation is never reimplemented here.
@@ -40,8 +40,8 @@
 (function (blocks, data, apiFetch, i18n) {
 	'use strict';
 
-	var BLOCK_NAME = 'tk/field-repeater';
-	var REST_PATH = '/tk/v1/post-repeaters/';
+	var BLOCK_NAME = 'tkfi/field-repeater';
+	var REST_PATH = '/tkfi/v1/post-repeaters/';
 	var MAX_ATTEMPTS = 40; // ~12s of retries waiting for tkFieldRepeater.
 
 	/**
@@ -68,7 +68,7 @@
 
 	/**
 	 * Depth-first scan of a block list (including innerBlocks) for a
-	 * tk/field-repeater whose fieldKey matches.
+	 * tkfi/field-repeater whose fieldKey matches.
 	 *
 	 * @param {Array}  blockList   Blocks from getBlocks().
 	 * @param {string} expectedKey The canonical fieldKey.

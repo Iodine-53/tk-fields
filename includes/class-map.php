@@ -28,21 +28,21 @@
  *     click-to-set, Photon search box) lives in the block editor
  *     (blocks/field-value/edit.js).
  *
- * The swappable geocoder contract is the `tk_fields_geocoder_url` filter:
+ * The swappable geocoder contract is the `tkfi_geocoder_url` filter:
  * it receives a URL template containing a literal `{query}` placeholder
  * and returns the template to use. Photon is the default template and can
  * be replaced without touching any call site:
  *
- *   add_filter( 'tk_fields_geocoder_url', function ( $template, $query ) {
+ *   add_filter( 'tkfi_geocoder_url', function ( $template, $query ) {
  *       return 'https://my-geocoder.example/search?q={query}';
  *   }, 10, 2 );
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -52,7 +52,7 @@ final class Map {
 
 	/**
 	 * Default geocoder URL template. `{query}` is replaced with the
-	 * URL-encoded search string. Swappable via the `tk_fields_geocoder_url`
+	 * URL-encoded search string. Swappable via the `tkfi_geocoder_url`
 	 * filter — never hardcoded at call sites.
 	 *
 	 * @var string
@@ -70,7 +70,7 @@ final class Map {
 	/**
 	 * Build the geocoder search URL for one query string.
 	 *
-	 * Pass the template through `tk_fields_geocoder_url` so the geocoder
+	 * Pass the template through `tkfi_geocoder_url` so the geocoder
 	 * is replaceable without touching call sites (trap register #1).
 	 *
 	 * ADJUDICATION NOTE (Round 3, map decision #2): the build spec asked
@@ -98,7 +98,7 @@ final class Map {
 		 * @param string $template URL template containing `{query}`.
 		 * @param string $query    Raw search text.
 		 */
-		$template = apply_filters( 'tk_fields_geocoder_url', self::GEOCODER_URL_TEMPLATE, $query );
+		$template = apply_filters( 'tkfi_geocoder_url', self::GEOCODER_URL_TEMPLATE, $query );
 		if ( ! is_string( $template ) || false === strpos( $template, '{query}' ) ) {
 			$template = self::GEOCODER_URL_TEMPLATE;
 		}
@@ -118,7 +118,7 @@ final class Map {
 	 *
 	 * @param array  $field Field definition (registry shape).
 	 * @param mixed  $value Current value (sanitized map array, '' or null).
-	 * @param string $name  Base input name, e.g. "tk_fields[field_name]".
+	 * @param string $name  Base input name, e.g. "tkfi[field_name]".
 	 *                      Sub-inputs are `$name[lat]`, `$name[lng]`, `$name[address]`.
 	 * @return string HTML for the reduced input row.
 	 */

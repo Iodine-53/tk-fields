@@ -10,9 +10,9 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Asset dependencies for the tk/countdown interactivity view module.
+ * Asset dependencies for the tkfi/countdown interactivity view module.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -5,7 +5,7 @@
 
 import { store, getContext } from "@wordpress/interactivity";
 
-store( "tk/accordion", {
+store( "tkfi/accordion", {
 	state: {
 		get isOpen() {
 			const c = getContext();

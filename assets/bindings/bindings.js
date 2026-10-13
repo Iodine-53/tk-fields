@@ -24,7 +24,7 @@
  * content — exactly what the visitor sees on the frontend — instead of an
  * empty block.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 ( function () {
@@ -163,7 +163,7 @@
 
 			apiFetch( {
 				path:
-					'/tk/v1/values/' +
+					'/tkfi/v1/values/' +
 					encodeURIComponent( postId ) +
 					'?fields=' +
 					needed.map( encodeURIComponent ).join( ',' ),
@@ -371,7 +371,7 @@
 		st.inFlight = true;
 
 		apiFetch( {
-			path: '/tk/v1/values/' + encodeURIComponent( postId ),
+			path: '/tkfi/v1/values/' + encodeURIComponent( postId ),
 			method: 'POST',
 			data: { values: batch },
 		} ).then( function ( response ) {
@@ -569,7 +569,7 @@
 	}
 
 	// Exported for tests / debugging only.
-	window.tkFieldsBindings = {
+	window.tkfiFieldsBindings = {
 		SOURCE_NAME: SOURCE_NAME,
 		STORE_KEY: STORE_KEY,
 	};

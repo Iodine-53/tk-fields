@@ -12,7 +12,7 @@
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * Convention (workers: follow this exactly, do not invent your own):
  *
- *   blocks/<slug>/block.json        — metadata. apiVersion 3, name "tk/<slug>".
+ *   blocks/<slug>/block.json        — metadata. apiVersion 3, name "tkfi/<slug>".
  *                                     Use "render": "file:./render.php" for
  *                                     server rendering and
  *                                     "viewScriptModule": "file:./view.js"
@@ -44,7 +44,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *                                     dependency:
  *                                     <?php return array( 'dependencies' =>
  *                                       array( '@wordpress/interactivity' ),
- *                                       'version' => TK_FIELDS_VERSION );
+ *                                       'version' => TKFI_VERSION );
  *                                     For vanilla-JS blocks (no interactivity),
  *                                     use classic "viewScript": "file:./view.js"
  *                                     instead and skip the asset file.
@@ -59,7 +59,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * stylesheets, and calls register_block_type(). block.json-declared
  * render/viewScriptModule are honoured automatically by core.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 class Blocks {
@@ -68,7 +68,7 @@ class Blocks {
 	 * Register every block found under blocks/<slug>/.
 	 */
 	public static function register(): void {
-		$dirs = glob( TK_FIELDS_DIR . 'blocks/*', GLOB_ONLYDIR );
+		$dirs = glob( TKFI_DIR . 'blocks/*', GLOB_ONLYDIR );
 		if ( ! $dirs ) {
 			return;
 		}
@@ -91,9 +91,9 @@ class Blocks {
 					$data_handle = 'tkf-' . $slug . '-dashicons';
 					wp_register_script(
 						$data_handle,
-						TK_FIELDS_URL . 'blocks/' . $slug . '/dashicons.js',
+						TKFI_URL . 'blocks/' . $slug . '/dashicons.js',
 						array(),
-						TK_FIELDS_VERSION,
+						TKFI_VERSION,
 						array( 'in_footer' => true )
 						);
 					$deps[] = $data_handle;
@@ -104,14 +104,14 @@ class Blocks {
 				if ( 'field-value' === $slug ) {
 					wp_register_script(
 						'tk-leaflet',
-						TK_FIELDS_URL . 'assets/leaflet/leaflet.js',
+						TKFI_URL . 'assets/leaflet/leaflet.js',
 						array(),
 						Map::LEAFLET_VERSION,
 						array( 'in_footer' => true )
 					);
 					wp_register_style(
 						'tk-leaflet',
-						TK_FIELDS_URL . 'assets/leaflet/leaflet.css',
+						TKFI_URL . 'assets/leaflet/leaflet.css',
 						array(),
 						Map::LEAFLET_VERSION
 					);
@@ -120,9 +120,9 @@ class Blocks {
 				}
 				wp_register_script(
 					$handle,
-					TK_FIELDS_URL . 'blocks/' . $slug . '/edit.js',
+					TKFI_URL . 'blocks/' . $slug . '/edit.js',
 					$deps,
-					TK_FIELDS_VERSION,
+					TKFI_VERSION,
 					array( 'in_footer' => true )
 				);
 				wp_set_script_translations( $handle, 'tk-fields' );
@@ -133,13 +133,13 @@ class Blocks {
 				// cannot set a User-Agent header on fetch(), so no site
 				// identification is sent — see the adjudication note there.
 				if ( 'field-value' === $slug ) {
-					$geocoder_template = apply_filters( 'tk_fields_geocoder_url', Map::GEOCODER_URL_TEMPLATE, '' );
+					$geocoder_template = apply_filters( 'tkfi_geocoder_url', Map::GEOCODER_URL_TEMPLATE, '' );
 					if ( ! is_string( $geocoder_template ) || false === strpos( $geocoder_template, '{query}' ) ) {
 						$geocoder_template = Map::GEOCODER_URL_TEMPLATE;
 					}
 					wp_add_inline_script(
 						$handle,
-						'window.TK_FIELDS_MAP = ' . wp_json_encode(
+						'window.TKFI_MAP = ' . wp_json_encode(
 							array(
 								'geocoderTemplate' => $geocoder_template,
 							)
@@ -171,9 +171,9 @@ class Blocks {
 				$style_deps = ( 'post-listing' === $slug ) ? array( Widget_Assets::HANDLE ) : array();
 				wp_register_style(
 					$handle,
-					TK_FIELDS_URL . 'blocks/' . $slug . '/' . $file,
+					TKFI_URL . 'blocks/' . $slug . '/' . $file,
 					$style_deps,
-					TK_FIELDS_VERSION
+					TKFI_VERSION
 				);
 				$args[ $arg_key ]   = isset( $args[ $arg_key ] ) && is_array( $args[ $arg_key ] )
 					? array_merge( $args[ $arg_key ], array( $handle ) )
@@ -185,7 +185,7 @@ class Blocks {
 	}
 
 	/**
-	 * Editor data for the tk/post-listing inspector: public post types
+	 * Editor data for the tkfi/post-listing inspector: public post types
 	 * (incl. TK Content Types) and registered TK fields (layout-only
 	 * types excluded — they store nothing).
 	 *

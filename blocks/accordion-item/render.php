@@ -10,10 +10,10 @@
  * See LICENSE in the plugin root for the full license text.
  */
 /**
- * Server render for tk/accordion-item.
+ * Server render for tkfi/accordion-item.
  *
  * Each item carries its own id in context; the item's state.isOpen resolves
- * against the nearest data-wp-interactive ancestor (the tk/accordion root)
+ * against the nearest data-wp-interactive ancestor (the tkfi/accordion root)
  * using the merged context (own {id} + ancestor {allowMultiple, openIds}).
  *
  * Open/close animates via the grid-template-rows 0fr -> 1fr trick on
@@ -21,12 +21,12 @@
  * 180 degrees when the item is open. The panel is inert while closed so
  * collapsed content stays out of the tab order and the accessibility tree.
  *
- * @package TK\Fields
+ * @package TKFields
  */
 
 declare(strict_types=1);
 
-namespace TK\Fields;
+namespace TKFields;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;

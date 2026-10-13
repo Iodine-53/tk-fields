@@ -4,7 +4,7 @@
  */
 
 /**
- * tk/parallax editor UI — classic script, wp.* globals only.
+ * tkfi/parallax editor UI — classic script, wp.* globals only.
  */
 ( function( wp ) {
 	'use strict';
@@ -37,7 +37,7 @@
 		);
 	}
 
-	registerBlockType( 'tk/parallax', {
+	registerBlockType( 'tkfi/parallax', {
 		edit: function( props ) {
 			var attributes = props.attributes;
 			var setAttributes = props.setAttributes;
